@@ -22,20 +22,31 @@ describe("Game Sheet Suite", () => {
             new Player("Player 1", Suspect.GREEN), new Player("Player 2", Suspect.MUSTARD), new Player("Player 3", Suspect.PLUM)
         ];
 
-        let verifySheetForPlayer = (sheet : GameSheet, expectedCardsHad : Card[], player : Player) => {
+        let verifySheetForPlayer = (sheet : GameSheet, player : Player, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) => {
+            let expectedCardStatus = (card : Card, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) =>
+            {
+                if (_.findIndex(expectedCardsHad, card) != -1)
+                    return true;
+
+                if (_.findIndex(expectedCardsNotHad, card) != -1)
+                    return false;
+
+                return undefined;
+            }
+            
             _.forEach(EnumValues.getValues(Suspect), (suspectIndex) => {
                 let card = new Card(CardCategory.SUSPECT, suspectIndex);
-                expect(sheet.doesPlayerHaveCard(player, card)).toBe(_.findIndex(expectedCardsHad, card) != -1);
+                expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad));
             });
 
             _.forEach(EnumValues.getValues(Weapon), (weaponIndex) => {
                 let card = new Card(CardCategory.WEAPON, weaponIndex);
-                expect(sheet.doesPlayerHaveCard(player, card)).toBe(_.findIndex(expectedCardsHad, card) != -1);
+                expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad));
             });
 
             _.forEach(EnumValues.getValues(Room), (roomIndex) => {
                 let card = new Card(CardCategory.ROOM, roomIndex);
-                expect(sheet.doesPlayerHaveCard(player, card)).toBe(_.findIndex(expectedCardsHad, card) != -1);
+                expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad));
             });
         };
 
@@ -62,7 +73,7 @@ describe("Game Sheet Suite", () => {
                 let sheet = new GameSheet(defaultThreePlayers);
                 
                 _.forEach(defaultThreePlayers, (player) => {
-                    verifySheetForPlayer(sheet, [], player);
+                    verifySheetForPlayer(sheet, player, [], []);
                 });
             });
 
@@ -71,9 +82,9 @@ describe("Game Sheet Suite", () => {
                 let cardToMark = new Card(CardCategory.WEAPON, Weapon.REVOLVER);
                 sheet.markCardAsHadByPlayer(defaultThreePlayers[0], cardToMark);
 
-                verifySheetForPlayer(sheet, [cardToMark], defaultThreePlayers[0]);
-                verifySheetForPlayer(sheet, [], defaultThreePlayers[1]);
-                verifySheetForPlayer(sheet, [], defaultThreePlayers[2]);                
+                verifySheetForPlayer(sheet, defaultThreePlayers[0], [cardToMark], []);
+                verifySheetForPlayer(sheet, defaultThreePlayers[1], [], []);
+                verifySheetForPlayer(sheet, defaultThreePlayers[2], [], []);                
             });
         });
     });

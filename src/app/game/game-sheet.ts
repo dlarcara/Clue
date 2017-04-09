@@ -24,6 +24,10 @@ export class GameSheet
         this.fillOutBlankSheet(players);
     }
 
+    //Returns:
+    //  True: Player has card
+    //  False: Player does not have card
+    //  Undefined: Unkown
     doesPlayerHaveCard(player: Player, card : Card) : Boolean
     {
         let playerIndex = this.findPlayerIndex(player);
@@ -44,9 +48,9 @@ export class GameSheet
 
     private fillOutBlankSheet(players : Player[]) : void
     {
-        this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(false)); });
-        this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(false)); });
-        this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(false)); });
+        this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(undefined)); });
+        this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(undefined)); });
+        this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(undefined)); });
     }
 
     private findPlayerIndex(player : Player) : Number
