@@ -39,7 +39,7 @@ describe("Game Suite", () => {
       it("it should successfully start game when 6 cards are passed in", () => {
         let game = new Game(defaultDetective, defaultThreePlayers, allSuspectCards);
 
-        expect(game.detectiveCards).toBe(allSuspectCards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should throw an error when 7 cards are passed in", () => {
@@ -65,14 +65,14 @@ describe("Game Suite", () => {
         let cards = allSuspectCards.slice(0,4);
         let game = new Game(defaultDetective, fourPlayers, cards)
 
-        expect(game.detectiveCards).toBe(cards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should successfully start a game with 5 cards", () => {
         let cards = allSuspectCards.slice(0,5);
         let game = new Game(defaultDetective, fourPlayers, cards)
 
-        expect(game.detectiveCards).toBe(cards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should throw an error when starting a game with 6 cards", () => {
@@ -98,14 +98,14 @@ describe("Game Suite", () => {
         let cards = allSuspectCards.slice(0,3);
         let game = new Game(defaultDetective, fivePlayers, cards)
 
-        expect(game.detectiveCards).toBe(cards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should successfully start a game with 4 cards", () => {
         let cards = allSuspectCards.slice(0,4);
         let game = new Game(defaultDetective, fivePlayers, cards)
 
-        expect(game.detectiveCards).toBe(cards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should throw an error when starting a game with 5 cards", () => {
@@ -131,7 +131,7 @@ describe("Game Suite", () => {
         let cards = allSuspectCards.slice(0,3);
         let game = new Game(defaultDetective, sixPlayers, cards)
 
-        expect(game.detectiveCards).toBe(cards);
+        expect(game.turns.length).toBe(1);
       });
 
       it("it should throw an error when starting a game with 4 cards", () => {
@@ -147,15 +147,13 @@ describe("Game Suite", () => {
       expect(() => new Game(defaultDetective, defaultThreePlayers, duplicateCards)).toThrowError('Duplicate cards were supplied');
     });
 
-    it("it should track who you are, the players, and your cards", () => {
+    it("it should create an initial turn", () => {
       var game = new Game(defaultDetective, defaultThreePlayers, allSuspectCards);
       
-      expect(game.detective.name).toBe('Player 1');
-      expect(game.detective.suspect).toBe(Suspect.GREEN);
-
-      expect(game.players).toBe(defaultThreePlayers);
-
-      expect(game.detectiveCards).toBe(allSuspectCards);
+      expect(game.turns[0].number).toBe(1);
+      expect(game.turns[0].player).toBe(defaultDetective);
+      expect(game.turns[0].guess).toBe(null);
+      expect(game.turns[0].resultingSheet).toBe(null);
     }); 
   });
 });

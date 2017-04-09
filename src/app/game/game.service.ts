@@ -1,12 +1,14 @@
 import * as _ from 'lodash';
 
-import { Player, Card } from './index';
+import { Player, Card, Turn, Guess, GameSheet } from './index';
 
 export class Game
 {
-    detective: Player;
-    detectiveCards: Card[]
-    players: Player[]
+    turns: Turn[] = [];
+
+    private detective: Player;
+    private detectiveCards: Card[]
+    private players: Player[]
 
     constructor(detective: Player, players: Player[], detectiveCards: Card[])
     {
@@ -35,8 +37,8 @@ export class Game
         this.players = players;
         this.detectiveCards = detectiveCards;
 
-        //Mark Cards as Hard
-        //Mark rest of cards as not had by detective
+        //Create Sheet
+        this.addTurn(detective, null, null);
     }
 
     //Return possible number of cards a player can have based on the total number of players
@@ -45,5 +47,11 @@ export class Game
         var totalNumberOfAvailableCards = 18; 
         var averageCardsPerPerson = totalNumberOfAvailableCards/numberOfPlayers;
         return _.uniq([Math.floor(averageCardsPerPerson), Math.ceil(averageCardsPerPerson)]);
+    }
+
+    private addTurn(player : Player, guess : Guess, gameSheet : GameSheet) : void
+    {
+        let turn = new Turn(1, player, guess, gameSheet);
+        this.turns.push(turn);
     }
 }
