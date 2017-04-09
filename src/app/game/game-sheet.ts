@@ -37,6 +37,10 @@ export class GameSheet
     markCardAsHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
+
+        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, true);
+
+        //Mark Card as had for this player
         this.sheet[card.category][+card.cardIndex][+playerIndex] = true;
 
         //Mark other players as not having card
@@ -48,6 +52,10 @@ export class GameSheet
     markCardAsNotHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
+
+        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, false);
+
+        //Mark card as not had for this player
         this.sheet[card.category][+card.cardIndex][+playerIndex] = false;
     }
 
@@ -56,6 +64,13 @@ export class GameSheet
         this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(undefined)); });
         this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(undefined)); });
         this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(undefined)); });
+    }
+
+    private ensureCardIsNotMarkedDifferentlyAlready(player : Player, card : Card, statusToSet : Boolean) : void
+    {
+        let currentStatus = this.doesPlayerHaveCard(player, card);
+        if (currentStatus != undefined && currentStatus != statusToSet)
+            throw new Error("Card status has already been set differently");
     }
 
     private findPlayerIndex(player : Player) : Number

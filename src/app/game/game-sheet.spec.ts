@@ -23,7 +23,7 @@ describe("Game Sheet Suite:", () => {
         ];
 
         describe("and passing in bad information", () => {
-            it("it should throw an error when checking the status for a card for a player that's not playing", () => {
+            it("it should throw an error when checking the status by a card for a player that's not playing", () => {
                 let sheet = new GameSheet(defaultThreePlayers);
                 let playerToCheck = new Player("Player 4", Suspect.PEACOCK);
                 let cardToCheck = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
@@ -32,7 +32,7 @@ describe("Game Sheet Suite:", () => {
                                 .toThrowError("Invalid player supplied");
             });
 
-            it("it should throw an error when marking a card as had for a player that's not playing", () => {
+            it("it should throw an error when marking a card as had by a player that's not playing", () => {
                 let sheet = new GameSheet(defaultThreePlayers);
                 let playerToMark = new Player("Player 4", Suspect.PEACOCK);
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
@@ -41,13 +41,33 @@ describe("Game Sheet Suite:", () => {
                                 .toThrowError("Invalid player supplied");
             });
 
-            it("it should throw an error when marking a card as not had for a player that's not playing", () => {
+            it("it should throw an error when marking a card as note had by a player and the status has aleady been set to had", () => {
+                let sheet = new GameSheet(defaultThreePlayers);
+                let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+
+                sheet.markCardAsHadByPlayer(defaultThreePlayers[0], cardToMark)
+
+                expect(() => sheet.markCardAsNotHadByPlayer(defaultThreePlayers[0], cardToMark))
+                                .toThrowError("Card status has already been set differently");
+            });
+
+            it("it should throw an error when marking a card as not had by a player that's not playing", () => {
                 let sheet = new GameSheet(defaultThreePlayers);
                 let playerToMark = new Player("Player 4", Suspect.PEACOCK);
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
                 expect(() => sheet.markCardAsNotHadByPlayer(playerToMark, cardToMark))
                                 .toThrowError("Invalid player supplied");
+            });
+
+            it("it should throw an error when marking a card as had by a player and the status has already been set to not had", () => {
+                let sheet = new GameSheet(defaultThreePlayers);
+                let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+
+                sheet.markCardAsNotHadByPlayer(defaultThreePlayers[0], cardToMark)
+
+                expect(() => sheet.markCardAsHadByPlayer(defaultThreePlayers[0], cardToMark))
+                                .toThrowError("Card status has already been set differently");
             });
         });
 
