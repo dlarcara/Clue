@@ -31,19 +31,19 @@ export class GameSheet
     doesPlayerHaveCard(player: Player, card : Card) : Boolean
     {
         let playerIndex = this.findPlayerIndex(player);
-        if(playerIndex == -1)
-            throw new Error("Invalid player supplied");
-            
         return this.sheet[card.category][+card.cardIndex][+playerIndex];
     }
 
     markCardAsHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
-        if(playerIndex == -1)
-            throw new Error("Invalid player supplied");
-
         this.sheet[card.category][+card.cardIndex][+playerIndex] = true;
+    }
+
+    markCardAsNotHadByPlayer(player: Player, card : Card) : void
+    {
+        let playerIndex = this.findPlayerIndex(player);
+        this.sheet[card.category][+card.cardIndex][+playerIndex] = false;
     }
 
     private fillOutBlankSheet(players : Player[]) : void
@@ -55,6 +55,11 @@ export class GameSheet
 
     private findPlayerIndex(player : Player) : Number
     {
-        return _.findIndex(this.players, player);
+        let playerIndex = _.findIndex(this.players, player);
+
+        if(playerIndex == -1)
+            throw new Error("Invalid player supplied");
+
+        return playerIndex;
     }
 }

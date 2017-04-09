@@ -50,7 +50,7 @@ describe("Game Sheet Suite", () => {
             });
         };
 
-        it("it should throw an error when checking the status for a player that's not playing", () => {
+        it("it should throw an error when checking the status for a card for a player that's not playing", () => {
             let sheet = new GameSheet(defaultThreePlayers);
             let playerToCheck = new Player("Player 4", Suspect.PEACOCK);
             let cardToCheck = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
@@ -59,12 +59,21 @@ describe("Game Sheet Suite", () => {
                               .toThrowError("Invalid player supplied");
         });
 
-       it("it should throw an error when marking the status for a player that's not playing", () => {
+       it("it should throw an error when marking a card as had for a player that's not playing", () => {
             let sheet = new GameSheet(defaultThreePlayers);
             let playerToMark = new Player("Player 4", Suspect.PEACOCK);
             let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
             expect(() => sheet.markCardAsHadByPlayer(playerToMark, cardToMark))
+                              .toThrowError("Invalid player supplied");
+        });
+
+       it("it should throw an error when marking a card as not had for a player that's not playing", () => {
+            let sheet = new GameSheet(defaultThreePlayers);
+            let playerToMark = new Player("Player 4", Suspect.PEACOCK);
+            let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+
+            expect(() => sheet.markCardAsNotHadByPlayer(playerToMark, cardToMark))
                               .toThrowError("Invalid player supplied");
         });
 
@@ -83,6 +92,16 @@ describe("Game Sheet Suite", () => {
                 sheet.markCardAsHadByPlayer(defaultThreePlayers[0], cardToMark);
 
                 verifySheetForPlayer(sheet, defaultThreePlayers[0], [cardToMark], []);
+                verifySheetForPlayer(sheet, defaultThreePlayers[1], [], []);
+                verifySheetForPlayer(sheet, defaultThreePlayers[2], [], []);                
+            });
+
+            it("it should show the revolver as not had by Player 1 after marking it that way", () => {
+                let sheet = new GameSheet(defaultThreePlayers);
+                let cardToMark = new Card(CardCategory.WEAPON, Weapon.REVOLVER);
+                sheet.markCardAsNotHadByPlayer(defaultThreePlayers[0], cardToMark);
+
+                verifySheetForPlayer(sheet, defaultThreePlayers[0], [], [cardToMark]);
                 verifySheetForPlayer(sheet, defaultThreePlayers[1], [], []);
                 verifySheetForPlayer(sheet, defaultThreePlayers[2], [], []);                
             });
