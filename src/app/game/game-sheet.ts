@@ -1,4 +1,4 @@
-import { Player, CardCategory, Card, Suspect, Weapon, Room } from "./index";
+import { Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus } from "./index";
 
 import { EnumValues } from 'enum-values';
 
@@ -24,11 +24,7 @@ export class GameSheet
         this.fillOutBlankSheet(players);
     }
 
-    //Returns:
-    //  True: Player has card
-    //  False: Player does not have card
-    //  Undefined: Unkown
-    doesPlayerHaveCard(player: Player, card : Card) : Boolean
+    getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {
         let playerIndex = this.findPlayerIndex(player);
         return this.sheet[card.category][+card.cardIndex][+playerIndex];
@@ -40,10 +36,10 @@ export class GameSheet
     {
         let playerIndex = this.findPlayerIndex(player);
 
-        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, true);
+        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.Had);
 
         //Mark Card as had for this player
-        this.sheet[card.category][+card.cardIndex][+playerIndex] = true;
+        this.sheet[card.category][+card.cardIndex][+playerIndex] = CellStatus.Had;
 
         //Mark other players as not having card
         _.forEach(this.getAllOtherPlayers(player), (p) => {
@@ -56,10 +52,10 @@ export class GameSheet
     {
         let playerIndex = this.findPlayerIndex(player);
 
-        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, false);
+        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.NotHad);
 
         //Mark card as not had for this player
-        this.sheet[card.category][+card.cardIndex][+playerIndex] = false;
+        this.sheet[card.category][+card.cardIndex][+playerIndex] = CellStatus.NotHad;
     }
 
     //Get all other players to operate on except the excluded player passsed in
@@ -71,17 +67,17 @@ export class GameSheet
     //Create empty sheet with all card/player status as unknown
     private fillOutBlankSheet(players : Player[]) : void
     {
-        this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(undefined)); });
-        this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(undefined)); });
-        this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(undefined)); });
+        this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
+        this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
+        this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
     }
 
     //Verify current status is not already differently than what is about to be set
-    private ensureCardIsNotMarkedDifferentlyAlready(player : Player, card : Card, statusToSet : Boolean) : void
+    private ensureCardIsNotMarkedDifferentlyAlready(player : Player, card : Card, statusToSet : CellStatus) : void
     {
-        let currentStatus = this.doesPlayerHaveCard(player, card);
-        if (currentStatus != undefined && currentStatus != statusToSet)
-            throw new Error("Card status has already been set differently");
+        let currentStatus = this.getStatusForPlayerAndCard(player, card);
+        if (currentStatus != CellStatus.Unknown && currentStatus != statusToSet)
+            throw new Error("Cell status has already been set differently");
     }
 
     //Get index into players array given player, verify it exists

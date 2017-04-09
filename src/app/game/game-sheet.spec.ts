@@ -1,4 +1,4 @@
-import { GameSheet, Player, CardCategory, Card, Weapon, Suspect, Room } from './index';
+import { GameSheet, Player, CardCategory, Card, Weapon, Suspect, Room, CellStatus } from './index';
 
 import { EnumValues } from 'enum-values';
 
@@ -29,7 +29,7 @@ describe("Game Sheet Suite:", () => {
                 let playerToCheck = new Player("Player 4", Suspect.PEACOCK);
                 let cardToCheck = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
-                expect(() => sheet.doesPlayerHaveCard(playerToCheck, cardToCheck))
+                expect(() => sheet.getStatusForPlayerAndCard(playerToCheck, cardToCheck))
                                 .toThrowError("Invalid player supplied");
             });
 
@@ -49,7 +49,7 @@ describe("Game Sheet Suite:", () => {
                 sheet.markCardAsHadByPlayer(defaultSixPlayers[0], cardToMark)
 
                 expect(() => sheet.markCardAsNotHadByPlayer(defaultSixPlayers[0], cardToMark))
-                                .toThrowError("Card status has already been set differently");
+                                .toThrowError("Cell status has already been set differently");
             });
 
             it("it should throw an error when marking a card as not had by a player that's not playing", () => {
@@ -68,7 +68,7 @@ describe("Game Sheet Suite:", () => {
                 sheet.markCardAsNotHadByPlayer(defaultSixPlayers[0], cardToMark)
 
                 expect(() => sheet.markCardAsHadByPlayer(defaultSixPlayers[0], cardToMark))
-                                .toThrowError("Card status has already been set differently");
+                                .toThrowError("Cell status has already been set differently");
             });
         });
 
@@ -78,12 +78,12 @@ describe("Game Sheet Suite:", () => {
                 let expectedCardStatus = (card : Card, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) =>
                 {
                     if (_.findIndex(expectedCardsHad, card) != -1)
-                        return true;
+                        return CellStatus.Had;
 
                     if (_.findIndex(expectedCardsNotHad, card) != -1)
-                        return false;
+                        return CellStatus.NotHad;
 
-                    return undefined;
+                    return CellStatus.Unknown;
                 }
                 
                 //For all Suspect Cards
@@ -91,7 +91,7 @@ describe("Game Sheet Suite:", () => {
                     let card = new Card(CardCategory.SUSPECT, suspectIndex);
                     let expectedState = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
                     let failMessage = `Expected ${Suspect[suspectIndex]} to be in state ${expectedState} for ${player.name}`;
-                    expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedState, failMessage);
+                    expect(sheet.getStatusForPlayerAndCard(player, card)).toBe(expectedState, failMessage);
                 });
 
                 //For all Weapon Cards
@@ -99,7 +99,7 @@ describe("Game Sheet Suite:", () => {
                     let card = new Card(CardCategory.WEAPON, weaponIndex);
                     let expectedState = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
                     let failMessage = `Expected ${Weapon[weaponIndex]} to be in state ${expectedState} for ${player.name}`;
-                    expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedState, failMessage);
+                    expect(sheet.getStatusForPlayerAndCard(player, card)).toBe(expectedState, failMessage);
                 });
 
                 //For all Room Cards
@@ -107,7 +107,7 @@ describe("Game Sheet Suite:", () => {
                     let card = new Card(CardCategory.ROOM, roomIndex);
                     let expectedState = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
                     let failMessage = `Expected ${Room[roomIndex]} to be in state ${expectedState} for ${player.name}`;
-                    expect(sheet.doesPlayerHaveCard(player, card)).toBe(expectedState, failMessage);
+                    expect(sheet.getStatusForPlayerAndCard(player, card)).toBe(expectedState, failMessage);
                 });
             };
 
