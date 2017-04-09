@@ -1,12 +1,12 @@
 export enum Room
 {
-    Dining,
-    Kitchen,
-    Hall,
-    Conservatory,
-    Library,
-    Lounge,
-    Ballroom,
-    Study,
-    Billiard
+    DINING,
+    KITCHEN,
+    HALL,
+    CONSERVATORY,
+    LIBRARY,
+    LOUNGE,
+    BALLROOM,
+    STUDY,
+    BILLIARD
 }

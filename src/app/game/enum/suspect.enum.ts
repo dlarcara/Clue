@@ -1,8 +1,9 @@
-export enum Suspect {
-    Peacock,
-    Scarlet,
-    White,
-    Plum,
-    Mustard,
-    Green
+export enum Suspect 
+{
+    PEACOCK,
+    SCARLET,
+    WHITE,
+    PLUM,
+    MUSTARD,
+    GREEN
 }

@@ -1,6 +1,6 @@
 export enum CardCategory
 {
-    Suspect,
-    Weapon,
-    Room
+    SUSPECT,
+    WEAPON,
+    ROOM
 }

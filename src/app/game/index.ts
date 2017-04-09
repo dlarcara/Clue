@@ -1,4 +1,5 @@
 export * from './game.service';
+export * from './game-sheet';
 export * from './enum/card-category.enum';
 export * from './enum/room.enum';
 export * from './enum/suspect.enum';
