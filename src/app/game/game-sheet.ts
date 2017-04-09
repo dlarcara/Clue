@@ -34,6 +34,8 @@ export class GameSheet
         return this.sheet[card.category][+card.cardIndex][+playerIndex];
     }
 
+    //Mark card as had by player passed in, verifying that the status isn't already set differently
+    //Also mark all other players as not having this card
     markCardAsHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
@@ -44,11 +46,12 @@ export class GameSheet
         this.sheet[card.category][+card.cardIndex][+playerIndex] = true;
 
         //Mark other players as not having card
-        _(this.players).filter(!player).forEach((p) => {
+        _.forEach(this.getAllOtherPlayers(player), (p) => {
             this.markCardAsNotHadByPlayer(p, card);
         });
     }
 
+    //Mark card as not had by player passed in, verifying that the status isn't already set differently
     markCardAsNotHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
@@ -59,6 +62,13 @@ export class GameSheet
         this.sheet[card.category][+card.cardIndex][+playerIndex] = false;
     }
 
+    //Get all other players to operate on except the excluded player passsed in
+    private getAllOtherPlayers(playerToExclude : Player) : Player[]
+    {
+        return _.filter(this.players, (p) => { return !_.isEqual(p, playerToExclude);});
+    }
+
+    //Create empty sheet with all card/player status as unknown
     private fillOutBlankSheet(players : Player[]) : void
     {
         this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(undefined)); });
@@ -66,6 +76,7 @@ export class GameSheet
         this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(undefined)); });
     }
 
+    //Verify current status is not already differently than what is about to be set
     private ensureCardIsNotMarkedDifferentlyAlready(player : Player, card : Card, statusToSet : Boolean) : void
     {
         let currentStatus = this.doesPlayerHaveCard(player, card);
@@ -73,6 +84,7 @@ export class GameSheet
             throw new Error("Card status has already been set differently");
     }
 
+    //Get index into players array given player, verify it exists
     private findPlayerIndex(player : Player) : Number
     {
         let playerIndex = _.findIndex(this.players, player);

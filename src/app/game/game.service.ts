@@ -34,6 +34,9 @@ export class Game
         this.detective = detective;
         this.players = players;
         this.detectiveCards = detectiveCards;
+
+        //Mark Cards as Hard
+        //Mark rest of cards as not had by detective
     }
 
     //Return possible number of cards a player can have based on the total number of players
