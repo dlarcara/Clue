@@ -11,7 +11,6 @@ export class GameSheetService
 
     constructor(players : Player[])
     {
-        debugger;
         //Ensure unique players 
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
            throw new Error("Player suspect used more than once");
@@ -21,7 +20,6 @@ export class GameSheetService
             throw new Error("At least 3 players are required to play a game");
 
         this.players = players;
-
         this.sheet = new GameSheet(players.length);
     }
 
@@ -31,14 +29,9 @@ export class GameSheetService
         return this.sheet.getStatusForPlayerAndCard(playerIndex, card.category, card.cardIndex);
     }
 
-    //Mark card as had by player passed in, verifying that the status isn't already set differently
-    //Also mark all other players as not having this card
     markCardAsHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
-
-        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.Had);
-
         this.sheet.markCardAsHadByPlayer(playerIndex, card.category, card.cardIndex);
 
         //Mark other players as not having card
@@ -51,9 +44,6 @@ export class GameSheetService
     markCardAsNotHadByPlayer(player: Player, card : Card) : void
     {
         let playerIndex = this.findPlayerIndex(player);
-
-        this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.NotHad);
-
         this.sheet.markCardAsNotHadByPlayer(playerIndex, card.category, card.cardIndex);
     }
 
@@ -61,14 +51,6 @@ export class GameSheetService
     private getAllOtherPlayers(playerToExclude : Player) : Player[]
     {
         return _.filter(this.players, (p) => { return !_.isEqual(p, playerToExclude);});
-    }
-
-    //Verify current status is not already differently than what is about to be set
-    private ensureCardIsNotMarkedDifferentlyAlready(player : Player, card : Card, statusToSet : CellStatus) : void
-    {
-        let currentStatus = this.getStatusForPlayerAndCard(player, card);
-        if (currentStatus != CellStatus.Unknown && currentStatus != statusToSet)
-            throw new Error("Cell status has already been set differently");
     }
 
     //Get index into players array given player, verify it exists

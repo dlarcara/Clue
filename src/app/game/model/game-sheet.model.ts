@@ -28,11 +28,17 @@ export class GameSheet
 
     markCardAsHadByPlayer(playerIndex : Number, cardCategoryIndex : Number, cardIndex : Number) : void
     {
+        if (this.getStatusForPlayerAndCard(playerIndex, cardCategoryIndex, cardIndex) == CellStatus.NotHad)
+            throw new Error("Cell status has already been set differently");
+
         this.cells[+cardCategoryIndex][+cardIndex][+playerIndex] = CellStatus.Had;
     }
 
     markCardAsNotHadByPlayer(playerIndex : Number, cardCategoryIndex : Number, cardIndex : Number) : void
     {
+        if (this.getStatusForPlayerAndCard(playerIndex, cardCategoryIndex, cardIndex) == CellStatus.Had)
+            throw new Error("Cell status has already been set differently");
+
         this.cells[+cardCategoryIndex][+cardIndex][+playerIndex] = CellStatus.NotHad;
     }
 }
