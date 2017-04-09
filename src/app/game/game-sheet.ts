@@ -38,6 +38,11 @@ export class GameSheet
     {
         let playerIndex = this.findPlayerIndex(player);
         this.sheet[card.category][+card.cardIndex][+playerIndex] = true;
+
+        //Mark other players as not having card
+        _(this.players).filter(!player).forEach((p) => {
+            this.markCardAsNotHadByPlayer(p, card);
+        });
     }
 
     markCardAsNotHadByPlayer(player: Player, card : Card) : void
