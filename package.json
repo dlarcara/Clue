@@ -24,8 +24,10 @@
     "@ionic-native/splash-screen": "3.1.0",
     "@ionic-native/status-bar": "3.1.0",
     "@ionic/storage": "2.0.0",
+    "@types/lodash": "^4.14.62",
     "ionic-angular": "2.3.0",
     "ionicons": "3.0.0",
+    "lodash": "^4.17.4",
     "rxjs": "5.0.1",
     "sw-toolbox": "3.4.0",
     "zone.js": "0.7.2"
