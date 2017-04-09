@@ -1,4 +1,4 @@
-import { GameSheet, Player, CardCategory, Card, Weapon, Suspect, Room, CellStatus } from './index';
+import { GameSheetService, Player, CardCategory, Card, Weapon, Suspect, Room, CellStatus } from './index';
 
 import { EnumValues } from 'enum-values';
 
@@ -9,11 +9,11 @@ describe("Game Sheet Suite:", () => {
         it("it should make sure a suspect isn't playing twice", () => {
             var players = [ new Player("Player 1", Suspect.PEACOCK), new Player("Player 2", Suspect.PEACOCK), new Player("Player 3", Suspect.GREEN)];
         
-            expect(() => new GameSheet(players)).toThrowError("Player suspect used more than once");
+            expect(() => new GameSheetService(players)).toThrowError("Player suspect used more than once");
         });
         
         it("it should require at least 3 players", () => {
-            expect(() => new GameSheet([])).toThrowError("At least 3 players are required to play a game")
+            expect(() => new GameSheetService([])).toThrowError("At least 3 players are required to play a game")
         });
     });
 
@@ -25,7 +25,7 @@ describe("Game Sheet Suite:", () => {
 
         describe("and passing in bad information", () => {
             it("it should throw an error when checking the status by a card for a player that's not playing", () => {
-                let sheet = new GameSheet(defaultSixPlayers.slice(0,3));
+                let sheet = new GameSheetService(defaultSixPlayers.slice(0,3));
                 let playerToCheck = new Player("Player 4", Suspect.PEACOCK);
                 let cardToCheck = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
@@ -34,7 +34,7 @@ describe("Game Sheet Suite:", () => {
             });
 
             it("it should throw an error when marking a card as had by a player that's not playing", () => {
-                let sheet = new GameSheet(defaultSixPlayers.slice(0,3));
+                let sheet = new GameSheetService(defaultSixPlayers.slice(0,3));
                 let playerToMark = new Player("Player 4", Suspect.PEACOCK);
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
@@ -43,7 +43,7 @@ describe("Game Sheet Suite:", () => {
             });
 
             it("it should throw an error when marking a card as note had by a player and the status has aleady been set to had", () => {
-                let sheet = new GameSheet(defaultSixPlayers.slice(0,3));
+                let sheet = new GameSheetService(defaultSixPlayers.slice(0,3));
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
                 sheet.markCardAsHadByPlayer(defaultSixPlayers[0], cardToMark)
@@ -53,7 +53,7 @@ describe("Game Sheet Suite:", () => {
             });
 
             it("it should throw an error when marking a card as not had by a player that's not playing", () => {
-                let sheet = new GameSheet(defaultSixPlayers.slice(0,3));
+                let sheet = new GameSheetService(defaultSixPlayers.slice(0,3));
                 let playerToMark = new Player("Player 4", Suspect.PEACOCK);
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
@@ -62,7 +62,7 @@ describe("Game Sheet Suite:", () => {
             });
 
             it("it should throw an error when marking a card as had by a player and the status has already been set to not had", () => {
-                let sheet = new GameSheet(defaultSixPlayers.slice(0,3));
+                let sheet = new GameSheetService(defaultSixPlayers.slice(0,3));
                 let cardToMark = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
 
                 sheet.markCardAsNotHadByPlayer(defaultSixPlayers[0], cardToMark)
@@ -74,7 +74,7 @@ describe("Game Sheet Suite:", () => {
 
         describe("and checking the status", () => {
             let gameSheet;
-            let verifySheetForPlayer = (sheet : GameSheet, player : Player, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) => {
+            let verifySheetForPlayer = (sheet : GameSheetService, player : Player, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) => {
                 let expectedCardStatus = (card : Card, expectedCardsHad : Card[], expectedCardsNotHad : Card[]) =>
                 {
                     if (_.findIndex(expectedCardsHad, card) != -1)
@@ -114,7 +114,7 @@ describe("Game Sheet Suite:", () => {
             describe("for a 3 player game", () => {
                 let defaultThreePlayers = defaultSixPlayers.slice(0,3);
                 beforeEach(() => {
-                    gameSheet = new GameSheet(defaultThreePlayers);
+                    gameSheet = new GameSheetService(defaultThreePlayers);
                 });
 
                 it("it should show all cards as not had for new game sheet", () => {
@@ -145,11 +145,11 @@ describe("Game Sheet Suite:", () => {
             describe("for a 4 player game", () => {
                 let defaultFourPlayers = defaultSixPlayers.slice(0,4);
                 beforeEach(() => {
-                    gameSheet = new GameSheet(defaultFourPlayers);
+                    gameSheet = new GameSheetService(defaultFourPlayers);
                 });
 
                 it("it should show all cards as not had for new game sheet", () => {
-                    let sheet = new GameSheet(defaultFourPlayers);
+                    let sheet = new GameSheetService(defaultFourPlayers);
                     
                     _.forEach(defaultFourPlayers, (player) => {
                         verifySheetForPlayer(sheet, player, [], []);
@@ -180,11 +180,11 @@ describe("Game Sheet Suite:", () => {
             describe("for a 5 player game", () => {
                 let defaultFivePlayers = defaultSixPlayers.slice(0,5);
                 beforeEach(() => {
-                    gameSheet = new GameSheet(defaultFivePlayers);
+                    gameSheet = new GameSheetService(defaultFivePlayers);
                 });
 
                 it("it should show all cards as not had for new game sheet", () => {
-                    let sheet = new GameSheet(defaultFivePlayers);
+                    let sheet = new GameSheetService(defaultFivePlayers);
                     
                     _.forEach(defaultFivePlayers, (player) => {
                         verifySheetForPlayer(sheet, player, [], []);
@@ -216,11 +216,11 @@ describe("Game Sheet Suite:", () => {
 
             describe("for a 6 player game", () => {
                 beforeEach(() => {
-                    gameSheet = new GameSheet(defaultSixPlayers);
+                    gameSheet = new GameSheetService(defaultSixPlayers);
                 });
 
                 it("it should show all cards as not had for new game sheet", () => {
-                    let sheet = new GameSheet(defaultSixPlayers);
+                    let sheet = new GameSheetService(defaultSixPlayers);
                     
                     _.forEach(defaultSixPlayers, (player) => {
                         verifySheetForPlayer(sheet, player, [], []);

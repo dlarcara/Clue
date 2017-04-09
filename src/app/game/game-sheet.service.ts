@@ -1,16 +1,17 @@
-import { Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus } from "./index";
+import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus } from "./index";
 
 import { EnumValues } from 'enum-values';
 
 import * as _ from 'lodash';
 
-export class GameSheet
+export class GameSheetService
 {
-    private sheet: any[] = [];
+    private sheet: GameSheet;
     private players: Player[];
 
     constructor(players : Player[])
     {
+        debugger;
         //Ensure unique players 
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
            throw new Error("Player suspect used more than once");
@@ -21,13 +22,13 @@ export class GameSheet
 
         this.players = players;
 
-        this.fillOutBlankSheet(players);
+        this.sheet = new GameSheet(players.length);
     }
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {
         let playerIndex = this.findPlayerIndex(player);
-        return this.sheet[card.category][+card.cardIndex][+playerIndex];
+        return this.sheet.getStatusForPlayerAndCard(playerIndex, card.category, card.cardIndex);
     }
 
     //Mark card as had by player passed in, verifying that the status isn't already set differently
@@ -38,8 +39,7 @@ export class GameSheet
 
         this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.Had);
 
-        //Mark Card as had for this player
-        this.sheet[card.category][+card.cardIndex][+playerIndex] = CellStatus.Had;
+        this.sheet.markCardAsHadByPlayer(playerIndex, card.category, card.cardIndex);
 
         //Mark other players as not having card
         _.forEach(this.getAllOtherPlayers(player), (p) => {
@@ -54,22 +54,13 @@ export class GameSheet
 
         this.ensureCardIsNotMarkedDifferentlyAlready(player, card, CellStatus.NotHad);
 
-        //Mark card as not had for this player
-        this.sheet[card.category][+card.cardIndex][+playerIndex] = CellStatus.NotHad;
+        this.sheet.markCardAsNotHadByPlayer(playerIndex, card.category, card.cardIndex);
     }
 
     //Get all other players to operate on except the excluded player passsed in
     private getAllOtherPlayers(playerToExclude : Player) : Player[]
     {
         return _.filter(this.players, (p) => { return !_.isEqual(p, playerToExclude);});
-    }
-
-    //Create empty sheet with all card/player status as unknown
-    private fillOutBlankSheet(players : Player[]) : void
-    {
-        this.sheet[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
-        this.sheet[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
-        this.sheet[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(CellStatus.Unknown)); });
     }
 
     //Verify current status is not already differently than what is about to be set
