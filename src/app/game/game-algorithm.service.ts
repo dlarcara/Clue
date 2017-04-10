@@ -33,7 +33,7 @@ export class GameAlgorithm
         return this.sheet.getStatusForPlayerAndCard(player, card);
     }
 
-    initializeCardsForDetective(player : Player, cardsInHand : Card[]) : void
+    fillOutKnownCards(player : Player, cardsInHand : Card[]) : void
     {
          if (!this.playerIsPlaying(player))
             throw new Error("Player not found");
@@ -53,7 +53,6 @@ export class GameAlgorithm
 
         let lastPlayerInTurn = (!guess.playerThatShowed) ? guess.playerThatGuessed : guess.playerThatShowed;
 
-        debugger;
         let currentPlayer = this.getNextPlayer(guess.playerThatGuessed);
         while(!_.isEqual(currentPlayer, lastPlayerInTurn))
         { 

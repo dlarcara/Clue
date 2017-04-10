@@ -30,7 +30,7 @@ describe("When interacting with the game algorithm", () => {
             var gameAlgroithm = new GameAlgorithm(defaultPlayers);
             
             let player = new Player("Player 4", Suspect.SCARLET);
-            expect(() => gameAlgroithm.initializeCardsForDetective(player, []))
+            expect(() => gameAlgroithm.fillOutKnownCards(player, []))
                                       .toThrowError("Player not found");
         });
 
@@ -47,13 +47,13 @@ describe("When interacting with the game algorithm", () => {
         it("it should throw an error when the player who showed isn't playing", () => {
             let gameAlgroithm = new GameAlgorithm(defaultPlayers);
 
-            let guessingplayer = new Player("Player 4", Suspect.SCARLET);
+            let guessingplayer = new Player("Player 3", Suspect.GREEN);
             let showingPlayer = new Player("Player 5", Suspect.WHITE);
             let shownCard = new Card(CardCategory.ROOM, Room.HALL)
             let guess = new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.HALL, guessingplayer, showingPlayer, shownCard);
             
             expect(() => gameAlgroithm.applyGuess(guess))
-                                      .toThrowError("Guessing player not found");
+                                      .toThrowError("Showing player not found");
         });
     });
 
@@ -125,7 +125,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("initializing the detectives cards should mark them as had and no one else having them", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
@@ -133,7 +133,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
             var rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
@@ -162,7 +162,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("initializing the detectives cards should mark them as had and no one else having them", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
@@ -171,7 +171,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
             var rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
@@ -201,7 +201,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("initializing the detectives cards should mark them as had and no one else having them", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
@@ -211,7 +211,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
             var rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
@@ -242,7 +242,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("initializing the detectives cards should mark them as had and no one else having them", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
@@ -253,7 +253,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
-            gameSheet.initializeCardsForDetective(gamePlayers[0], cardsInHand);
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
             var rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
