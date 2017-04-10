@@ -51,6 +51,28 @@ export class GameAlgorithm
         if (!!guess.playerThatShowed && !this.playerIsPlaying(guess.playerThatShowed))
             throw new Error("Showing player not found");
 
+        this.markCardAsNotHadAllForPlayersWhoDidNotShowByGuess(guess);
+
+        if (guess.playerThatShowed && guess.cardShown)
+            this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
+    }
+
+    private markCardAsHadByPlayer(player : Player, card : Card) : void
+    {
+        this.sheet.markCardAsHadByPlayer(player, card);
+
+        _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
+
+        //TODO: Mark player as not having any other cards if all their cards are known
+    }
+
+    private markCardAsNotHadByPlayer(player : Player, card : Card) : void
+    {
+        this.sheet.markCardAsNotHadByPlayer(player, card);
+    }
+
+    private markCardAsNotHadAllForPlayersWhoDidNotShowByGuess(guess : Guess)
+    {
         let lastPlayerInTurn = (!guess.playerThatShowed) ? guess.playerThatGuessed : guess.playerThatShowed;
 
         let currentPlayer = this.getNextPlayer(guess.playerThatGuessed);
@@ -72,18 +94,6 @@ export class GameAlgorithm
     private getAllCardsExcept(cards : Card[]) : Card[]
     {
         return GameConstants.ALLCARDS.filter((card) => { return !_.find(cards, card); });
-    }
-
-    private markCardAsHadByPlayer(player : Player, card : Card) : void
-    {
-        this.sheet.markCardAsHadByPlayer(player, card);
-
-        _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
-    }
-
-    private markCardAsNotHadByPlayer(player : Player, card : Card) : void
-    {
-        this.sheet.markCardAsNotHadByPlayer(player, card);
     }
 
     private getAllOtherPlayers(playerToExclude : Player) : Player[] 

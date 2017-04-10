@@ -124,7 +124,7 @@ describe("When interacting with the game algorithm", () => {
             });
         });
 
-        it("initializing the detectives cards should mark them as had and no one else having them", () => {
+        it("filling out known cards for a player should mark them as had and no one else having them", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
@@ -132,7 +132,20 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand);                
         });
 
-        it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
+        it("it should mark a card as had by the shower and not had by everyone else when shown a card", () => {
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.LOUNGE);
+            gameSheet.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], suspectCard));
+
+            verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameSheet, gamePlayers[2], [suspectCard], cardsInHand);             
+        });
+
+        it("it should mark a card as had by no one when guessing a card you don't have and no one shows", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
@@ -141,6 +154,14 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand.concat([rope]));
             verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand.concat([rope]));                
         });
+
+        // it("it should mark a card as had by shower when you dont know what was shown if the other cards are had by other people", () => {
+               //It should mark card as not had by people who passed up until shower when card is not shown           
+        // });
+
+        // it("it should mark a card as hard by the shower and not had by people who didn't show when applying a guess", () => {
+               //It should mark card as not had by people who passed up until shower when card is not shown           
+        // });
     });
 
     describe("for a 4 player game", () => {
@@ -161,16 +182,30 @@ describe("When interacting with the game algorithm", () => {
             });
         });
 
-        it("initializing the detectives cards should mark them as had and no one else having them", () => {
+        it("filling out known cards for a player should mark them as had and no one else having them", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
             verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand);
-            verifySheetForPlayer(gameSheet, gamePlayers[3], [], cardsInHand);            
+            verifySheetForPlayer(gameSheet, gamePlayers[3], [], cardsInHand);           
         });
 
-        it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
+        it("it should mark a card as had by the shower and not had by everyone else when shown a card", () => {
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.LOUNGE);
+            gameSheet.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], suspectCard));
+
+            verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameSheet, gamePlayers[2], [suspectCard], cardsInHand); 
+            verifySheetForPlayer(gameSheet, gamePlayers[3], [], cardsInHand.concat([suspectCard]));    
+        });
+
+        it("it should mark a card as had by no one when guessing a card you don't have and no one shows", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
@@ -200,17 +235,32 @@ describe("When interacting with the game algorithm", () => {
             });
         });
 
-        it("initializing the detectives cards should mark them as had and no one else having them", () => {
+        it("filling out known cards for a player should mark them as had and no one else having them", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
             verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand);
             verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand);
             verifySheetForPlayer(gameSheet, gamePlayers[3], [], cardsInHand);
-            verifySheetForPlayer(gameSheet, gamePlayers[4], [], cardsInHand);          
+            verifySheetForPlayer(gameSheet, gamePlayers[4], [], cardsInHand);        
         });
 
-        it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
+        it("it should mark a card as had by the shower and not had by everyone else when shown a card", () => {
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.LOUNGE);
+            gameSheet.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[3], suspectCard));
+
+            verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard])); 
+            verifySheetForPlayer(gameSheet, gamePlayers[3], [suspectCard], cardsInHand);  
+            verifySheetForPlayer(gameSheet, gamePlayers[4], [], cardsInHand.concat(suspectCard));
+        });
+
+        it("it should mark a card as had by no one when guessing a card you don't have and no one shows", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             gameSheet.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[0], null, null));
 
@@ -241,7 +291,7 @@ describe("When interacting with the game algorithm", () => {
             });
         });
 
-        it("initializing the detectives cards should mark them as had and no one else having them", () => {
+        it("it should mark a card as had by no one when guessing a card you don't have and no one shows", () => {
             gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
             verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
@@ -249,7 +299,23 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand);
             verifySheetForPlayer(gameSheet, gamePlayers[3], [], cardsInHand);
             verifySheetForPlayer(gameSheet, gamePlayers[4], [], cardsInHand); 
-            verifySheetForPlayer(gameSheet, gamePlayers[5], [], cardsInHand);         
+            verifySheetForPlayer(gameSheet, gamePlayers[5], [], cardsInHand);        
+        });
+
+        it("it should mark a card as had by the shower and not had by everyone else when shown a card", () => {
+            gameSheet.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.LOUNGE);
+            gameSheet.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[3], suspectCard));
+
+            verifySheetForPlayer(gameSheet, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameSheet, gamePlayers[1], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameSheet, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard])); 
+            verifySheetForPlayer(gameSheet, gamePlayers[3], [suspectCard], cardsInHand);  
+            verifySheetForPlayer(gameSheet, gamePlayers[4], [], cardsInHand.concat(suspectCard));
+            verifySheetForPlayer(gameSheet, gamePlayers[5], [], cardsInHand.concat(suspectCard));
         });
 
         it("it should show the rope as had by no one when detective guesses it and no one shows it", () => {
