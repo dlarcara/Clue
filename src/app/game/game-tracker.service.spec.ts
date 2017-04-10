@@ -1,7 +1,7 @@
-import { Game, Player, Suspect, Card, CardCategory } from './index';
+import { GameTracker, Player, Suspect, Card, CardCategory } from './index';
 
-describe("Game Suite", () => {
-  describe("When starting a game", () => {
+describe("When working with the game tracker", () => {
+  describe("and starting a game", () => {
     let defaultDetective = new Player("Player 1", Suspect.GREEN);
 
     let defaultThreePlayers = [
@@ -14,30 +14,30 @@ describe("Game Suite", () => {
     ];
 
     it("it should make sure the detective is included in the list of players", () => {
-      expect(() => new Game(defaultDetective, defaultThreePlayers.slice(1,2), allSuspectCards)).toThrowError("Detective not included in list of players");
+      expect(() => new GameTracker(defaultDetective, defaultThreePlayers.slice(1,2), allSuspectCards)).toThrowError("Detective not included in list of players");
     });
 
     it("it should make sure a suspect isn't playing twice", () => {
       var players = defaultThreePlayers.concat(new Player("Player 1", Suspect.GREEN));
       
-      expect(() => new Game(defaultDetective, players, allSuspectCards)).toThrowError("Player suspect used more than once");
+      expect(() => new GameTracker(defaultDetective, players, allSuspectCards)).toThrowError("Player suspect used more than once");
     });
 
     it("it should make sure at least 3 players are playing", () => {
       var players = defaultThreePlayers.slice(0,2);
 
-      expect(() => new Game(defaultDetective, players, [])).toThrowError("At least 3 players are required to play a game");
+      expect(() => new GameTracker(defaultDetective, players, [])).toThrowError("At least 3 players are required to play a game");
     });
 
     describe("with 3 players", () => {
       it("it should throw an error when starting with 5 cards", () => {
         let cards = allSuspectCards.slice(0,5);
 
-        expect(() => new Game(defaultDetective, defaultThreePlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, defaultThreePlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
 
       it("it should successfully start game when 6 cards are passed in", () => {
-        let game = new Game(defaultDetective, defaultThreePlayers, allSuspectCards);
+        let game = new GameTracker(defaultDetective, defaultThreePlayers, allSuspectCards);
 
         expect(game.turns.length).toBe(1);
       });
@@ -45,7 +45,7 @@ describe("Game Suite", () => {
       it("it should throw an error when 7 cards are passed in", () => {
         let cards = allSuspectCards.concat(new Card(CardCategory.ROOM, 1));
 
-        expect(() => new Game(defaultDetective, defaultThreePlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, defaultThreePlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
     });
 
@@ -58,19 +58,19 @@ describe("Game Suite", () => {
       it("it should throw an error when starting with 3 cards", () => {
         let cards = allSuspectCards.slice(0,3);
 
-        expect(() => new Game(defaultDetective, fourPlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, fourPlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
 
       it("it should successfully start a game with 4 cards", () => {
         let cards = allSuspectCards.slice(0,4);
-        let game = new Game(defaultDetective, fourPlayers, cards)
+        let game = new GameTracker(defaultDetective, fourPlayers, cards)
 
         expect(game.turns.length).toBe(1);
       });
 
       it("it should successfully start a game with 5 cards", () => {
         let cards = allSuspectCards.slice(0,5);
-        let game = new Game(defaultDetective, fourPlayers, cards)
+        let game = new GameTracker(defaultDetective, fourPlayers, cards)
 
         expect(game.turns.length).toBe(1);
       });
@@ -78,7 +78,7 @@ describe("Game Suite", () => {
       it("it should throw an error when starting a game with 6 cards", () => {
         let cards = allSuspectCards;
 
-        expect(() => new Game(defaultDetective, fourPlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, fourPlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
     });
 
@@ -91,19 +91,19 @@ describe("Game Suite", () => {
       it("it should throw an error when starting game with 2 cards", () => {
         let cards = allSuspectCards.slice(0,2);
 
-        expect(() => new Game(defaultDetective, fivePlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, fivePlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
 
       it("it should successfully start a game with 3 cards", () => {
         let cards = allSuspectCards.slice(0,3);
-        let game = new Game(defaultDetective, fivePlayers, cards)
+        let game = new GameTracker(defaultDetective, fivePlayers, cards)
 
         expect(game.turns.length).toBe(1);
       });
 
       it("it should successfully start a game with 4 cards", () => {
         let cards = allSuspectCards.slice(0,4);
-        let game = new Game(defaultDetective, fivePlayers, cards)
+        let game = new GameTracker(defaultDetective, fivePlayers, cards)
 
         expect(game.turns.length).toBe(1);
       });
@@ -111,7 +111,7 @@ describe("Game Suite", () => {
       it("it should throw an error when starting a game with 5 cards", () => {
         let cards = allSuspectCards.slice(0,5);
 
-        expect(() => new Game(defaultDetective, fivePlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, fivePlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
     });  
 
@@ -124,12 +124,12 @@ describe("Game Suite", () => {
       it("it should throw an error when starting with 2 cards", () => {
         let cards = allSuspectCards.slice(0,2);
 
-        expect(() => new Game(defaultDetective, sixPlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, sixPlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
 
       it("it should successfully start a game with 3 cards", () => {
         let cards = allSuspectCards.slice(0,3);
-        let game = new Game(defaultDetective, sixPlayers, cards)
+        let game = new GameTracker(defaultDetective, sixPlayers, cards)
 
         expect(game.turns.length).toBe(1);
       });
@@ -137,18 +137,18 @@ describe("Game Suite", () => {
       it("it should throw an error when starting a game with 4 cards", () => {
         let cards = allSuspectCards.slice(0,4);
 
-        expect(() => new Game(defaultDetective, sixPlayers, cards)).toThrowError("The wrong number of cards was supplied");
+        expect(() => new GameTracker(defaultDetective, sixPlayers, cards)).toThrowError("The wrong number of cards was supplied");
       });
     });  
 
     it("it should throw an error if duplicate cards are passed in", () => {
       var duplicateCards = allSuspectCards.slice(0,5).concat(new Card(CardCategory.SUSPECT, 1));
  
-      expect(() => new Game(defaultDetective, defaultThreePlayers, duplicateCards)).toThrowError('Duplicate cards were supplied');
+      expect(() => new GameTracker(defaultDetective, defaultThreePlayers, duplicateCards)).toThrowError('Duplicate cards were supplied');
     });
 
     it("it should create an initial turn", () => {
-      var game = new Game(defaultDetective, defaultThreePlayers, allSuspectCards);
+      var game = new GameTracker(defaultDetective, defaultThreePlayers, allSuspectCards);
       
       expect(game.turns[0].number).toBe(1);
       expect(game.turns[0].player).toBe(defaultDetective);

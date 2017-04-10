@@ -1,8 +1,8 @@
+import { Player, Card, Turn, Guess } from './index';
+
 import * as _ from 'lodash';
 
-import { Player, Card, Turn, Guess, GameSheet } from './index';
-
-export class Game
+export class GameTracker
 {
     turns: Turn[] = [];
 
@@ -37,7 +37,6 @@ export class Game
         this.players = players;
         this.detectiveCards = detectiveCards;
 
-        //Create Sheet
         this.addTurn(detective, null, null);
     }
 

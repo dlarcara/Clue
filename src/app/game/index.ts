@@ -1,5 +1,5 @@
-export * from './game.service';
-export * from './game-sheet.service';
+export * from './game-tracker.service';
+export * from './game-algorithm.service';
 export * from './enum/card-category.enum';
 export * from './enum/room.enum';
 export * from './enum/suspect.enum';
@@ -10,3 +10,4 @@ export * from './model/player.model';
 export * from './model/game-sheet.model';
 export * from './model/turn.model';
 export * from './model/guess.model';
+export * from './game.constants';

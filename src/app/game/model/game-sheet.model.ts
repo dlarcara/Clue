@@ -6,39 +6,47 @@ import * as _ from 'lodash';
 
 export class GameSheet
 {
+    private players : Player[];
     private cells: any[] = [];
 
-    constructor(numberOfPlayers : Number)
+    constructor(players : Player[])
     {
-        //Create empty sheet with all card/player status as unknown
-        this.cells[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(+numberOfPlayers, _.constant(CellStatus.Unknown)); });
-        this.cells[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(+numberOfPlayers, _.constant(CellStatus.Unknown)); });
-        this.cells[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(+numberOfPlayers, _.constant(CellStatus.Unknown)); });
+        this.players = players;
+
+        this.cells[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
+        this.cells[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
+        this.cells[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
     }
 
-    getCells() : any[]
+    getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {
-        return this.cells;
+        //TODO: Throw Exception When checking on a player not playing
+
+        return this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)];
     }
 
-    getStatusForPlayerAndCard(playerIndex : Number, cardCategoryIndex : Number, cardIndex : Number) : CellStatus
+    markCardAsHadByPlayer(player : Player, card : Card) : void
     {
-        return this.cells[+cardCategoryIndex][+cardIndex][+playerIndex];
-    }
+        //TODO: Throw Exception When working on a player not playing
 
-    markCardAsHadByPlayer(playerIndex : Number, cardCategoryIndex : Number, cardIndex : Number) : void
-    {
-        if (this.getStatusForPlayerAndCard(playerIndex, cardCategoryIndex, cardIndex) == CellStatus.NotHad)
+        if (this.getStatusForPlayerAndCard(player, card) == CellStatus.NOTHAD)
             throw new Error("Cell status has already been set differently");
 
-        this.cells[+cardCategoryIndex][+cardIndex][+playerIndex] = CellStatus.Had;
+        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.HAD;
     }
 
-    markCardAsNotHadByPlayer(playerIndex : Number, cardCategoryIndex : Number, cardIndex : Number) : void
+    markCardAsNotHadByPlayer(player : Player, card : Card) : void
     {
-        if (this.getStatusForPlayerAndCard(playerIndex, cardCategoryIndex, cardIndex) == CellStatus.Had)
+        //TODO: Throw Exception When working on a player not playing
+
+        if (this.getStatusForPlayerAndCard(player, card) == CellStatus.HAD)
             throw new Error("Cell status has already been set differently");
 
-        this.cells[+cardCategoryIndex][+cardIndex][+playerIndex] = CellStatus.NotHad;
+        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
+    }
+
+    private getPlayerIndex(player : Player) : number
+    {
+        return _.findIndex(this.players, player);
     }
 }

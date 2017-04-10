@@ -1,6 +1,6 @@
 export enum CellStatus
 {
-    Unknown,
-    NotHad,
-    Had
+    UNKNOWN,
+    NOTHAD,
+    HAD
 }
