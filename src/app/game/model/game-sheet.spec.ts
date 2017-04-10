@@ -1,4 +1,4 @@
-import { Game, Player, Suspect, Card, CardCategory } from '../index';
+import { Player, Suspect, Card, CardCategory } from '../index';
 
 describe("When filling out a game sheet", () => {
     it("it should throw an error when checking the status for a card and player that's not playing", () => {

@@ -27,14 +27,16 @@ export class GameAlgorithm
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {     
-        //TODO: Verify that Player is valid
+        if (!this.playerIsPlaying(player))
+            throw new Error("Player not found");
 
         return this.sheet.getStatusForPlayerAndCard(player, card);
     }
 
     initializeCardsForDetective(player : Player, cardsInHand : Card[]) : void
     {
-        //TODO: Verify that Player is valid
+         if (!this.playerIsPlaying(player))
+            throw new Error("Player not found");
 
         _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
 
@@ -43,10 +45,15 @@ export class GameAlgorithm
 
     applyGuess(guess : Guess) : void
     {   
-        //TODO: Verify that Guessing Player & Showing Player is valid
+        if (!this.playerIsPlaying(guess.playerThatGuessed))
+            throw new Error("Guessing player not found");
         
+        if (!!guess.playerThatShowed && !this.playerIsPlaying(guess.playerThatShowed))
+            throw new Error("Showing player not found");
+
         let lastPlayerInTurn = (!guess.playerThatShowed) ? guess.playerThatGuessed : guess.playerThatShowed;
 
+        debugger;
         let currentPlayer = this.getNextPlayer(guess.playerThatGuessed);
         while(!_.isEqual(currentPlayer, lastPlayerInTurn))
         { 
@@ -56,6 +63,11 @@ export class GameAlgorithm
 
             currentPlayer = this.getNextPlayer(currentPlayer);
         }
+    }
+
+    private playerIsPlaying(player : Player) : Boolean
+    {
+        return !!_.find(this.players, player);
     }
 
     private getAllCardsExcept(cards : Card[]) : Card[]

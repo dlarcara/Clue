@@ -1,4 +1,4 @@
-import { Player, Card, Turn, Guess } from './index';
+import { Player, Card, Turn, Guess, GameSheet } from './index';
 
 import * as _ from 'lodash';
 

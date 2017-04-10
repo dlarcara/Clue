@@ -5,11 +5,12 @@ import { EnumValues } from 'enum-values';
 import * as _ from 'lodash';
 
 describe("When interacting with the game algorithm", () => {
-    describe("and starting a game", () => {
-        it("it should make sure a suspect isn't playing twice", () => {
-            var players = [ new Player("Player 1", Suspect.PEACOCK), new Player("Player 2", Suspect.PEACOCK), new Player("Player 3", Suspect.GREEN)];
+    describe("and exercising error condtions", () => {
+        let defaultPlayers = [ new Player("Player 1", Suspect.PEACOCK), new Player("Player 2", Suspect.PLUM), new Player("Player 3", Suspect.GREEN)];
         
-            expect(() => new GameAlgorithm(players)).toThrowError("Player suspect used more than once");
+        it("it should make sure a suspect isn't playing twice", () => {
+            let duplicatePlayers = [ new Player("Player 1", Suspect.PEACOCK), new Player("Player 2", Suspect.PEACOCK), new Player("Player 3", Suspect.GREEN)];
+            expect(() => new GameAlgorithm(duplicatePlayers)).toThrowError("Player suspect used more than once");
         });
         
         it("it should require at least 3 players", () => {
@@ -17,19 +18,42 @@ describe("When interacting with the game algorithm", () => {
         });
 
         it("it should throw an error when getting the status for a player and card for a player that isn't playing", () => {
-            expect(true).toBe(false);
+            var gameAlgroithm = new GameAlgorithm(defaultPlayers);
+            
+            let player = new Player("Player 4", Suspect.SCARLET);
+            let card = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            expect(() => gameAlgroithm.getStatusForPlayerAndCard(player, card))
+                                    .toThrowError("Player not found");
         });
 
         it("it should throw an error when initializing the game for a detective that isn't playing", () => {
-            expect(true).toBe(false);
+            var gameAlgroithm = new GameAlgorithm(defaultPlayers);
+            
+            let player = new Player("Player 4", Suspect.SCARLET);
+            expect(() => gameAlgroithm.initializeCardsForDetective(player, []))
+                                      .toThrowError("Player not found");
         });
 
         it("it should throw an error when the player who guessed isn't playing", () => {
-            expect(true).toBe(false);
+            let gameAlgroithm = new GameAlgorithm(defaultPlayers);
+
+            let guessingplayer = new Player("Player 4", Suspect.SCARLET);
+            let guess = new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.HALL, guessingplayer, null, null);
+            
+            expect(() => gameAlgroithm.applyGuess(guess))
+                                      .toThrowError("Guessing player not found");
         });
 
         it("it should throw an error when the player who showed isn't playing", () => {
-            expect(true).toBe(false);
+            let gameAlgroithm = new GameAlgorithm(defaultPlayers);
+
+            let guessingplayer = new Player("Player 4", Suspect.SCARLET);
+            let showingPlayer = new Player("Player 5", Suspect.WHITE);
+            let shownCard = new Card(CardCategory.ROOM, Room.HALL)
+            let guess = new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.HALL, guessingplayer, showingPlayer, shownCard);
+            
+            expect(() => gameAlgroithm.applyGuess(guess))
+                                      .toThrowError("Guessing player not found");
         });
     });
 
