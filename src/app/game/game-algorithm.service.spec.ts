@@ -151,8 +151,15 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([rope]));                
         });
 
-        //It should mark cards as not had by people who passed up until shower when card shown is not known
-        //Start writing tests where guesser wasn't you and therefore the card shown wasn't known
+        it("it should mark cards as not had by people who passed up until shower when card shown is not known", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[1], gamePlayers[2], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
+        });
+
         //Start writing tests around resolving guesses after the fact
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
@@ -229,6 +236,20 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([rope]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([rope]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([rope]));               
+        });
+
+        it("it should mark cards as not had by people who passed up until shower when card shown is not known", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.PEACOCK);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.KITCHEN);       
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[1], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
         });
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
@@ -310,6 +331,21 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([rope]));        
         });
 
+        it("it should mark cards as not had by people who passed up until shower when card shown is not known", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.PEACOCK);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.KITCHEN);       
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[1], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand);
+        });
+
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
 
@@ -389,6 +425,22 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([rope]));      
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([rope]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([rope]));       
+        });
+
+        it("it should mark cards as not had by people who passed up until shower when card shown is not known", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.PEACOCK);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomCard = new Card(CardCategory.ROOM, Room.KITCHEN);       
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[1], gamePlayers[5], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand);
         });
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
