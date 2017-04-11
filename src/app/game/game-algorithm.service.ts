@@ -13,11 +13,9 @@ export class GameAlgorithm
 
     constructor(players : Player[])
     {
-        //Ensure unique players 
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
            throw new Error("Player suspect used more than once");
 
-        //Ensure game involves at least 3 players
         if (players.length < 3)
             throw new Error("At least 3 players are required to play a game");
 
@@ -38,8 +36,10 @@ export class GameAlgorithm
          if (!this.playerIsPlaying(player))
             throw new Error("Player not found");
 
+        //Mark all cards passed in as had by this player
         _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
 
+        //Mark all other cards as not had for this player
         _.forEach(this.getAllCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
@@ -51,19 +51,26 @@ export class GameAlgorithm
         if (!!guess.playerThatShowed && !this.playerIsPlaying(guess.playerThatShowed))
             throw new Error("Showing player not found");
 
+        //Mark all people who didn't show as not having any of the cards
         this.markCardAsNotHadAllForPlayersWhoDidNotShowByGuess(guess);
 
+        //Mark the shower of the card as having that card
         if (guess.playerThatShowed && guess.cardShown)
             this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
     }
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void
     {
+        //Mark this card as had by this player
         this.sheet.markCardAsHadByPlayer(player, card);
 
+        //Mark all other players as not having this card
         _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
 
-        //TODO: Mark player as not having any other cards if all their cards are known
+        //Mark all other cards as not had by this player if all their cards as known
+        let knownHadCardsForPlayer = this.getAllKnownHadCardsForPlay(player);
+        if (player.numberOfCards == knownHadCardsForPlayer.length)
+            _.forEach(this.getAllCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
 
     private markCardAsNotHadByPlayer(player : Player, card : Card) : void
@@ -89,6 +96,13 @@ export class GameAlgorithm
     private playerIsPlaying(player : Player) : Boolean
     {
         return !!_.find(this.players, player);
+    }
+
+    private getAllKnownHadCardsForPlay(player : Player) : Card[]
+    {
+        return GameConstants.ALLCARDS.filter((card) => {
+            return this.sheet.getStatusForPlayerAndCard(player, card) == CellStatus.HAD;
+        });
     }
 
     private getAllCardsExcept(cards : Card[]) : Card[]
