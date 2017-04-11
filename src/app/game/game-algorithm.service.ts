@@ -52,7 +52,7 @@ export class GameAlgorithm
             throw new Error("Showing player not found");
 
         //Mark all people who didn't show as not having any of the cards
-        this.markCardsAsNotHadAllForPlayersWhoDidNotShowByGuess(guess);
+        this.markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess);
 
         //Mark the shower of the card as having that card
         if (guess.playerThatShowed && guess.cardShown)
@@ -90,7 +90,7 @@ export class GameAlgorithm
             _.forEach(this.getAllCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
 
-    private markCardsAsNotHadAllForPlayersWhoDidNotShowByGuess(guess : Guess)
+    private markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess : Guess)
     {
         let lastPlayerInTurn = (!guess.playerThatShowed) ? guess.playerThatGuessed : guess.playerThatShowed;
 
