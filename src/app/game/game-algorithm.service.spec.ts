@@ -160,7 +160,22 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
         });
 
-        //Start writing tests around resolving guesses after the fact
+        it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            var player2Cards = [
+                new Card(CardCategory.SUSPECT, Suspect.MUSTARD), new Card(CardCategory.SUSPECT, Suspect.WHITE),
+                new Card(CardCategory.WEAPON, Weapon.WRENCH), new Card(CardCategory.ROOM, Room.LIBRARY),
+                new Card(CardCategory.ROOM, Room.STUDY), new Card(CardCategory.ROOM, Room.LOUNGE)
+            ]
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.ROPE, Room.BILLIARD, gamePlayers[0], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.HALL, gamePlayers[0], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.LEADPIPE, Room.CONSERVATORY, gamePlayers[0], gamePlayers[2], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], player2Cards, allCardsExcept(player2Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat(player2Cards));
+        });
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
@@ -252,6 +267,25 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
         });
 
+        it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[1], cardsInHand);
+
+            var player3Cards = [
+                new Card(CardCategory.SUSPECT, Suspect.MUSTARD), new Card(CardCategory.ROOM, Room.DINING),
+                new Card(CardCategory.WEAPON, Weapon.WRENCH), new Card(CardCategory.ROOM, Room.LIBRARY),
+                new Card(CardCategory.ROOM, Room.STUDY)
+            ]
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.ROPE, Room.BILLIARD, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.LEADPIPE, Room.LOUNGE, gamePlayers[1], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], [], cardsInHand.concat(player3Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], player3Cards, allCardsExcept(player3Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat(player3Cards));
+        });        
+
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
 
@@ -280,8 +314,8 @@ describe("When interacting with the game algorithm", () => {
             new Player("Player 4", Suspect.PEACOCK, 3), new Player("Player 5", Suspect.SCARLET, 3) 
         ]; 
         let cardsInHand = [ 
-            new Card(CardCategory.ROOM, Room.KITCHEN), new Card(CardCategory.WEAPON, Weapon.KNIFE), 
-            new Card(CardCategory.SUSPECT, Suspect.PEACOCK)
+            new Card(CardCategory.ROOM, Room.BALLROOM), new Card(CardCategory.ROOM, Room.KITCHEN),
+            new Card(CardCategory.WEAPON, Weapon.KNIFE), new Card(CardCategory.SUSPECT, Suspect.PEACOCK)
         ];
 
         beforeEach(() => {
@@ -344,6 +378,34 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand);
+        });
+
+        it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[1], cardsInHand);
+
+            var player3Cards = [
+                new Card(CardCategory.SUSPECT, Suspect.MUSTARD), new Card(CardCategory.ROOM, Room.DINING),
+                new Card(CardCategory.WEAPON, Weapon.WRENCH), new Card(CardCategory.ROOM, Room.STUDY)
+            ];
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.KNIFE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.KNIFE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.KNIFE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.LEADPIPE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.REVOLVER, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.BALLROOM, gamePlayers[1], gamePlayers[3], null));;
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.BILLIARD, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.CONSERVATORY, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.HALL, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.LIBRARY, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.LOUNGE, gamePlayers[1], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], [], cardsInHand.concat(player3Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], player3Cards, allCardsExcept(player3Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat(player3Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat(player3Cards));
         });
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {
@@ -441,6 +503,37 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([suspectCard, weaponCard, roomCard]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand);
+        });
+
+        it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[5], cardsInHand);
+
+            var player1Cards = [
+                new Card(CardCategory.SUSPECT, Suspect.MUSTARD), new Card(CardCategory.ROOM, Room.DINING),
+                new Card(CardCategory.WEAPON, Weapon.WRENCH)
+            ];
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.KNIFE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.KNIFE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.KNIFE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.LEADPIPE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.REVOLVER, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.KITCHEN, gamePlayers[5], gamePlayers[1], null));;
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.BALLROOM, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.BILLIARD, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.CONSERVATORY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.HALL, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.LIBRARY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.LOUNGE, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.STUDY, gamePlayers[5], gamePlayers[1], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], player1Cards, allCardsExcept(player1Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat(player1Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat(player1Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat(player1Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat(player1Cards));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], cardsInHand, allCardsExcept(cardsInHand));
         });
 
         it("it should mark all other cards for a player as not had when their last card is deduced", () => {

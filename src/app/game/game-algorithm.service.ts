@@ -61,25 +61,33 @@ export class GameAlgorithm
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void
     {
+        if(this.getStatusForPlayerAndCard(player, card) == CellStatus.HAD)
+            return;
+
         //Mark this card as had by this player
-        this.sheet.markCardAsHadByPlayer(player, card);
+        this.sheet.setStatusForPlayerAndCard(player, card, CellStatus.HAD);
 
         //Mark all other players as not having this card
         _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
 
         //Mark all other cards as not had by this player if all their cards as known
-        let knownHadCardsForPlayer = this.getAllKnownHadCardsForPlay(player);
+        let knownHadCardsForPlayer = this.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (player.numberOfCards == knownHadCardsForPlayer.length)
             _.forEach(this.getAllCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
 
     private markCardAsNotHadByPlayer(player : Player, card : Card) : void
     {
-        //Mark this card as not had by a player
-        this.sheet.markCardAsNotHadByPlayer(player, card);
+        if(this.getStatusForPlayerAndCard(player, card) == CellStatus.NOTHAD)
+            return;
 
-        //TODO: Mark reamining unknown cards as had if all of the cards the player does not have are identified
-        //(TotalNumberOfCards - KnownNotHaveCardsForThisPlayer = NumberOfPlayersCards)
+        //Mark this card as not had by a player
+        this.sheet.setStatusForPlayerAndCard(player, card, CellStatus.NOTHAD);
+
+        //Mark all remaining cards as had by this player if all their not had cards have been identified
+        let knowNotHadCardsForPlayer = this.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
+        if ((GameConstants.ALLCARDS.length - knowNotHadCardsForPlayer.length) == player.numberOfCards)
+            _.forEach(this.getAllCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
 
     private markCardsAsNotHadAllForPlayersWhoDidNotShowByGuess(guess : Guess)
@@ -102,10 +110,10 @@ export class GameAlgorithm
         return !!_.find(this.players, player);
     }
 
-    private getAllKnownHadCardsForPlay(player : Player) : Card[]
+    private getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
     {
         return GameConstants.ALLCARDS.filter((card) => {
-            return this.sheet.getStatusForPlayerAndCard(player, card) == CellStatus.HAD;
+            return this.sheet.getStatusForPlayerAndCard(player, card) == cellStatus;
         });
     }
 

@@ -25,24 +25,15 @@ export class GameSheet
         return this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)];
     }
 
-    markCardAsHadByPlayer(player : Player, card : Card) : void
+    setStatusForPlayerAndCard(player: Player, card : Card, cellStatus : CellStatus) : void
     {
         //TODO: Throw Exception When working on a player not playing
-
-        if (this.getStatusForPlayerAndCard(player, card) == CellStatus.NOTHAD)
+        
+        let currentStatus = this.getStatusForPlayerAndCard(player, card);
+        if (currentStatus != CellStatus.UNKNOWN && currentStatus != cellStatus)
             throw new Error("Cell status has already been set differently");
 
-        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.HAD;
-    }
-
-    markCardAsNotHadByPlayer(player : Player, card : Card) : void
-    {
-        //TODO: Throw Exception When working on a player not playing
-
-        if (this.getStatusForPlayerAndCard(player, card) == CellStatus.HAD)
-            throw new Error("Cell status has already been set differently");
-
-        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
+        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = cellStatus;
     }
 
     private getPlayerIndex(player : Player) : number
