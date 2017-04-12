@@ -186,7 +186,33 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [rope, hall], cardsInHand.concat([white]));
         });
 
-        //Test cascading guesses
+        it("it should resolve a guess if any of the guessed cards are later identified", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+            
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.WHITE)));
+
+            expect(gameAlgorithm.getUnresolvedGuesses().length).toBe(0);
+        });
+
+        it("it should resolve guess based on another resolved guess", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[1], cardsInHand);
+            
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let candleStick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+     
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.ROPE, Room.HALL, gamePlayers[2], gamePlayers[0], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.CANDLESTICK, Room.HALL, gamePlayers[0], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.CANDLESTICK, Room.BALLROOM, gamePlayers[1], gamePlayers[0], white));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.CANDLESTICK, Room.BALLROOM, gamePlayers[1], gamePlayers[0], candleStick));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], [candleStick, white, rope], cardsInHand.concat([hall]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [hall], cardsInHand.concat([candleStick, white, rope]));
+        });
 
         //Test if only one card left in category left unknown it must be the verdict
 
