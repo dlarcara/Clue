@@ -76,13 +76,13 @@ export class GameAlgorithm
             return;
 
         //Mark this card as had by this player
-        this.sheet.setStatusForPlayerAndCard(player, card, CellStatus.HAD);
+        this.sheet.markCardAsHadByPlayer(player, card);
 
         //Mark all other players as not having this card
         _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
 
         //Mark all other cards as not had by this player if all their cards are known
-        let knownHadCardsForPlayer = this.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
+        let knownHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (player.numberOfCards == knownHadCardsForPlayer.length)
             _.forEach(this.getAllCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
@@ -94,10 +94,10 @@ export class GameAlgorithm
             return;
 
         //Mark this card as not had by a player
-        this.sheet.setStatusForPlayerAndCard(player, card, CellStatus.NOTHAD);
+        this.sheet.markCardAsNotHadByPlayer(player, card);
 
         //Mark all remaining cards as had by this player if all their not had cards have been identified
-        let knowNotHadCardsForPlayer = this.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
+        let knowNotHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
         if ((GameConstants.ALLCARDS.length - knowNotHadCardsForPlayer.length) == player.numberOfCards)
             _.forEach(this.getAllCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
@@ -136,9 +136,9 @@ export class GameAlgorithm
     private attemptToResolveGuess(guess : Guess) : void
     {
         //Figure out owner of each guessed card
-        let suspectCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.SUSPECT, guess.suspect));
-        let weaponCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.WEAPON, guess.weapon));
-        let roomCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.ROOM, guess.room));
+        let suspectCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.SUSPECT, guess.suspect));
+        let weaponCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.WEAPON, guess.weapon));
+        let roomCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.ROOM, guess.room));
         
         var cardOwners = [suspectCardOwner, weaponCardOwner, roomCardOwner];
         let numberOfKnownCardsInGuess = cardOwners.filter(Boolean).length; //How many of these cards have known owners
@@ -168,21 +168,9 @@ export class GameAlgorithm
         //Otherwise we don't have enough information to resolve the guess and it remains unresolved
     }
 
-    private getPlayerWhoHasCard(card : Card) : Player
-    {
-        return _.find(this.players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
-    }
-
     private playerIsPlaying(player : Player) : Boolean
     {
         return !!_.find(this.players, player);
-    }
-
-    private getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
-    {
-        return GameConstants.ALLCARDS.filter((card) => {
-            return this.sheet.getStatusForPlayerAndCard(player, card) == cellStatus;
-        });
     }
 
     private getAllCardsExcept(cards : Card[]) : Card[]

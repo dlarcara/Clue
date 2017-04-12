@@ -10,4 +10,6 @@ describe("When constructing a card:", () => {
     it("it should throw an error when the card is supplied doesn't exist", () => {
         expect(true).toBe(false);
     });
+
+    //Calling getFriendlyName should do so
 });
