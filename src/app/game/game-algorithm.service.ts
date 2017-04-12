@@ -8,8 +8,7 @@ export class GameAlgorithm
 {
     private sheet: GameSheet;
     private players: Player[];
-
-    private readonly 
+    private unresolvedGuesses : Guess[]
 
     constructor(players : Player[])
     {
@@ -21,6 +20,7 @@ export class GameAlgorithm
 
         this.players = players;
         this.sheet = new GameSheet(players);
+        this.unresolvedGuesses = [];
     }
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
@@ -54,9 +54,11 @@ export class GameAlgorithm
         //Mark all people who didn't show as not having any of the cards
         this.markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess);
 
-        //Mark the shower of the card as having that card
-        if (guess.playerThatShowed && guess.cardShown)
-            this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
+        //Evaulte guess for what may be known
+        this.evaluateGuess(guess);
+
+        //Recusively attempt to resolve guesses until
+        this.replayAllGuessesUntilNothingNewIsFoundOut();
     }
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void
@@ -103,6 +105,52 @@ export class GameAlgorithm
 
             currentPlayer = this.getNextPlayer(currentPlayer);
         }
+    }
+
+    private evaluateGuess(guess : Guess) : void
+    {
+        if (guess.playerThatShowed && guess.cardShown)
+            this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
+        else if (guess.playerThatShowed)
+            this.unresolvedGuesses.push(guess);
+    }
+
+    private replayAllGuessesUntilNothingNewIsFoundOut() : void
+    {
+        _.forEach(this.unresolvedGuesses, (guess) => {
+            this.attemptToResolveGuess(guess);
+        });
+    }
+
+    private attemptToResolveGuess(guess : Guess) : void
+    {
+        let suspectCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.SUSPECT, guess.suspect));
+        let weaponCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.WEAPON, guess.weapon));
+        let roomCardOwner = this.getPlayerWhoHasCard(new Card(CardCategory.ROOM, guess.room));
+
+        //Get number of known cards in this guess
+        let numberOfKnownCardsInGuess = [suspectCardOwner, weaponCardOwner, roomCardOwner].filter(Boolean).length;
+
+        if (numberOfKnownCardsInGuess == 3) //All cards are known, mark this guess as resolved
+        {
+            _.remove(this.unresolvedGuesses, guess);
+        }
+        else if (numberOfKnownCardsInGuess == 2) //The card that was shown is known, mark it has had by the shower and mark guess as resolved
+        {
+            let knownCard;
+            if (!suspectCardOwner) knownCard = new Card(CardCategory.SUSPECT, guess.suspect);
+            if (!weaponCardOwner) knownCard = new Card(CardCategory.WEAPON, guess.weapon);
+            if (!roomCardOwner) knownCard = new Card(CardCategory.ROOM, guess.room);
+
+            this.markCardAsHadByPlayer(guess.playerThatShowed, knownCard);
+
+            _.remove(this.unresolvedGuesses, guess);
+        }
+    }
+
+    private getPlayerWhoHasCard(card : Card) : Player
+    {
+        return _.find(this.players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
     }
 
     private playerIsPlaying(player : Player) : Boolean
