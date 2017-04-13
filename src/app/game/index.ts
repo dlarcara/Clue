@@ -10,4 +10,5 @@ export * from './model/player.model';
 export * from './model/game-sheet.model';
 export * from './model/turn.model';
 export * from './model/guess.model';
+export * from './model/verdict.model';
 export * from './game.constants';

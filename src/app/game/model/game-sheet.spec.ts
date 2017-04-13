@@ -1,4 +1,4 @@
-import { Player, Suspect, Weapon, Room, Card, CardCategory, GameSheet, GameConstants, CellStatus } from '../index';
+import { Player, Suspect, Weapon, Room, Card, CardCategory, GameSheet, GameConstants, CellStatus, Verdict } from '../index';
 
 import * as _ from 'lodash';
 
@@ -81,6 +81,17 @@ describe("When filling out a game sheet", () => {
             .toThrowError("All 6 cards for Player 1 are already identified, can't mark ROPE as HAD");
     });
 
+    it("it should throw an error when marking a card as not known for all players and a verdict in that category has already been reached", () => {
+        let players = [new Player("Player 1", Suspect.WHITE, 6), new Player("Player 2", Suspect.GREEN, 6), new Player("Player 3", Suspect.PLUM, 6)];
+        let gameSheet = new GameSheet(players);
+
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD)));
+        _.forEach(players.slice(0,2), (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.GREEN)));
+        
+        expect(() => gameSheet.markCardAsNotHadByPlayer(players[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)))
+            .toThrowError("Can't mark GREEN as not had for Player 3, no one else has GREEN and a verdict has already been reached in this category");        
+    });
+
     it("it should show card as UNKNOWN if it's not known if the card is had or not", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6), new Player("Player 2", Suspect.GREEN, 6), new Player("Player 3", Suspect.PLUM, 6)];
         let gameSheet = new GameSheet(players);
@@ -113,5 +124,15 @@ describe("When filling out a game sheet", () => {
 
         expect(() => gameSheet.getStatusForPlayerAndCard(new Player("Player 2", Suspect.WHITE, 6), new Card(CardCategory.SUSPECT, Suspect.WHITE)))
             .toThrowError("Player not found");
+    });
+    
+    it("it should return the current known verdict when requested", () => {
+        let players = [new Player("Player 1", Suspect.WHITE, 6), new Player("Player 2", Suspect.GREEN, 6), new Player("Player 3", Suspect.PLUM, 6)];
+        let gameSheet = new GameSheet(players);
+
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD)));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.ROOM, Room.HALL)));
+
+        expect(gameSheet.getVerdict()).toEqual(new Verdict(Suspect.MUSTARD, null, Room.HALL));
     });
 });

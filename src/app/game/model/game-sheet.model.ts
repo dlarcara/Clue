@@ -1,4 +1,4 @@
-import { CardCategory, Suspect, Weapon, Room, CellStatus, Player, Card, GameConstants } from '../index';
+import { CardCategory, Suspect, Weapon, Room, CellStatus, Player, Card, GameConstants, Verdict } from '../index';
 
 import { EnumValues } from 'enum-values';
 
@@ -72,6 +72,11 @@ export class GameSheet
         if (currentStatus != CellStatus.UNKNOWN && currentStatus == CellStatus.HAD)
             throw new Error(`${card.getFriendlyDisplay()} is already marked as HAD for ${player.name}, can't mark it as NOTHAD`);
 
+        //Ensure a verdict for this category has not yet been identified
+        let verdictInCategory = this.getVerdictForCategory(card.category);
+        if (verdictInCategory && verdictInCategory != card.cardIndex && _.countBy(this.cells[card.category][+card.cardIndex])[1] == (this.players.length - 1))
+            throw new Error(`Can't mark ${card.getFriendlyDisplay()} as not had for ${player.name}, no one else has ${card.getFriendlyDisplay()} and a verdict has already been reached in this category`)
+
         this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
     }
 
@@ -86,9 +91,32 @@ export class GameSheet
         if (!_.find(this.players, player))
             throw new Error("Player not found");
 
+        //Get all cards that are in a particular status
         return GameConstants.ALLCARDS.filter((card) => {
             return this.getStatusForPlayerAndCard(player, card) == cellStatus;
         });
+    }
+
+    getVerdict() : Verdict
+    {
+        let verdict = new Verdict();
+        verdict.suspect = this.getVerdictForCategory(CardCategory.SUSPECT);
+        verdict.weapon = this.getVerdictForCategory(CardCategory.WEAPON);
+        verdict.room = this.getVerdictForCategory(CardCategory.ROOM);
+        return verdict;
+    }
+
+    private getVerdictForCategory(cardCategory : CardCategory) : number
+    {
+        let verdict = null;
+
+        //Find any card in the given category that is marked as not had by every player
+        _.forEach(this.cells[cardCategory], (cardValues, cardIndex) => {
+            if (_.countBy(cardValues)[CellStatus.NOTHAD] == this.players.length)
+                verdict = cardIndex;
+        });
+
+        return verdict;
     }
 
     private getPlayerIndex(player : Player) : number
