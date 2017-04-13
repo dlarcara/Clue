@@ -96,7 +96,7 @@ describe("When interacting with the game algorithm", () => {
 
     let allCardsExcept = (cards : Card[]) : Card[] =>
     {
-        return GameConstants.ALLCARDS.filter((card) => { return !_.find(cards, card); });
+        return GameConstants.allCardsExcept(cards);
     }
 
     describe("for a 3 player game", () => {

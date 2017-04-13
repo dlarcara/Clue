@@ -1,5 +1,7 @@
 import { CardCategory, Card, Suspect, Weapon, Room } from "./index";
 
+import * as _ from 'lodash';
+
 export class GameConstants
 {
     static ALLCARDS : Card[] = [
@@ -11,4 +13,14 @@ export class GameConstants
         new Card(CardCategory.ROOM, Room.DINING), new Card(CardCategory.ROOM, Room.HALL), new Card(CardCategory.ROOM, Room.KITCHEN),
         new Card(CardCategory.ROOM, Room.LIBRARY), new Card(CardCategory.ROOM, Room.LOUNGE), new Card(CardCategory.ROOM, Room.STUDY)
     ];
+
+    static allCardsExcept(cards : Card[]) : Card[]
+    {
+        return this.ALLCARDS.filter((card) => { return !_.find(cards, card); });
+    }
+
+    static allCardsInCategory(cardCategory : CardCategory) : Card[]
+    {
+        return _.filter(GameConstants.ALLCARDS, (card) => { return card.category == cardCategory; });
+    }
 }

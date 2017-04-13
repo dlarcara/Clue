@@ -40,7 +40,7 @@ export class GameAlgorithm
         _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
 
         //Mark all other cards as not had for this player
-        _.forEach(this.getAllCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
+        _.forEach(GameConstants.allCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
     applyGuess(guess : Guess) : void
@@ -60,7 +60,7 @@ export class GameAlgorithm
         else if (guess.playerThatShowed)
             this.unresolvedGuesses.push(guess);
 
-        //Recsurively attempt to resovle all unresolved guesses and deduce verdicts for each category until nothing new is found out
+        //Recursively attempt to resovle all unresolved guesses and deduce verdicts for each category until nothing new is found out
         this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
     }
 
@@ -84,7 +84,7 @@ export class GameAlgorithm
         //Mark all other cards as not had by this player if all their cards are known
         let knownHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (player.numberOfCards == knownHadCardsForPlayer.length)
-            _.forEach(this.getAllCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
+            _.forEach(GameConstants.allCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
 
     private markCardAsNotHadByPlayer(player : Player, card : Card) : void
@@ -99,7 +99,7 @@ export class GameAlgorithm
         //Mark all remaining cards as had by this player if all their not had cards have been identified
         let knowNotHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
         if ((GameConstants.ALLCARDS.length - knowNotHadCardsForPlayer.length) == player.numberOfCards)
-            _.forEach(this.getAllCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
+            _.forEach(GameConstants.allCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
 
     private markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess : Guess)
@@ -124,9 +124,7 @@ export class GameAlgorithm
         let previousNumberOfUnresolvedGuesses = this.unresolvedGuesses.length;
 
         //Itereate through all unresolved guesses and attempt to resolve them
-        _.forEach(this.unresolvedGuesses, (guess) => {
-            this.attemptToResolveGuess(guess);
-        });
+        _.forEach(this.unresolvedGuesses, (guess) => {this.attemptToResolveGuess(guess); });
 
         //If any guess was resolved try replaying guesses again in case the new information resolves another guess
         if (previousNumberOfUnresolvedGuesses != this.unresolvedGuesses.length)
@@ -187,7 +185,7 @@ export class GameAlgorithm
     private attemptToDeduceVerdictInCategory(cardCategory : CardCategory) : void
     {
         //Get all cards in the given category
-        let allCardsInCategory = _.filter(GameConstants.ALLCARDS, (card) => { return card.category == cardCategory; });
+        let allCardsInCategory = GameConstants.allCardsInCategory(cardCategory);
         
         //Check if all but one card in this category has an identified owner, if so no one has the last card
         let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this.sheet.getPlayerWhoHasCard(card); });
@@ -201,11 +199,6 @@ export class GameAlgorithm
     private playerIsPlaying(player : Player) : Boolean
     {
         return !!_.find(this.players, player);
-    }
-
-    private getAllCardsExcept(cards : Card[]) : Card[]
-    {
-        return GameConstants.ALLCARDS.filter((card) => { return !_.find(cards, card); });
     }
 
     private getAllOtherPlayers(playerToExclude : Player) : Player[] 
