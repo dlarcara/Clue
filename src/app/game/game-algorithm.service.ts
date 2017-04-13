@@ -142,34 +142,24 @@ export class GameAlgorithm
 
     private attemptToResolveGuess(guess : Guess) : void
     {
-        //Figure out owner of each guessed card
-        let suspectCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.SUSPECT, guess.suspect));
-        let weaponCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.WEAPON, guess.weapon));
-        let roomCardOwner = this.sheet.getPlayerWhoHasCard(new Card(CardCategory.ROOM, guess.room));
-        
-        var cardOwners = [suspectCardOwner, weaponCardOwner, roomCardOwner];
-        let numberOfKnownCardsInGuess = cardOwners.filter(Boolean).length; //How many of these cards have known owners
+        let shower = guess.playerThatShowed;
+        let guessedCards = [new Card(CardCategory.SUSPECT, guess.suspect), new Card(CardCategory.WEAPON, guess.weapon), new Card(CardCategory.ROOM, guess.room)];
 
-        //If we've identified that any of these cards is owned by shower we can resolve this guess
-        //If all the cards are known we can also resolve this guess
-        if (_.find(cardOwners, guess.playerThatShowed) || numberOfKnownCardsInGuess == 3)
+        //If any of the cards is known to be had by the shower we can stop trying to resolve this guess
+        //They may have more than one of these cards, but there is no way of knowing which one it is they showed for sure
+        let cardsPlayerDefinitelyHas = _.filter(guessedCards, (card) => { return this.getStatusForPlayerAndCard(shower, card) == CellStatus.HAD});
+        if (cardsPlayerDefinitelyHas.length)
         {
             _.remove(this.unresolvedGuesses, guess);
-            return;
+            return; 
         }
 
-        ///If 2 of the cards are known, and not by the shower, the reamining card is what card was shown
-        if (numberOfKnownCardsInGuess == 2) 
+        //If there is only 1 card left that this player might have than we can resolve this guess
+        let cardsPlayerMightHave = _.filter(guessedCards, (card) => { return this.getStatusForPlayerAndCard(shower, card) == CellStatus.UNKNOWN});
+        if (cardsPlayerMightHave.length == 1)
         {
-            let knownCard;
-            if (!suspectCardOwner) knownCard = new Card(CardCategory.SUSPECT, guess.suspect);
-            if (!weaponCardOwner) knownCard = new Card(CardCategory.WEAPON, guess.weapon);
-            if (!roomCardOwner) knownCard = new Card(CardCategory.ROOM, guess.room);
-
-            this.markCardAsHadByPlayer(guess.playerThatShowed, knownCard);
-
-            _.remove(this.unresolvedGuesses, guess);
-            return;
+            this.markCardAsHadByPlayer(shower, cardsPlayerMightHave[0]);
+            _.remove(this.unresolvedGuesses, guess); 
         }
 
         //Otherwise we don't have enough information to resolve the guess and it remains unresolved

@@ -171,6 +171,23 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [hall], cardsInHand);
         });
 
+        it("it should resolve guess if later one of the guessed cards is known to not be had by the shower, and another is later known to be had by someone else ", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+            
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let peacock = new Card(CardCategory.SUSPECT, Suspect.PEACOCK);
+            let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+            
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[1], white));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.HALL, gamePlayers[1], gamePlayers[0], peacock));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [white], cardsInHand.concat([rope]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [rope], cardsInHand.concat([white, hall]));
+        });
+
         it("it should resolve guess a couple guesses later when enough information is known", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
@@ -232,7 +249,11 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([green, mustard, plum, scarlet, white]));
         });
 
-        //Test if only one card left in category left unknown it must be the verdict
+        //Test if only one card left in category left unknown it must be the verdict, no one has that card
+
+        //Test resolving verdict cascades to resolve guess
+
+        //Test resolving guess cascades to resolving verdict
 
         it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
