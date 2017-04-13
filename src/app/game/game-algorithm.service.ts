@@ -60,8 +60,8 @@ export class GameAlgorithm
         else if (guess.playerThatShowed)
             this.unresolvedGuesses.push(guess);
 
-        //Recusively attempt to resolve all unresolved guesses until nothing new is found out
-        this.replayAllGuessesUntilNothingNewIsFoundOut();
+        //Recsurively attempt to resovle all unresolved guesses and deduce verdicts for each category until nothing new is found out
+        this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
     }
 
     getUnresolvedGuesses() : Guess[]
@@ -119,7 +119,7 @@ export class GameAlgorithm
         }
     }
 
-    private replayAllGuessesUntilNothingNewIsFoundOut() : void
+    private replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut() : void
     {
         let previousNumberOfUnresolvedGuesses = this.unresolvedGuesses.length;
 
@@ -130,7 +130,16 @@ export class GameAlgorithm
 
         //If any guess was resolved try replaying guesses again in case the new information resolves another guess
         if (previousNumberOfUnresolvedGuesses != this.unresolvedGuesses.length)
-            this.replayAllGuessesUntilNothingNewIsFoundOut();
+            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+
+        //Check all categories to see if the verdict can be deduced for that category
+        //Can be done if the owner for all other cards in that category have been identified
+        let previousVerdict = this.sheet.getVerdict();
+        this.attemptToDeduceVerdictInEachCategory();
+        
+        //If verdict has changed attempt replaying all guesses again, the board now has new informtion on it
+        if (!_.isEqual(previousVerdict, this.sheet.getVerdict()))
+            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
     }
 
     private attemptToResolveGuess(guess : Guess) : void
@@ -166,6 +175,27 @@ export class GameAlgorithm
         }
 
         //Otherwise we don't have enough information to resolve the guess and it remains unresolved
+    }
+
+    private attemptToDeduceVerdictInEachCategory() : void
+    {
+        this.attemptToDeduceVerdictInCategory(CardCategory.SUSPECT);
+        this.attemptToDeduceVerdictInCategory(CardCategory.WEAPON);
+        this.attemptToDeduceVerdictInCategory(CardCategory.ROOM);
+    }
+
+    private attemptToDeduceVerdictInCategory(cardCategory : CardCategory) : void
+    {
+        //Get all cards in the given category
+        let allCardsInCategory = _.filter(GameConstants.ALLCARDS, (card) => { return card.category == cardCategory; });
+        
+        //Check if all but one card in this category has an identified owner, if so no one has the last card
+        let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this.sheet.getPlayerWhoHasCard(card); });
+        if (knownCardsInCategory.length == allCardsInCategory.length - 1)
+        {
+            let verdictInCategory = _.difference(allCardsInCategory, knownCardsInCategory)[0];
+            _.forEach(this.players, (player) => { this.markCardAsNotHadByPlayer(player, verdictInCategory)});
+        }
     }
 
     private playerIsPlaying(player : Player) : Boolean

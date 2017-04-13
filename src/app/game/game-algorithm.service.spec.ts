@@ -214,6 +214,24 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [hall], cardsInHand.concat([candleStick, white, rope]));
         });
 
+        it("it should mark all players as not having a card if every other card in that category is marked as had", () => {
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+            
+            let green = new Card(CardCategory.SUSPECT, Suspect.GREEN);
+            let mustard = new Card(CardCategory.SUSPECT, Suspect.MUSTARD);
+            let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+            let scarlet = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[1], green));
+            gameAlgorithm.applyGuess(new Guess(Suspect.MUSTARD, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[1], mustard));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[1], plum));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[1], scarlet));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [green, mustard, plum, scarlet], cardsInHand.concat([white]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([green, mustard, plum, scarlet, white]));
+        });
+
         //Test if only one card left in category left unknown it must be the verdict
 
         it("it should mark remaining cards as known for a player if all their other cards are marked as not had", () => {
