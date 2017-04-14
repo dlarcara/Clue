@@ -639,4 +639,43 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat(player4Cards));        
         });
     });
+
+    describe("When making a guess that proves to be invalid", () => {
+        let gamePlayers = [
+            new Player("Player 1", Suspect.GREEN, 6), new Player("Player 2", Suspect.MUSTARD, 6), new Player("Player 3", Suspect.PLUM, 6),
+        ];
+        let cardsInHand = [ 
+            new Card(CardCategory.ROOM, Room.BALLROOM), new Card(CardCategory.ROOM, Room.DINING),
+            new Card(CardCategory.ROOM, Room.KITCHEN), new Card(CardCategory.WEAPON, Weapon.REVOLVER),
+            new Card(CardCategory.WEAPON, Weapon.KNIFE), new Card(CardCategory.SUSPECT, Suspect.PEACOCK)
+        ];
+
+        it("it should throw an error when an impproper guess is entered", () => {
+            let gameAlgorithm = new GameAlgorithm(gamePlayers);
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+
+            expect(() => {
+                gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.KITCHEN, gamePlayers[1], gamePlayers[2], null));
+            }).toThrowError("Invalid guess, all cards are already marked as owned by someone else");
+        });
+
+        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess", () => {
+            let gameAlgorithm = new GameAlgorithm(gamePlayers);
+            gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
+            
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)));
+            
+            let previousSheet = _.cloneDeep(gameAlgorithm.gameSheet.data);
+            let previousUnresolvedGuesses = _.cloneDeep(gameAlgorithm.unresolvedGuesses);   
+            expect(() => {
+                gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.DINING, gamePlayers[0], null, null));
+            }).toThrowError("GREEN is already marked as HAD for Player 3, can't mark it as NOTHAD");
+
+            let leadPipe = new Card(CardCategory.WEAPON, Weapon.LEADPIPE);
+            expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
+            expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);
+        });
+    });
 });

@@ -8,6 +8,7 @@ export class GameSheet
 {
     private _players : Player[];
     private _data: any[] = [];
+    get data() : any[] { return this._data; }
 
     constructor(players : Player[])
     {
@@ -35,6 +36,11 @@ export class GameSheet
             throw new Error("Player not found");
 
         return this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)];
+    }
+
+    resetData(dataToResetTo : any[]) : void
+    {
+        this._data = dataToResetTo;
     }
 
     markCardAsHadByPlayer(player : Player, card : Card) : void

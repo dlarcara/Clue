@@ -53,10 +53,31 @@ export class GameAlgorithm
     {   
         if (!this.playerIsPlaying(guess.playerThatGuessed))
             throw new Error("Guessing player not found");
-        
+            
         if (!!guess.playerThatShowed && !this.playerIsPlaying(guess.playerThatShowed))
             throw new Error("Showing player not found");
 
+        //Create copy of game sheet data and unresolved guesses
+        //If something goes wrong during applying this guess we'll need to reset this
+        let priorGameSheetData = _.cloneDeep(this._gameSheet.data);
+        let priorUnresolvedGuesses = _.cloneDeep(this._unresolvedGuesses);
+
+        try
+        {
+            this.evaluateGuess(guess);
+        }
+        catch(error)
+        {
+            //Reset game sheet data and unresolved guesses
+            this._gameSheet.resetData(priorGameSheetData);
+            this._unresolvedGuesses = priorUnresolvedGuesses;
+            
+            throw error; //Rethrow error
+        }
+    }
+
+    private evaluateGuess(guess : Guess) : void 
+    {
         //Mark all people who passed as not having any of the cards
         this.markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess);
 
@@ -145,6 +166,11 @@ export class GameAlgorithm
     {
         let shower = guess.playerThatShowed;
         let guessedCards = [new Card(CardCategory.SUSPECT, guess.suspect), new Card(CardCategory.WEAPON, guess.weapon), new Card(CardCategory.ROOM, guess.room)];
+
+        //Check to see if all cards are already owned by someone else, if they are throw an error
+        let cardOwners = _.map(guessedCards, (card) => { return this._gameSheet.getPlayerWhoHasCard(card); }).filter(Boolean);
+        if (cardOwners.length == 3 && !_.find(cardOwners, shower))
+            throw new Error("Invalid guess, all cards are already marked as owned by someone else")
 
         //If any of the cards is known to be had by the shower we can stop trying to resolve this guess
         //They may have more than one of these cards, but there is no way of knowing which one it is they showed for sure
