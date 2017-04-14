@@ -6,9 +6,13 @@ import * as _ from 'lodash';
 
 export class GameAlgorithm
 {
-    private sheet: GameSheet;
-    private players: Player[];
-    private unresolvedGuesses : Guess[]
+    private _players: Player[];
+
+    private _gameSheet: GameSheet;
+    get gameSheet() : GameSheet { return this._gameSheet; }
+    
+    private _unresolvedGuesses : Guess[]
+    get unresolvedGuesses() : Guess[] { return this._unresolvedGuesses; }
 
     constructor(players : Player[])
     {
@@ -18,9 +22,9 @@ export class GameAlgorithm
         if (players.length < 3)
             throw new Error("At least 3 players are required to play a game");
 
-        this.players = players;
-        this.sheet = new GameSheet(players);
-        this.unresolvedGuesses = [];
+        this._players = players;
+        this._gameSheet = new GameSheet(players);
+        this._unresolvedGuesses = [];
     }
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
@@ -28,7 +32,7 @@ export class GameAlgorithm
         if (!this.playerIsPlaying(player))
             throw new Error("Player not found");
 
-        return this.sheet.getStatusForPlayerAndCard(player, card);
+        return this._gameSheet.getStatusForPlayerAndCard(player, card);
     }
 
     fillOutKnownCards(player : Player, cardsInHand : Card[]) : void
@@ -58,15 +62,10 @@ export class GameAlgorithm
         if (guess.playerThatShowed && guess.cardShown)
             this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
         else if (guess.playerThatShowed)
-            this.unresolvedGuesses.push(guess);
+            this._unresolvedGuesses.push(guess);
 
         //Recursively attempt to resovle all unresolved guesses and deduce verdicts for each category until nothing new is found out
         this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
-    }
-
-    getUnresolvedGuesses() : Guess[]
-    {
-        return this.unresolvedGuesses;
     }
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void
@@ -76,13 +75,13 @@ export class GameAlgorithm
             return;
 
         //Mark this card as had by this player
-        this.sheet.markCardAsHadByPlayer(player, card);
+        this._gameSheet.markCardAsHadByPlayer(player, card);
 
         //Mark all other players as not having this card
         _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
 
         //Mark all other cards as not had by this player if all their cards are known
-        let knownHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
+        let knownHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (player.numberOfCards == knownHadCardsForPlayer.length)
             _.forEach(GameConstants.allCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
@@ -94,10 +93,10 @@ export class GameAlgorithm
             return;
 
         //Mark this card as not had by a player
-        this.sheet.markCardAsNotHadByPlayer(player, card);
+        this._gameSheet.markCardAsNotHadByPlayer(player, card);
 
         //Mark all remaining cards as had by this player if all their not had cards have been identified
-        let knowNotHadCardsForPlayer = this.sheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
+        let knowNotHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
         if ((GameConstants.ALLCARDS.length - knowNotHadCardsForPlayer.length) == player.numberOfCards)
             _.forEach(GameConstants.allCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
@@ -121,22 +120,22 @@ export class GameAlgorithm
 
     private replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut() : void
     {
-        let previousNumberOfUnresolvedGuesses = this.unresolvedGuesses.length;
+        let previousNumberOfUnresolvedGuesses = this._unresolvedGuesses.length;
 
         //Itereate through all unresolved guesses and attempt to resolve them
-        _.forEach(this.unresolvedGuesses, (guess) => {this.attemptToResolveGuess(guess); });
+        _.forEach(this._unresolvedGuesses, (guess) => {this.attemptToResolveGuess(guess); });
 
         //If any guess was resolved try replaying guesses again in case the new information resolves another guess
-        if (previousNumberOfUnresolvedGuesses != this.unresolvedGuesses.length)
+        if (previousNumberOfUnresolvedGuesses != this._unresolvedGuesses.length)
             this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
 
         //Check all categories to see if the verdict can be deduced for that category
         //Can be done if the owner for all other cards in that category have been identified
-        let previousVerdict = this.sheet.getVerdict();
+        let previousVerdict = this._gameSheet.getVerdict();
         this.attemptToDeduceVerdictInEachCategory();
         
         //If verdict has changed attempt replaying all guesses again, the board now has new informtion on it
-        if (!_.isEqual(previousVerdict, this.sheet.getVerdict()))
+        if (!_.isEqual(previousVerdict, this._gameSheet.getVerdict()))
             this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
     }
 
@@ -150,7 +149,7 @@ export class GameAlgorithm
         let cardsPlayerDefinitelyHas = _.filter(guessedCards, (card) => { return this.getStatusForPlayerAndCard(shower, card) == CellStatus.HAD});
         if (cardsPlayerDefinitelyHas.length)
         {
-            _.remove(this.unresolvedGuesses, guess);
+            _.remove(this._unresolvedGuesses, guess);
             return; 
         }
 
@@ -159,7 +158,7 @@ export class GameAlgorithm
         if (cardsPlayerMightHave.length == 1)
         {
             this.markCardAsHadByPlayer(shower, cardsPlayerMightHave[0]);
-            _.remove(this.unresolvedGuesses, guess); 
+            _.remove(this._unresolvedGuesses, guess); 
         }
 
         //Otherwise we don't have enough information to resolve the guess and it remains unresolved
@@ -178,28 +177,28 @@ export class GameAlgorithm
         let allCardsInCategory = GameConstants.allCardsInCategory(cardCategory);
         
         //Check if all but one card in this category has an identified owner, if so no one has the last card
-        let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this.sheet.getPlayerWhoHasCard(card); });
+        let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this._gameSheet.getPlayerWhoHasCard(card); });
         if (knownCardsInCategory.length == allCardsInCategory.length - 1)
         {
             let verdictInCategory = _.difference(allCardsInCategory, knownCardsInCategory)[0];
-            _.forEach(this.players, (player) => { this.markCardAsNotHadByPlayer(player, verdictInCategory)});
+            _.forEach(this._players, (player) => { this.markCardAsNotHadByPlayer(player, verdictInCategory)});
         }
     }
 
     private playerIsPlaying(player : Player) : Boolean
     {
-        return !!_.find(this.players, player);
+        return !!_.find(this._players, player);
     }
 
     private getAllOtherPlayers(playerToExclude : Player) : Player[] 
     {
-        return _.differenceWith(this.players, [playerToExclude], _.isEqual);
+        return _.differenceWith(this._players, [playerToExclude], _.isEqual);
     }
 
     private getNextPlayer(player: Player) : Player
     {
-        let playerIndex = _.findIndex(this.players, player);
-        let nextPlayerIndex = (playerIndex == (this.players.length - 1)) ? 0 : +playerIndex + 1;
-        return this.players[nextPlayerIndex];
+        let playerIndex = _.findIndex(this._players, player);
+        let nextPlayerIndex = (playerIndex == (this._players.length - 1)) ? 0 : +playerIndex + 1;
+        return this._players[nextPlayerIndex];
     }
 }

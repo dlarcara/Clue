@@ -210,7 +210,7 @@ describe("When interacting with the game algorithm", () => {
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[1], gamePlayers[2], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.WHITE)));
 
-            expect(gameAlgorithm.getUnresolvedGuesses().length).toBe(0);
+            expect(gameAlgorithm.unresolvedGuesses.length).toBe(0);
         });
 
         it("it should resolve guess based on another resolved guess", () => {

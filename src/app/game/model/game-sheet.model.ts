@@ -6,8 +6,8 @@ import * as _ from 'lodash';
 
 export class GameSheet
 {
-    private players : Player[];
-    private cells: any[] = [];
+    private _players : Player[];
+    private _data: any[] = [];
 
     constructor(players : Player[])
     {
@@ -20,27 +20,27 @@ export class GameSheet
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
             throw new Error("Player suspect used more than once");
 
-        this.players = players;
+        this._players = players;
 
         //Fill out game sheet with all UNKNOWN's
-        this.cells[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
-        this.cells[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
-        this.cells[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
+        this._data[CardCategory.SUSPECT] = _.map(EnumValues.getValues(Suspect), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
+        this._data[CardCategory.WEAPON] = _.map(EnumValues.getValues(Weapon), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
+        this._data[CardCategory.ROOM] = _.map(EnumValues.getValues(Room), () => { return _.times(players.length, _.constant(CellStatus.UNKNOWN)); });
     }
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {
         //Ensure player is playing
-        if (!_.find(this.players, player))
+        if (!_.find(this._players, player))
             throw new Error("Player not found");
 
-        return this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)];
+        return this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)];
     }
 
     markCardAsHadByPlayer(player : Player, card : Card) : void
     {
         //Ensure player is playing
-        if (!_.find(this.players, player))
+        if (!_.find(this._players, player))
             throw new Error("Player not found");
         
         //Ensure card is not already marked as NOTHAD
@@ -58,13 +58,13 @@ export class GameSheet
         if (allPlayersCards.length == player.numberOfCards && !_.find(allPlayersCards, card))
             throw new Error(`All ${player.numberOfCards} cards for ${player.name} are already identified, can't mark ${card.getFriendlyDisplay()} as HAD`)
 
-        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.HAD;
+        this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.HAD;
     }
  
     markCardAsNotHadByPlayer(player : Player, card : Card) : void
     {
         //Ensure player is playing
-        if (!_.find(this.players, player))
+        if (!_.find(this._players, player))
             throw new Error("Player not found");
 
         //Ensure card is not already marked as NOTHAD
@@ -72,23 +72,23 @@ export class GameSheet
         if (currentStatus != CellStatus.UNKNOWN && currentStatus == CellStatus.HAD)
             throw new Error(`${card.getFriendlyDisplay()} is already marked as HAD for ${player.name}, can't mark it as NOTHAD`);
 
-        //Ensure a verdict for this category has not yet been identified
+        //Ensure you're not marking the last card in the category as fully own, avoid duplicate verdicts in category
         let verdictInCategory = this.getVerdictForCategory(card.category);
-        if (verdictInCategory && verdictInCategory != card.cardIndex && _.countBy(this.cells[card.category][+card.cardIndex])[1] == (this.players.length - 1))
+        if (verdictInCategory && verdictInCategory != card.cardIndex && _.countBy(this._data[card.category][+card.cardIndex])[1] == (this._players.length - 1))
             throw new Error(`Can't mark ${card.getFriendlyDisplay()} as not had for ${player.name}, no one else has ${card.getFriendlyDisplay()} and a verdict has already been reached in this category`)
 
-        this.cells[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
+        this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
     }
 
     getPlayerWhoHasCard(card : Card) : Player
     {
-        return _.find(this.players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
+        return _.find(this._players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
     }
 
     getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
     {
         //Ensure player is playing
-        if (!_.find(this.players, player))
+        if (!_.find(this._players, player))
             throw new Error("Player not found");
 
         //Get all cards that are in a particular status
@@ -111,8 +111,8 @@ export class GameSheet
         let verdict = null;
 
         //Find any card in the given category that is marked as not had by every player
-        _.forEach(this.cells[cardCategory], (cardValues, cardIndex) => {
-            if (_.countBy(cardValues)[CellStatus.NOTHAD] == this.players.length)
+        _.forEach(this._data[cardCategory], (cardValues, cardIndex) => {
+            if (_.countBy(cardValues)[CellStatus.NOTHAD] == this._players.length)
                 verdict = cardIndex;
         });
 
@@ -121,6 +121,6 @@ export class GameSheet
 
     private getPlayerIndex(player : Player) : number
     {
-        return _.findIndex(this.players, player);
+        return _.findIndex(this._players, player);
     }
 }
