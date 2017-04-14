@@ -2,10 +2,14 @@ import * as _ from 'lodash';
 
 export class CircularArray<T>
 {
-    constructor(private values : T[]) 
+    values: T[];
+
+    constructor(values : T[]) 
     {
         if (_.uniqWith(values, _.isEqual).length != values.length)
             throw new Error("Duplicate values provided");
+
+        this.values = values;
     }
 
     getIndexOf(value : T) : number

@@ -1,4 +1,5 @@
 import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus, Guess, GameConstants } from "./index";
+import { CircularArray } from "../shared/index";
 
 import { EnumValues } from 'enum-values';
 
@@ -6,7 +7,8 @@ import * as _ from 'lodash';
 
 export class GameAlgorithm
 {
-    private _players: Player[];
+    private _playersArray: CircularArray<Player>;
+    get _players(): Player[] { return this._playersArray.values; }
 
     private _gameSheet: GameSheet;
     get gameSheet() : GameSheet { return this._gameSheet; }
@@ -22,7 +24,7 @@ export class GameAlgorithm
         if (players.length < 3)
             throw new Error("At least 3 players are required to play a game");
 
-        this._players = players;
+        this._playersArray = new CircularArray(players);
         this._gameSheet = new GameSheet(players);
         this._unresolvedGuesses = [];
     }
@@ -197,8 +199,6 @@ export class GameAlgorithm
 
     private getNextPlayer(player: Player) : Player
     {
-        let playerIndex = _.findIndex(this._players, player);
-        let nextPlayerIndex = (playerIndex == (this._players.length - 1)) ? 0 : +playerIndex + 1;
-        return this._players[nextPlayerIndex];
+        return this._playersArray.getNext(player);
     }
 }
