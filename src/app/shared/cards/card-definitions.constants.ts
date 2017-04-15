@@ -1,4 +1,4 @@
-import { CardDefinition } from './card-definition';
+import { CardDefinition } from './card-definition.model';
 import { CardCategory } from '../../game/index';
 
 let baseIconLocation = 'assets/img/cards';
@@ -18,12 +18,12 @@ export class CardDefinitions
     ];
 
     static WEAPONS = [
-        new CardDefinition(CardCategory.WEAPON, 0, 'Candlestick', `${roomIconLocation}/candlestick.png`),
-        new CardDefinition(CardCategory.WEAPON, 1, 'Knife', `${roomIconLocation}/knife.png`),
-        new CardDefinition(CardCategory.WEAPON, 2, 'Lead Pipe', `${roomIconLocation}/leadpipe.png`),
-        new CardDefinition(CardCategory.WEAPON, 3, 'Revolver', `${roomIconLocation}/revolver.png`),
-        new CardDefinition(CardCategory.WEAPON, 4, 'Rope', `${roomIconLocation}/rope.png`),
-        new CardDefinition(CardCategory.WEAPON, 5, 'Wrench', `${roomIconLocation}/wrench.png`)
+        new CardDefinition(CardCategory.WEAPON, 0, 'Candlestick', `${weaponIconLocation}/candlestick.png`),
+        new CardDefinition(CardCategory.WEAPON, 1, 'Knife', `${weaponIconLocation}/knife.png`),
+        new CardDefinition(CardCategory.WEAPON, 2, 'Lead Pipe', `${weaponIconLocation}/leadpipe.png`),
+        new CardDefinition(CardCategory.WEAPON, 3, 'Revolver', `${weaponIconLocation}/revolver.png`),
+        new CardDefinition(CardCategory.WEAPON, 4, 'Rope', `${weaponIconLocation}/rope.png`),
+        new CardDefinition(CardCategory.WEAPON, 5, 'Wrench', `${weaponIconLocation}/wrench.png`)
     ];
 
     static ROOMS = [
