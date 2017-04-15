@@ -1,3 +1,3 @@
 export * from './circular-array.component';
-export * from './cards/card-definition.model';
-export * from './cards/card-definitions.constants';
+export * from './game-cards/game-card.model';
+export * from './game-cards/game-card.service';
