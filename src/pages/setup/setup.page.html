@@ -1,0 +1,37 @@
+<ion-content>
+    <ion-segment [(ngModel)]="setupStep" color="primary">
+        <ion-segment-button value="1" sele>Players</ion-segment-button>
+        <ion-segment-button value="2">Names</ion-segment-button>    
+        <ion-segment-button value="3">Cards</ion-segment-button>
+    </ion-segment>
+
+    <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
+    <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
+        <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)">
+           <ion-avatar item-left><img src="{{player.suspect.icon}}"></ion-avatar>
+
+           <!-- Step 1: Players -->
+           <ion-label *ngIf="setupStep == 1">{{player.suspect.friendlyName}}</ion-label>
+           <ion-radio item-right [value]="player" [checked]="player.isDetective" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-radio>
+           <ion-toggle item-right [(ngModel)]="player.isPlaying" *ngIf="setupStep == 1"></ion-toggle>
+
+           <!-- Step 2: Names, Extra Cards, Order -->
+           <ion-input type="text" [(ngModel)]="player.name" name="playerName" placeholder="Player Name" [disabled]="!player.isPlaying" *ngIf="setupStep == 2"></ion-input>
+           <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="setupStep == 2"></ion-toggle>
+        </ion-item>
+    </ion-list>
+
+    <!-- Step 3: Detective Cards -->
+    <ion-list *ngIf="setupStep == 3">
+        <ion-item-group *ngFor="let cardsForCategory of allCardsByCategory">
+            <ion-item-divider color="light">{{cardsForCategory.category}}</ion-item-divider>
+            
+            <ion-item *ngFor="let card of cardsForCategory.cards">
+                <ion-avatar item-left><img src="{{card.icon}}"></ion-avatar>
+                
+                <ion-label>{{card.friendlyName}}</ion-label>
+                <ion-checkbox item-right></ion-checkbox>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+</ion-content>

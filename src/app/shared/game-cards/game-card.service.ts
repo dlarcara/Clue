@@ -14,7 +14,7 @@ export class GameCardService
     private readonly weaponIconLocation = `${this.baseIconLocation}/weapons`;
     private readonly roomIconLocation = `${this.baseIconLocation}/rooms`;
 
-    private readonly ALLCARDS = [
+    readonly ALLCARDS = [
         new GameCard(CardCategory.SUSPECT, 0, 'Mr. Green', `${this.suspectIconLocation}/green.png`),
         new GameCard(CardCategory.SUSPECT, 1, 'Colonel Mustard', `${this.suspectIconLocation}/mustard.png`),
         new GameCard(CardCategory.SUSPECT, 2, 'Mrs. Peacock', `${this.suspectIconLocation}/peacock.png`),
@@ -41,5 +41,15 @@ export class GameCardService
     getCardsByCategory(cardCategory : CardCategory) : GameCard[]
     {
         return _.filter(this.ALLCARDS, (c) => { return c.cardCategory == cardCategory; });
+    }
+
+    groupAllCardsByCategory() : any[]
+    {
+        return _.chain(this.ALLCARDS)
+                .groupBy('cardCategory')
+                .toPairs()
+                .map(item => _.zipObject(['category', 'cards'], item))
+                .map((item : {category, cards}) =>  { return {category: "Suspect", cards: item.cards }; })
+                .value();
     }
 }
