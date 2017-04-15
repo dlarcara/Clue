@@ -206,7 +206,6 @@ describe("When interacting with the game algorithm", () => {
         it("it should resolve a guess if any of the guessed cards are later identified", () => {
             gameAlgorithm.fillOutKnownCards(gamePlayers[0], cardsInHand);
             
-            let hall = new Card(CardCategory.ROOM, Room.HALL);
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[1], gamePlayers[2], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.WHITE)));
 
@@ -673,7 +672,6 @@ describe("When interacting with the game algorithm", () => {
                 gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.DINING, gamePlayers[0], null, null));
             }).toThrowError("GREEN is already marked as HAD for Player 3, can't mark it as NOTHAD");
 
-            let leadPipe = new Card(CardCategory.WEAPON, Weapon.LEADPIPE);
             expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
             expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);
         });
