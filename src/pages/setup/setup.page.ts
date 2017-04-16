@@ -13,31 +13,31 @@ import * as _ from 'lodash';
 })
 
 export class SetupPage {
+    setupStep: string;
     detective: any;
     players: any[];
-    setupStep: number;
+    allCardsByCategory: any[] //Game Cards grouped by category
+    selectedCards: any[]
 
     CardCategory = CardCategory;
-
-    private allCardsByCategory: any[] //Game Cards grouped by category
 
     constructor(private gameCardService : GameCardService) {}
 
     ionViewDidLoad()
     {
-        this.setupStep = 1;        
+        this.setupStep = "1";  
         this.allCardsByCategory = this.gameCardService.groupAllCardsByCategory();
 
         //Default template for players
         this.players = _.map(this.allCardsByCategory[CardCategory.SUSPECT].cards, (suspect, index) => {
-            return { name: '', suspect: suspect, isPlaying: index < 3, extraCard: false }
+            return { name: '', suspect: suspect, isPlaying: index < 3, extraCard: false, cards: [] }
         });
         this.detective = this.players[0]; //Default the detective to first player
     }
 
     getPlayersToDisplayBasedOnSetupStep(setupStep) : any[]
     {
-        return _.filter(this.players, (player) => setupStep == 1 ? true : player.isPlaying);
+        return setupStep == 1 ? this.players : this.getPlayingPlayers();
     }
 
     getPlayingPlayers() : any[]
@@ -54,13 +54,36 @@ export class SetupPage {
         return _.isEqual(player, this.detective);
     }
 
-    isPlayerCountValid() : Boolean
+    getNumberOfCardsForPlayer(player : any)
     {
-        return this.getPlayingPlayers().length >= 3;
+        let numberOfCards = Math.floor(18 / this.getPlayingPlayers().length);
+        if (player.extraCard) numberOfCards++;
+        return numberOfCards;
     }
 
-    arePlayerNamesValid() : Boolean
+    //Step 1 Validation
+    isStep1Valid = () : Boolean => this.isPlayerCountValid() && this.arePlayerNamesValid();
+
+    isPlayerCountValid = () : Boolean => (this.getPlayingPlayers().length >= 3);
+    arePlayerNamesValid = () : Boolean => (_.every(this.getPlayingPlayers(), 'name'));
+
+    //Step 2 Validation
+    isStep2Valid = () : Boolean => this.isStep1Valid() && this.areExtraCardsIdentified();
+    getNumberOfExtraCards = () : number => 18 % this.getPlayingPlayers().length;
+    getPlayersWithExtraCard = () : number => _.filter(this.players, 'extraCard').length;
+    areExtraCardsIdentified = () : Boolean => this.getPlayersWithExtraCard() == this.getNumberOfExtraCards();
+    shouldShowExtraCardValidation = () : Boolean => (this.setupStep == "2" || this.setupStep == "4") && this.getNumberOfExtraCards() !=0;
+    getPlayerOrderDisplay = () : string => this.getPlayingPlayers().map((item) => item.name).join(", ");
+
+    //Step 3 Validation
+    isStep3Valid = () : Boolean => this.isStep2Valid() && this.allDetectivesCardsSelected();
+    allDetectivesCardsSelected = () : Boolean => this.getSelectedCards().length == this.getNumberOfCardsForPlayer(this.detective);
+    getSelectedCards() : any[]
     {
-        return _.every(this.getPlayingPlayers(), 'name');
+        if (!this.allCardsByCategory) return [];
+
+        return _.filter(this.allCardsByCategory[0].cards, 'selected')
+                        .concat(_.filter(this.allCardsByCategory[1].cards, 'selected'))
+                        .concat(_.filter(this.allCardsByCategory[2].cards, 'selected'));
     }
 }

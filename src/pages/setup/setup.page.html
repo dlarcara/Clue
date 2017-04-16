@@ -1,40 +1,50 @@
 <ion-content>
     <ion-segment [(ngModel)]="setupStep" color="primary">
-        <ion-segment-button value="1" sele>Players</ion-segment-button>
-        <ion-segment-button value="2">Details</ion-segment-button>    
-        <ion-segment-button value="3">Cards</ion-segment-button>
-        <ion-segment-button value="4">Review</ion-segment-button>
+        <ion-segment-button value="1">Players</ion-segment-button>
+        <ion-segment-button value="2" [disabled]="!isStep1Valid()">Details</ion-segment-button>    
+        <ion-segment-button value="3" [disabled]="!isStep2Valid()">Cards</ion-segment-button>
+        <ion-segment-button value="4" [disabled]="!isStep3Valid()">Review</ion-segment-button>
     </ion-segment>
 
     <!-- List of validations -->
     <ion-card>
         <ion-list>
-            <ion-item *ngIf="setupStep == 1 || setupStep == 4">
+            <!-- Step 1 Validations -->
+            <ion-item *ngIf="setupStep == 1 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="{{isPlayerCountValid() ? 'valid' : 'invalid'}}" item-left></ion-icon>
                 3+ players selected
             </ion-item>
-            <ion-item *ngIf="setupStep == 1 || setupStep == 4">
+            <!-- All players have name -->
+            <ion-item *ngIf="setupStep == 1 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="{{arePlayerNamesValid() ? 'valid' : 'invalid'}}" item-left></ion-icon>
                 All players given a name
-            </ion-item>     
-            <ion-item *ngIf="setupStep == 2 || setupStep == 4">
+            </ion-item>    
+
+            <!-- Step 2 Validation -->
+            <ion-item *ngIf="setupStep == 2 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="valid" item-left></ion-icon>
                 You're playing as {{detective.suspect.friendlyName}}
             </ion-item>
-            <ion-item *ngIf="setupStep == 2 || setupStep == 4">
+            <ion-item *ngIf="setupStep == 2 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="valid" item-left></ion-icon>
-                2 players with extra cards identified
+                Order: {{getPlayerOrderDisplay()}}
+            </ion-item>  
+            <ion-item *ngIf="shouldShowExtraCardValidation()" class="validation">
+                <ion-icon name="checkmark-circle" color="{{areExtraCardsIdentified() ? 'valid' : 'invalid'}}" item-left></ion-icon>
+                Players holding extra cards ({{getPlayersWithExtraCard()}}/{{getNumberOfExtraCards()}})
             </ion-item>   
-            <ion-item *ngIf="setupStep == 3 || setupStep == 4">
-                <ion-icon name="checkmark-circle" color="valid" item-left></ion-icon>
-                Mark your 7 cards
+            
+            <!-- Step 3 Validations -->
+            <ion-item *ngIf="setupStep == 3 || setupStep == 4" class="validation">
+                <ion-icon name="checkmark-circle" color="{{allDetectivesCardsSelected() ? 'valid' : 'invalid'}}" item-left></ion-icon>
+                Your cards selected ({{getSelectedCards().length}}/{{getNumberOfCardsForPlayer(detective)}})
             </ion-item> 
         </ion-list>
 
-        <button ion-button *ngIf="setupStep == 4" full>Start Game</button>
+        <button ion-button *ngIf="setupStep == 4 && isStep1Valid() && isStep2Valid() && isStep3Valid()" full>Start Game</button>
     </ion-card>
 
-    <ion-card  *ngIf="setupStep != 4">
+    <ion-card *ngIf="setupStep != 4">
         <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
         <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
             <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)">
@@ -47,7 +57,7 @@
                 <!-- Step 2: Detective, Extra Cards, Order -->
                 <ion-label *ngIf="setupStep == 2">{{player.name}}</ion-label>
                 <ion-radio item-right [value]="player" [checked]="playerIsDetective(player)" [disabled]="!player.isPlaying" *ngIf="setupStep == 2"></ion-radio>
-                <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="setupStep == 2"></ion-toggle>
+                <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="setupStep == 2 && getNumberOfExtraCards() !=0"></ion-toggle>
             </ion-item>
         </ion-list>
 
@@ -60,7 +70,7 @@
                     <img item-left src="{{card.icon}}" class="game-card-icon" />
 
                     <ion-label>{{card.friendlyName}}</ion-label>
-                    <ion-checkbox item-right></ion-checkbox>
+                    <ion-checkbox [(ngModel)]="card.selected" item-right></ion-checkbox>
                 </ion-item>
             </ion-item-group>
         </ion-list>
