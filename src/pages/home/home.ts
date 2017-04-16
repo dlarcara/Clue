@@ -5,6 +5,7 @@ import { NavController } from 'ionic-angular';
 import { SetupPage } from '../index';
 
 @Component({
+  selector: 'home-page',
   templateUrl: 'home.html'
 })
 
