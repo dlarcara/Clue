@@ -29,9 +29,21 @@ export class GuessEntryComponent {
 
     guessIsValid() : Boolean
     {
-        let baseValidation = this.accusedSuspect && this.accusedWeapon && this.accusedRoom && this.playerThatShowed;
+        let baseValidation = !!this.accusedSuspect && !!this.accusedWeapon && !!this.accusedRoom;
+        
+        if (!this.enterShownCard && baseValidation) 
+            return true;
+        
+        if (this.enterShownCard && baseValidation)
+        {
+            if (!this.playerThatShowed && !this.shownCategory)
+                return true;
 
-        return baseValidation && (this.enterShownCard ? !!this.getShownCard() : true);
+             if (this.playerThatShowed && this.shownCategory)
+                return true;
+        }
+
+        return false;
     }
 
     enterGuess() : void
