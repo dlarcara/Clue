@@ -4,4 +4,11 @@
     
     <ion-icon *ngIf="selectedCard" item-left><img src="{{selectedCard.icon}}" class="game-card-icon" /></ion-icon> 
     <ion-label *ngIf="selectedCard">{{selectedCard.friendlyName}}</ion-label>
+    
+    <ion-toggle *ngIf="selectedCard && enableActivateEntry" 
+                [(ngModel)]="isActive"
+                (ionChange)="onActiveStatusChanged()" 
+                [disabled]="!selectedCard" 
+                item-right>
+    </ion-toggle>
 </button>

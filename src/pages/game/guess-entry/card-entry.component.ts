@@ -14,10 +14,15 @@ import { CardListComponent } from '../../index';
 export class CardEntryComponent {
     @Input() cardCategory : CardCategory
     @Input() selectedCard: GameCard
+    
     @Input() icon : string
     @Input() entryText : string
+    
+    @Input() enableActivateEntry : Boolean
+    @Input() isActive : Boolean
 
     @Output() cardSelected = new EventEmitter()
+    @Output() activeStatusChanged = new EventEmitter()
 
     constructor(private navController : NavController, private gameCardService : GameCardService) {}
 
@@ -44,5 +49,10 @@ export class CardEntryComponent {
             selectedCard: this.selectedCard,
             callback: callback 
         });
+    }
+
+    onActiveStatusChanged() : void
+    {
+        this.activeStatusChanged.emit(this.isActive);
     }
 }

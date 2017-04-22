@@ -1,9 +1,13 @@
+import { Injectable } from "@angular/core";
+
 import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus, Guess, GameConstants } from "./index";
 import { CircularArray } from "../shared/index";
 
 import { EnumValues } from 'enum-values';
 
 import * as _ from 'lodash';
+
+@Injectable()
 
 export class GameAlgorithm
 {

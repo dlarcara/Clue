@@ -3,36 +3,42 @@
                 [entryText]="'Select Suspect'"
                 [icon]="'contact'"
                 [selectedCard]="accusedSuspect" 
-                (cardSelected)="suspectSelected($event)">
+                (cardSelected)="suspectSelected($event)"
+                [enableActivateEntry]="enterShownCard"
+                [isActive]="shownCategory == CardCategory.SUSPECT"
+                (activeStatusChanged)="cardActiveChange(CardCategory.SUSPECT, $event)">
     </card-entry>
 
     <card-entry [cardCategory]="CardCategory.WEAPON" 
                 [entryText]="'Select Weapon'"
                 [icon]="'hammer'"
                 [selectedCard]="accusedWeapon" 
-                (cardSelected)="weaponSelected($event)">
+                (cardSelected)="weaponSelected($event)"
+                [enableActivateEntry]="enterShownCard"
+                [isActive]="shownCategory == CardCategory.WEAPON"
+                (activeStatusChanged)="cardActiveChange(CardCategory.WEAPON, $event)">
     </card-entry>
 
     <card-entry [cardCategory]="CardCategory.ROOM" 
                 [entryText]="'Select Room'"
                 [icon]="'home'"
                 [selectedCard]="accusedRoom" 
-                (cardSelected)="roomSelected($event)">
+                (cardSelected)="roomSelected($event)"
+                [enableActivateEntry]="enterShownCard"
+                [isActive]="shownCategory == CardCategory.ROOM"
+                (activeStatusChanged)="cardActiveChange(CardCategory.ROOM, $event)">
     </card-entry>
 
-    <player-entry [players]="players" [selectedPlayer]="playerThatShowed" (playerSelected)="playerThatShowedSelected($event)">
+    <player-entry [players]="getPlayersToShow()" [selectedPlayer]="playerThatShowed" (playerSelected)="playerThatShowedSelected($event)">
     </player-entry>
-
-    <card-entry *ngIf="enterShownCard" 
-                [selectedCard]="cardShown" 
-                [entryText]="'What card was shown?'"
-                [icon]="'card'"
-                (cardSelected)="cardShownSelected($event)">
-    </card-entry>
 
     <button ion-button block 
             [disabled]="!guessIsValid()"
             (click)="enterGuess()">
         Make Guess
+    </button>
+
+    <button ion-button block (click)="enterPass()" color="secondary">
+        Pass
     </button>
 </ion-card>
