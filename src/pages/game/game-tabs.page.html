@@ -1,10 +1,21 @@
-<ion-card>
-    <ion-label>Turn: # {{gameTracker.turns.length + 1}}</ion-label>
-    <ion-label>Player: {{activePlayer.name}}</ion-label>
-</ion-card>
+<ion-header>
+    <ion-toolbar>
+        <ion-grid>
+            <ion-row>
+                <ion-col *ngFor="let player of gameTracker.players" 
+                         class="player-space" 
+                         [ngClass]="{'active': player == activePlayer}">
+                    <player-icon [player]="player"></player-icon>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-toolbar>
+</ion-header>
 
-<guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
-                       [activePlayer]="activePlayer" 
-                       [players]="gameTracker.players"
-                       (guessEntered)="guessEntered($event)">
-</guess-entry-component>
+<ion-content>
+    <guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
+                        [activePlayer]="activePlayer" 
+                        [players]="gameTracker.players"
+                        (guessEntered)="guessEntered($event)">
+    </guess-entry-component>
+</ion-content>

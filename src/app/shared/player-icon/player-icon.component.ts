@@ -4,7 +4,7 @@ import { Player } from '../../game/index';
 
 @Component({
     selector: 'player-icon',
-    template: 'D'
+    template: '{{player.name.substring(0,1)}}'
     // template: `<ng2-letter-avatar avatar-data='{{player.name}}' 
     //                               avatar-height='25px' 
     //                               avatar-width='25px' 
