@@ -40,7 +40,14 @@ export class GuessEntryComponent {
         let guess = new Guess(+this.accusedSuspect.cardCategory, +this.accusedWeapon.cardIndex, +this.accusedRoom.cardIndex, 
                               this.activePlayer, this.playerThatShowed, shownCard);
         
-        this.guessEntered.emit(guess);
+        try
+        {
+            this.guessEntered.emit(guess);
+        }
+        catch(Error)
+        {
+            alert("Conflicting change, TODO: Handle this gracefully");
+        }
 
         this.resetEntry();
     }
