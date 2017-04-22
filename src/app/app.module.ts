@@ -1,9 +1,13 @@
 import { NgModule, ErrorHandler } from '@angular/core';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
-import { HomePage, SetupPage } from '../pages/index';
+import { Ng2LetterAvatar } from "ng2letteravatar/ng2letteravatar";
 
-import { GameCardService } from './shared/index';
+import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+
+import { MyApp } from './app.component';
+import { HomePage, SetupPage, GameTabsPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/index';
+
+import { GameCardService, PlayerIconComponent } from './shared/index';
+import { GameAlgorithm } from './game/index';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -12,7 +16,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     HomePage,
-    SetupPage
+    SetupPage,
+    
+    GameTabsPage,
+    GuessEntryComponent,
+    CardEntryComponent,
+    CardListComponent,
+    PlayerEntryComponent,
+    PlayerListComponent,
+
+    PlayerIconComponent,
+    //Ng2LetterAvatar
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -21,13 +35,19 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     HomePage,
-    SetupPage
+    SetupPage,
+    GameTabsPage,
+    GuessEntryComponent,
+    CardListComponent,
+    PlayerListComponent
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GameCardService
+    GameCardService,
+    GameAlgorithm
   ]
 })
+
 export class AppModule {}

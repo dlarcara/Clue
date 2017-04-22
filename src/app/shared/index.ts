@@ -1,3 +1,4 @@
 export * from './circular-array.component';
 export * from './game-cards/game-card.model';
 export * from './game-cards/game-card.service';
+export * from './player-icon/player-icon.component';

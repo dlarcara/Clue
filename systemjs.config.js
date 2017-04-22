@@ -24,11 +24,13 @@
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
             // other libraries
             'rxjs': 'npm:rxjs',
+            'ng2letteravatar': 'npm:ng2letteravatar'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
             app: { main: './boot.js', defaultExtension: 'js' },
-            rxjs: { defaultExtension: 'js' }
+            rxjs: { defaultExtension: 'js' },
+            ng2LAjs: { main: 'ng2letteravatar/ng2letteravatar.js' }
         }
     });
 })(this);

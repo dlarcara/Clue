@@ -1,0 +1,9 @@
+<ion-content>
+    <ion-list>
+        <button ion-item *ngFor="let player of players" (click)="selectPlayer(player)">
+            <ion-icon item-left><player-icon [player]="player"></player-icon></ion-icon>
+            <ion-label>{{player.name}}</ion-label>
+            <ion-icon name="checkmark-circle" item-right *ngIf="player == selectedPlayer" color="primary"></ion-icon>
+        </button>
+    </ion-list>
+</ion-content>

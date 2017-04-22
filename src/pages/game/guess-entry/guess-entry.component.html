@@ -1,0 +1,38 @@
+<ion-card> 
+    <card-entry [cardCategory]="CardCategory.SUSPECT"  
+                [entryText]="'Select Suspect'"
+                [icon]="'contact'"
+                [selectedCard]="accusedSuspect" 
+                (cardSelected)="suspectSelected($event)">
+    </card-entry>
+
+    <card-entry [cardCategory]="CardCategory.WEAPON" 
+                [entryText]="'Select Weapon'"
+                [icon]="'hammer'"
+                [selectedCard]="accusedWeapon" 
+                (cardSelected)="weaponSelected($event)">
+    </card-entry>
+
+    <card-entry [cardCategory]="CardCategory.ROOM" 
+                [entryText]="'Select Room'"
+                [icon]="'home'"
+                [selectedCard]="accusedRoom" 
+                (cardSelected)="roomSelected($event)">
+    </card-entry>
+
+    <player-entry [players]="players" [selectedPlayer]="playerThatShowed" (playerSelected)="playerThatShowedSelected($event)">
+    </player-entry>
+
+    <card-entry *ngIf="enterShownCard" 
+                [selectedCard]="cardShown" 
+                [entryText]="'What card was shown?'"
+                [icon]="'card'"
+                (cardSelected)="cardShownSelected($event)">
+    </card-entry>
+
+    <button ion-button block 
+            [disabled]="!guessIsValid()"
+            (click)="enterGuess()">
+        Make Guess
+    </button>
+</ion-card>

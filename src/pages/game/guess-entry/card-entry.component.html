@@ -1,0 +1,7 @@
+<button ion-item (click)="showCardSelect()">   
+    <ion-icon name="{{icon}}" *ngIf="!selectedCard" item-left></ion-icon>
+    <ion-label *ngIf="!selectedCard">{{entryText}}</ion-label>
+    
+    <ion-icon *ngIf="selectedCard" item-left><img src="{{selectedCard.icon}}" class="game-card-icon" /></ion-icon> 
+    <ion-label *ngIf="selectedCard">{{selectedCard.friendlyName}}</ion-label>
+</button>

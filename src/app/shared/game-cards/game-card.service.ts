@@ -38,6 +38,11 @@ export class GameCardService
         new GameCard(CardCategory.ROOM, 9, 'Stucy', `${this.roomIconLocation}/study.png`)
     ];
 
+    getAllCards() : GameCard[]
+    {
+        return this.ALLCARDS;
+    }
+
     getCardsByCategory(cardCategory : CardCategory) : GameCard[]
     {
         return _.filter(this.ALLCARDS, (c) => { return c.cardCategory == cardCategory; });

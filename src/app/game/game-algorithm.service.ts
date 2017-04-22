@@ -76,6 +76,11 @@ export class GameAlgorithm
         }
     }
 
+    getNextPlayer(player: Player) : Player
+    {
+        return this._playersArray.getNext(player);
+    }
+
     private evaluateGuess(guess : Guess) : void 
     {
         //Mark all people who passed as not having any of the cards
@@ -221,10 +226,5 @@ export class GameAlgorithm
     private getAllOtherPlayers(playerToExclude : Player) : Player[] 
     {
         return _.differenceWith(this._players, [playerToExclude], _.isEqual);
-    }
-
-    private getNextPlayer(player: Player) : Player
-    {
-        return this._playersArray.getNext(player);
     }
 }

@@ -1,0 +1,14 @@
+<ion-card>
+    <ion-label>Turn: # {{gameTracker.turns.length + 1}}</ion-label>
+    <ion-label>Player: {{activePlayer.name}}</ion-label>
+</ion-card>
+
+<guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
+                       [activePlayer]="activePlayer" 
+                       [players]="gameTracker.players"
+                       (guessEntered)="guessEntered($event)">
+</guess-entry-component>
+
+<button ion-button (click)="guessEntered(null)" color="secondary">
+    Pass
+</button>

@@ -1,0 +1,7 @@
+<button ion-item (click)="showPlayerSelect()">
+    <ion-icon name="person" item-left *ngIf="!selectedPlayer"></ion-icon>
+    <ion-label *ngIf="!selectedPlayer">Who showed?</ion-label>
+
+    <ion-icon item-left *ngIf="selectedPlayer"><player-icon [player]="selectedPlayer"></player-icon></ion-icon>
+    <ion-label *ngIf="selectedPlayer">{{selectedPlayer.name}}</ion-label>
+</button>
