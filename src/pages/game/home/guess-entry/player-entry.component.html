@@ -3,5 +3,5 @@
     <ion-label *ngIf="!selectedPlayer">No One</ion-label>
 
     <ion-icon item-left *ngIf="selectedPlayer"><player-icon [player]="selectedPlayer"></player-icon></ion-icon>
-    <ion-label *ngIf="selectedPlayer">{{selectedPlayer.name}}</ion-label>
+    <ion-label *ngIf="selectedPlayer">{{selectedPlayer.isDetective ? "You" : selectedPlayer.name}}</ion-label>
 </button>

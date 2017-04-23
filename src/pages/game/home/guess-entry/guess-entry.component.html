@@ -8,7 +8,7 @@
         <br><br>
 
         <span *ngIf="!activePlayer.isDetective">
-            <span class="card-entry">{{playerThatShowed ? playerThatShowed.name : 'No One' }}</span>
+            <span class="card-entry">{{playerThatShowed ? getShowingPlayerDisplay() : 'No One' }}</span>
             disproved it.
         </span>
 

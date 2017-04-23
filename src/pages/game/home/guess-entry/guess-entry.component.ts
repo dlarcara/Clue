@@ -70,7 +70,7 @@ export class GuessEntryComponent {
     getSuspectDisplay = () => this.accusedSuspect ? this.accusedSuspect.friendlyName : '';
     getWeaponDisplay = () => this.accusedWeapon ? this.accusedWeapon.friendlyName : '';
     getRoomDisplay = () => this.accusedRoom ? this.accusedRoom.friendlyName : '';
-    getShowingPlayerDisplay = () => this.playerThatShowed ? this.playerThatShowed.name : '';
+    getShowingPlayerDisplay = () => this.playerThatShowed ? (this.playerThatShowed.isDetective ? "You" : this.playerThatShowed.name) : '';
     getShownCardDisplay = () => !!this.getShownCard() ? this.getShownCard().friendlyName : '';
 
     enterPass() : void
