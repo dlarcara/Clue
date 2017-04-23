@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
-import { Player } from '../../../app/game/index';
+import { Player } from '../../../../app/game/index';
 import { PlayerListComponent } from '../../index';
 
 @Component({

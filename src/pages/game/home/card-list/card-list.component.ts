@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 import { NavController, NavParams } from 'ionic-angular';
 
-import { CardCategory } from '../../../app/game/index';
-import { GameCard } from '../../../app/shared/index';
+import { CardCategory } from '../../../../app/game/index';
+import { GameCard } from '../../../../app/shared/index';
 
 import * as _ from 'lodash';
 

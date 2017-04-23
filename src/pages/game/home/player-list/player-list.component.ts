@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, NavParams } from 'ionic-angular';
 
-import { Player } from '../../../app/game/index';
+import { Player } from '../../../../app/game/index';
 
 @Component({
     selector: 'player-list-component',

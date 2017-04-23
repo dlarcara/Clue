@@ -4,7 +4,8 @@ import { Ng2LetterAvatar } from "ng2letteravatar/ng2letteravatar";
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-import { HomePage, SetupPage, GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/index';
+import { HomePage, SetupPage } from '../pages/index';
+import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/game/index';
 
 import { GameCardService, PlayerIconComponent } from './shared/index';
 import { GameAlgorithm } from './game/index';

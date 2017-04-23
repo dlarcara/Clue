@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Card, Suspect, Player } from '../../app/game/index';
+import { GameTracker, CardCategory, Card, Suspect, Player } from '../../../app/game/index';
 
 @Component({
     selector: 'game-home-page',

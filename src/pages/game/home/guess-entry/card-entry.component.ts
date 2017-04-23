@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
-import { CardCategory } from '../../../app/game/index';
-import { GameCardService, GameCard } from '../../../app/shared/index';
+import { CardCategory } from '../../../../app/game/index';
+import { GameCardService, GameCard } from '../../../../app/shared/index';
 import { CardListComponent } from '../../index';
 
 @Component({

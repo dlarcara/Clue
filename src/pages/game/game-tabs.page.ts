@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { GameHomePage, GameSheetPage } from '../index';
+import { GameHomePage, GameSheetPage } from './index';
 
 @Component({
     templateUrl: 'game-tabs.page.html'

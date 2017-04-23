@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { } from 'ionic-angular';
 
-import { CardCategory, Player, Guess, Card } from '../../../app/game/index';
-import { GameCard, GameCardService } from '../../../app/shared/index';
+import { CardCategory, Player, Guess, Card } from '../../../../app/game/index';
+import { GameCard, GameCardService } from '../../../../app/shared/index';
 
 import * as _ from "lodash";
 
