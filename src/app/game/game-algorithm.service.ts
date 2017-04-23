@@ -70,6 +70,11 @@ export class GameAlgorithm
         }
     }
 
+    getPlayerWhoHasCard(card : Card) : Player
+    {
+        return this._gameSheet.getPlayerWhoHasCard(card);
+    }
+
     getNextPlayer(player: Player) : Player
     {
         return this._playersArray.getNext(player);

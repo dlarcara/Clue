@@ -1,4 +1,4 @@
-import { Player, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus } from './index';
+import { Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus } from './index';
 
 import * as _ from 'lodash';
 
@@ -66,6 +66,21 @@ export class GameTracker
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {     
         return this.gameAlgorithm.getStatusForPlayerAndCard(player, card);
+    }
+
+    //TODO: Test This
+    playerMightHaveCard(player : Player, card : Card) : Boolean
+    {
+        if (this.gameAlgorithm.getPlayerWhoHasCard(card))
+            return false;
+
+        let unresolvedShowsForPlayer = _.filter(this.gameAlgorithm.unresolvedGuesses, (g) => _.isEqual(player, g.playerThatShowed));
+        
+        return _.some(unresolvedShowsForPlayer, (g : Guess) => {
+            return (card.category == CardCategory.SUSPECT && card.cardIndex == g.suspect) ||
+                   (card.category == CardCategory.WEAPON && card.cardIndex == g.weapon) ||
+                   (card.category == CardCategory.ROOM && card.cardIndex == g.room)
+        });
     }
 
     //Return possible number of cards a player can have based on the total number of players
