@@ -19,10 +19,9 @@ export class GameTabsPage {
         this.gameHome = GameHomePage;
         this.gameSheet = GameSheetPage;
 
-        let detective = navParams.get('detective');
         let detectivesCards = navParams.get('detectivesCards');
         let players = navParams.get('players');
 
-        this.homeTabParams = { detective: detective, players: players, detectivesCards: detectivesCards};
+        this.homeTabParams = { players: players, detectivesCards: detectivesCards};
     }
 }

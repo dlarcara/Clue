@@ -1,9 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { NavController, reorderArray } from 'ionic-angular';
 
 import { CardCategory, Player, Card } from '../../app/game/index';
-import { GameCardService, GameCard } from '../../app/shared/index';
+import { GameCardService } from '../../app/shared/index';
 import { GameTabsPage } from '../game/index';
 
 import * as _ from 'lodash';    
@@ -15,9 +15,10 @@ import * as _ from 'lodash';
 
 export class SetupPage {
     setupStep: string;
-    detective: any;
-    players: any[];
     allCardsByCategory: any[] //Game Cards grouped by category
+
+    detective: any
+    players: any[];
     selectedCards: any[]
 
     CardCategory = CardCategory;
@@ -33,7 +34,7 @@ export class SetupPage {
         this.players = _.map(this.allCardsByCategory[CardCategory.SUSPECT].cards, (suspect, index) => {
             return { name: '', suspect: suspect, isPlaying: index < 3, extraCard: false, cards: [] }
         });
-        this.detective = this.players[0]; //Default the detective to first player
+        this.detective = this.players[0];
     }
 
     getPlayersToDisplayBasedOnSetupStep(setupStep) : any[]
@@ -50,16 +51,16 @@ export class SetupPage {
         this.players = reorderArray(this.players, indexes);
     }
 
-    playerIsDetective(player) : Boolean
-    {
-        return _.isEqual(player, this.detective);
-    }
-
     getNumberOfCardsForPlayer(player : any)
     {
         let numberOfCards = Math.floor(18 / this.getPlayingPlayers().length);
         if (player.extraCard) numberOfCards++;
         return numberOfCards;
+    }
+
+    getDetective() : any
+    {
+        return _.find(this.players, this.detective);
     }
 
     //Step 1 Validation
@@ -78,7 +79,7 @@ export class SetupPage {
 
     //Step 3 Validation
     isStep3Valid = () : Boolean => this.isStep2Valid() && this.allDetectivesCardsSelected();
-    allDetectivesCardsSelected = () : Boolean => this.getSelectedCards().length == this.getNumberOfCardsForPlayer(this.detective);
+    allDetectivesCardsSelected = () : Boolean => this.getDetective() && this.getSelectedCards().length == this.getNumberOfCardsForPlayer(this.getDetective());
     getSelectedCards() : any[]
     {
         if (!this.allCardsByCategory) return [];
@@ -90,21 +91,16 @@ export class SetupPage {
 
     startGame() : void
     {
-        let detective : Player;
         let players : Player[] = [];
         let detectivesCards = this.getSelectedCards().map((c) => new Card(c.cardCategory, c.cardIndex));
 
         _.forEach(this.getPlayingPlayers(), (p) => {
-            let player = new Player(p.name, p.suspect.cardIndex, this.getNumberOfCardsForPlayer(p));
+            let player = new Player(p.name, p.suspect.cardIndex, this.getNumberOfCardsForPlayer(p), p == this.detective);
             players.push(player);
-
-            if (this.playerIsDetective(p))
-                detective = player;
         });
 
         this.navCtrl.setRoot(GameTabsPage, {
-            players: players, 
-            detective: detective, 
+            players: players,
             detectivesCards: detectivesCards
         });
     }

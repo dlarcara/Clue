@@ -13,8 +13,7 @@
 </ion-header>
 
 <ion-content>
-    <guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
-                           [detective]="gameTracker.detective"
+    <guess-entry-component [enterShownCard]="activePlayer.isDetective" 
                            [activePlayer]="activePlayer" 
                            [players]="gameTracker.players"
                            (guessEntered)="guessEntered($event)">

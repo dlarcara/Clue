@@ -20,7 +20,7 @@ export class GameAlgorithm
     private _unresolvedGuesses : Guess[]
     get unresolvedGuesses() : Guess[] { return this._unresolvedGuesses; }
 
-    constructor(players : Player[])
+    constructor(players : Player[], detectivesCards : Card[])
     {
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
            throw new Error("Player suspect used more than once");
@@ -31,6 +31,8 @@ export class GameAlgorithm
         this._playersArray = new CircularArray(players);
         this._gameSheet = new GameSheet(players);
         this._unresolvedGuesses = [];
+
+        this.fillOutKnownCards(this.getDetective(), detectivesCards);
     }
 
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
@@ -39,18 +41,6 @@ export class GameAlgorithm
             throw new Error("Player not found");
 
         return this._gameSheet.getStatusForPlayerAndCard(player, card);
-    }
-
-    fillOutKnownCards(player : Player, cardsInHand : Card[]) : void
-    {
-         if (!this.playerIsPlaying(player))
-            throw new Error("Player not found");
-
-        //Mark all cards passed in as had by this player
-        _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
-
-        //Mark all other cards as not had for this player
-        _.forEach(GameConstants.allCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
     applyGuess(guess : Guess) : void
@@ -83,6 +73,20 @@ export class GameAlgorithm
     getNextPlayer(player: Player) : Player
     {
         return this._playersArray.getNext(player);
+    }
+
+    private getDetective() : Player
+    {
+        return _.find(this._players, { 'isDetective': true });
+    }
+
+    private fillOutKnownCards(player : Player, cardsInHand : Card[]) : void
+    {
+        //Mark all cards passed in as had by this player
+        _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
+
+        //Mark all other cards as not had for this player
+        _.forEach(GameConstants.allCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
     private evaluateGuess(guess : Guess) : void 

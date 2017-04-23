@@ -4,18 +4,21 @@ import * as _ from 'lodash';
 
 export class GameTracker
 {
-    detective : Player;
     detectiveCards : Card[]
     players : Player[]
     turns: Turn[] = [];
 
     private gameAlgorithm : GameAlgorithm;
 
-    constructor(detective: Player, players: Player[], detectiveCards: Card[])
+    constructor(players: Player[], detectiveCards: Card[])
     {
-        //Ensure detective is included in the list of players
-        if (!players.find(p => p.suspect == detective.suspect && p.name == detective.name))
-            throw new Error("Detective not included in list of players");
+        //Ensure one detective is playing
+        if (_.countBy(players, 'isDetective')['true'] != 1)
+            throw new Error("Must define a single detective");
+
+        //Ensure right number of cards for detective are passed in
+        if (_.find(players, 'isDetective').numberOfCards != detectiveCards.length)
+            throw new Error("Wrong number of cards identified for the detective");
 
         //Ensure unique players 
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
@@ -29,17 +32,12 @@ export class GameTracker
         if(_.uniqWith(detectiveCards, _.isEqual).length != detectiveCards.length)
             throw new Error("Duplicate cards were supplied");
 
-        //Ensure proper number of cards are passed in
-        var expectedNumberOfCards = this.getCardCountPossibilities(players.length);
-        if (expectedNumberOfCards.indexOf(detectiveCards.length) == -1)
-            throw new Error("The wrong number of cards was supplied");
+        //Ensure everyone the total number of cards pass in is 18, and broken out amongst player correctly
 
-        this.detective = detective;
         this.players = players;
         this.detectiveCards = detectiveCards;
         
-        this.gameAlgorithm = new GameAlgorithm(this.players);
-        this.gameAlgorithm.fillOutKnownCards(this.detective, this.detectiveCards);
+        this.gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
     }
 
     enterTurn(player : Player, guess : Guess) : Turn
@@ -53,6 +51,11 @@ export class GameTracker
         this.turns.push(turn);
 
         return turn;
+    }
+
+    getDetective() : Player
+    {
+        return _.find(this.players, (p) => p.isDetective);
     }
 
     getNextPlayer(player : Player) : Player

@@ -11,5 +11,7 @@ describe("When constructing a card:", () => {
         expect(true).toBe(false);
     });
 
-    //Calling getFriendlyName should do so
+    it("it should return friendly name when requesting it", () => {
+        expect(true).toBe(false);
+    });
 });

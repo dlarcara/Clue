@@ -1,5 +1,6 @@
 <ion-content>
     <ion-list>
+        <ion-item-divider color="light">Players</ion-item-divider>
         <button ion-item *ngFor="let player of players" (click)="selectPlayer(player)">
             <ion-icon item-left><player-icon [player]="player"></player-icon></ion-icon>
             <ion-label>{{player.name}}</ion-label>

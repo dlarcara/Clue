@@ -23,7 +23,7 @@
             <!-- Step 2 Validation -->
             <ion-item *ngIf="setupStep == 2 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="valid" item-left></ion-icon>
-                You're playing as {{detective.suspect.friendlyName}}
+                You're playing as {{getDetective() ? getDetective().suspect.friendlyName : ''}}
             </ion-item>
             <ion-item *ngIf="setupStep == 2 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="valid" item-left></ion-icon>
@@ -37,13 +37,14 @@
             <!-- Step 3 Validations -->
             <ion-item *ngIf="setupStep == 3 || setupStep == 4" class="validation">
                 <ion-icon name="checkmark-circle" color="{{allDetectivesCardsSelected() ? 'valid' : 'invalid'}}" item-left></ion-icon>
-                Your cards selected ({{getSelectedCards().length}}/{{getNumberOfCardsForPlayer(detective)}})
+                Your cards selected ({{getSelectedCards().length}}/{{getNumberOfCardsForPlayer(getDetective())}})
             </ion-item> 
         </ion-list>
 
         <button ion-button *ngIf="setupStep == 4 && isStep1Valid() && isStep2Valid() && isStep3Valid()" full (click)="startGame()">Start Game</button>
     </ion-card>
 
+    
     <ion-card *ngIf="setupStep != 4">
         <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
         <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
@@ -56,7 +57,7 @@
 
                 <!-- Step 2: Detective, Extra Cards, Order -->
                 <ion-label *ngIf="setupStep == 2">{{player.name}}</ion-label>
-                <ion-radio item-right [value]="player" [checked]="playerIsDetective(player)" [disabled]="!player.isPlaying" *ngIf="setupStep == 2"></ion-radio>
+                <ion-radio item-right [value]="player" [checked]="player == detective" [disabled]="!player.isPlaying" *ngIf="setupStep == 2"></ion-radio>
                 <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="setupStep == 2 && getNumberOfExtraCards() !=0"></ion-toggle>
             </ion-item>
         </ion-list>

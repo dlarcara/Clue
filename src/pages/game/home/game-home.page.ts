@@ -15,12 +15,11 @@ export class GameHomePage {
 
     constructor(private navParams : NavParams) 
     {
-        let detective = this.navParams.get('detective');
         let players = this.navParams.get('players');
         let detectivesCards = this.navParams.get('detectivesCards');
 
         this.activePlayer = players[0];
-        this.gameTracker = new GameTracker(detective, players, detectivesCards);
+        this.gameTracker = new GameTracker(players, detectivesCards);
     }
 
     guessEntered(guess) : void

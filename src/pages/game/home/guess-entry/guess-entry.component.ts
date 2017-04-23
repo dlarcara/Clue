@@ -19,7 +19,6 @@ export class GuessEntryComponent {
     playerThatShowed: Player
     shownCategory : CardCategory
 
-    @Input() detective : Player
     @Input() activePlayer: Player
     @Input() players: Player[]
     @Input() enterShownCard : Boolean
@@ -67,7 +66,7 @@ export class GuessEntryComponent {
         return new Guess(accusedSuspect, accusedWeapon, accusedRoom, this.activePlayer, this.playerThatShowed, shownCard);
     }
 
-    getGuessingPlayerDisplay = () => this.detective == this.activePlayer ? "You" : this.activePlayer.name;
+    getGuessingPlayerDisplay = () => this.activePlayer.isDetective ? "You" : this.activePlayer.name;
     getSuspectDisplay = () => this.accusedSuspect ? this.accusedSuspect.friendlyName : '';
     getWeaponDisplay = () => this.accusedWeapon ? this.accusedWeapon.friendlyName : '';
     getRoomDisplay = () => this.accusedRoom ? this.accusedRoom.friendlyName : '';
