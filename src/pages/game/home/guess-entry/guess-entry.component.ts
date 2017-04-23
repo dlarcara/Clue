@@ -38,10 +38,10 @@ export class GuessEntryComponent {
         
         if (this.enterShownCard && baseValidation)
         {
-            if (!this.playerThatShowed && !this.shownCategory)
+            if (!this.playerThatShowed && this.shownCategory == null)
                 return true;
 
-             if (this.playerThatShowed && this.shownCategory)
+             if (this.playerThatShowed && this.shownCategory != null)
                 return true;
         }
 
