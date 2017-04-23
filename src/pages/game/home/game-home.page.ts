@@ -10,16 +10,13 @@ import { GameTracker, Player } from '../../../app/game/index';
 })
 
 export class GameHomePage {
-    activePlayer: Player;
-    gameTracker: GameTracker
+    activePlayer : Player
+    gameTracker : GameTracker
 
     constructor(private navParams : NavParams) 
     {
-        let players = this.navParams.get('players');
-        let detectivesCards = this.navParams.get('detectivesCards');
-
-        this.activePlayer = players[0];
-        this.gameTracker = new GameTracker(players, detectivesCards);
+        this.gameTracker = this.navParams.get('gameTracker');
+        this.activePlayer = this.gameTracker.players[0];
     }
 
     guessEntered(guess) : void

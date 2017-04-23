@@ -1,4 +1,4 @@
-import { Player, Card, Turn, Guess, GameSheet, GameAlgorithm } from './index';
+import { Player, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus } from './index';
 
 import * as _ from 'lodash';
 
@@ -61,6 +61,11 @@ export class GameTracker
     getNextPlayer(player : Player) : Player
     {
         return this.gameAlgorithm.getNextPlayer(player);
+    }
+    
+    getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
+    {     
+        return this.gameAlgorithm.getStatusForPlayerAndCard(player, card);
     }
 
     //Return possible number of cards a player can have based on the total number of players

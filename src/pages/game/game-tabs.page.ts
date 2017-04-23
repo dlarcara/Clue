@@ -4,6 +4,8 @@ import { NavParams } from 'ionic-angular';
 
 import { GameHomePage, GameSheetPage } from './index';
 
+import { GameTracker } from '../../app/game/index';
+
 @Component({
     templateUrl: 'game-tabs.page.html'
 })
@@ -13,7 +15,8 @@ export class GameTabsPage {
     gameHome: any;
     gameSheet: any;
 
-    homeTabParams: any;
+    tabParams: any;
+    gameTracker: GameTracker
 
     constructor(private navParams : NavParams) {
         this.gameHome = GameHomePage;
@@ -22,6 +25,7 @@ export class GameTabsPage {
         let detectivesCards = navParams.get('detectivesCards');
         let players = navParams.get('players');
 
-        this.homeTabParams = { players: players, detectivesCards: detectivesCards};
+        this.gameTracker = new GameTracker(players, detectivesCards);
+        this.tabParams = { gameTracker: this.gameTracker};
     }
 }

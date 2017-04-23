@@ -1,3 +1,54 @@
 <ion-content>
-    Sheet goes here
+    <ion-grid class="game-sheet">
+        <!-- Suspects -->
+        <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
+        <ion-row>
+            <ion-col class="sheet-cell-icon" col-auto></ion-col>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
+                <player-icon [player]="player"></player-icon>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let suspect of suspectCards">
+            <ion-col class="sheet-cell-icon" col-auto>
+                <img [src]="suspect.icon" class="game-card-icon"/>
+            </ion-col>
+    
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, suspect)">
+            </ion-col>
+        </ion-row>
+
+        <!-- Weapons -->
+        <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
+        <ion-row>
+            <ion-col class="sheet-cell-icon" col-auto></ion-col>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
+                <player-icon [player]="player"></player-icon>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let weapon of weaponCards">
+            <ion-col class="sheet-cell-icon" col-auto>
+                <img [src]="weapon.icon" class="game-card-icon"/>
+            </ion-col>
+    
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
+            </ion-col>
+        </ion-row>
+
+        <!-- Rooms -->
+        <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>
+        <ion-row>
+            <ion-col class="sheet-cell-icon" col-auto></ion-col>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
+                <player-icon [player]="player"></player-icon>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let room of roomCards">
+            <ion-col class="sheet-cell-icon" col-auto>
+                <img [src]="room.icon" class="game-card-icon"/>
+            </ion-col>
+    
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, room)">
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>
