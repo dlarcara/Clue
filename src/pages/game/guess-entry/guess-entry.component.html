@@ -1,3 +1,30 @@
+<ion-card padding>
+    <p>
+        {{getGuessingPlayerDisplay()}} guessed 
+        <span [ngClass]="{'card-entry-space': !accusedSuspect}" class="card-entry">{{getSuspectDisplay()}}</span> in the 
+        <span [ngClass]="{'card-entry-space': !accusedRoom}" class="card-entry">{{getRoomDisplay()}}</span> with the 
+        <span [ngClass]="{'card-entry-space': !accusedWeapon}" class="card-entry">{{getWeaponDisplay()}}</span>.
+        
+        <br><br>
+
+        <span *ngIf="detective != activePlayer">
+            <span class="card-entry">{{playerThatShowed ? playerThatShowed.name : 'No One' }}</span>
+            disproved it.
+        </span>
+
+         <span *ngIf="detective == activePlayer">
+            <span *ngIf="!playerThatShowed && shownCategory == null"><span class="card-entry">No One</span> disproved it.</span>
+            
+            <span *ngIf="playerThatShowed || shownCategory != null">
+                <span [ngClass]="{'card-entry-space': !playerThatShowed}" class="card-entry">{{getShowingPlayerDisplay()}}</span>
+                disproved it by showing 
+                <span *ngIf="shownCategory != CardCategory.SUSPECT"> the </span>
+                <span [ngClass]="{'card-entry-space': !getShownCard()}" class="card-entry">{{getShownCardDisplay()}}</span>.
+            </span> 
+        </span>
+    </p>
+</ion-card>
+
 <ion-card> 
     <card-entry [cardCategory]="CardCategory.SUSPECT"  
                 [entryText]="'Select Suspect'"
@@ -7,16 +34,6 @@
                 [enableActivateEntry]="enterShownCard"
                 [isActive]="shownCategory == CardCategory.SUSPECT"
                 (activeStatusChanged)="cardActiveChange(CardCategory.SUSPECT, $event)">
-    </card-entry>
-
-    <card-entry [cardCategory]="CardCategory.WEAPON" 
-                [entryText]="'Select Weapon'"
-                [icon]="'hammer'"
-                [selectedCard]="accusedWeapon" 
-                (cardSelected)="weaponSelected($event)"
-                [enableActivateEntry]="enterShownCard"
-                [isActive]="shownCategory == CardCategory.WEAPON"
-                (activeStatusChanged)="cardActiveChange(CardCategory.WEAPON, $event)">
     </card-entry>
 
     <card-entry [cardCategory]="CardCategory.ROOM" 
@@ -29,16 +46,28 @@
                 (activeStatusChanged)="cardActiveChange(CardCategory.ROOM, $event)">
     </card-entry>
 
+    <card-entry [cardCategory]="CardCategory.WEAPON" 
+                [entryText]="'Select Weapon'"
+                [icon]="'hammer'"
+                [selectedCard]="accusedWeapon" 
+                (cardSelected)="weaponSelected($event)"
+                [enableActivateEntry]="enterShownCard"
+                [isActive]="shownCategory == CardCategory.WEAPON"
+                (activeStatusChanged)="cardActiveChange(CardCategory.WEAPON, $event)">
+    </card-entry>
+
     <player-entry [players]="getPlayersToShow()" [selectedPlayer]="playerThatShowed" (playerSelected)="playerThatShowedSelected($event)">
     </player-entry>
 
-    <button ion-button block 
-            [disabled]="!guessIsValid()"
-            (click)="enterGuess()">
-        Make Guess
-    </button>
+    <div padding>
+        <button ion-button block
+                [disabled]="!guessIsValid()"
+                (click)="enterGuess()">
+            Make Guess
+        </button>
 
-    <button ion-button block (click)="enterPass()" color="secondary">
-        Pass
-    </button>
+        <button ion-button block (click)="enterPass()" color="secondary">
+            Pass
+        </button>
+    </div>
 </ion-card>

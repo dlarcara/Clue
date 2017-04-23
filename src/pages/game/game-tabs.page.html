@@ -14,8 +14,9 @@
 
 <ion-content>
     <guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
-                        [activePlayer]="activePlayer" 
-                        [players]="gameTracker.players"
-                        (guessEntered)="guessEntered($event)">
+                           [detective]="gameTracker.detective"
+                           [activePlayer]="activePlayer" 
+                           [players]="gameTracker.players"
+                           (guessEntered)="guessEntered($event)">
     </guess-entry-component>
 </ion-content>
