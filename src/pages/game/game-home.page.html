@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-grid>
+            <ion-row>
+                <ion-col *ngFor="let player of gameTracker.players" 
+                         class="player-space" 
+                         [ngClass]="{'active': player == activePlayer}">
+                    <player-icon [player]="player"></player-icon>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <guess-entry-component [enterShownCard]="activePlayer == gameTracker.detective" 
+                           [detective]="gameTracker.detective"
+                           [activePlayer]="activePlayer" 
+                           [players]="gameTracker.players"
+                           (guessEntered)="guessEntered($event)">
+    </guess-entry-component>
+</ion-content>

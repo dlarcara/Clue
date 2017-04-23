@@ -4,7 +4,7 @@ import { Ng2LetterAvatar } from "ng2letteravatar/ng2letteravatar";
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-import { HomePage, SetupPage, GameTabsPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/index';
+import { HomePage, SetupPage, GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/index';
 
 import { GameCardService, PlayerIconComponent } from './shared/index';
 import { GameAlgorithm } from './game/index';
@@ -19,6 +19,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     SetupPage,
     
     GameTabsPage,
+    GameHomePage,
+    GameSheetPage,
     GuessEntryComponent,
     CardEntryComponent,
     CardListComponent,
@@ -37,6 +39,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     SetupPage,
     GameTabsPage,
+    GameHomePage,
+    GameSheetPage,
     GuessEntryComponent,
     CardListComponent,
     PlayerListComponent
