@@ -2,8 +2,9 @@ import { Component, Inject } from '@angular/core';
 
 import { NavController, reorderArray } from 'ionic-angular';
 
-import { CardCategory } from '../../app/game/index';
+import { CardCategory, Player, Card } from '../../app/game/index';
 import { GameCardService, GameCard } from '../../app/shared/index';
+import { GameTabsPage } from '../game/index';
 
 import * as _ from 'lodash';    
 
@@ -21,7 +22,7 @@ export class SetupPage {
 
     CardCategory = CardCategory;
 
-    constructor(private gameCardService : GameCardService) {}
+    constructor(private navCtrl : NavController, private gameCardService : GameCardService) {}
 
     ionViewDidLoad()
     {
@@ -85,5 +86,26 @@ export class SetupPage {
         return _.filter(this.allCardsByCategory[0].cards, 'selected')
                         .concat(_.filter(this.allCardsByCategory[1].cards, 'selected'))
                         .concat(_.filter(this.allCardsByCategory[2].cards, 'selected'));
+    }
+
+    startGame() : void
+    {
+        let detective : Player;
+        let players : Player[] = [];
+        let detectivesCards = this.getSelectedCards().map((c) => new Card(c.cardCategory, c.cardIndex));
+
+        _.forEach(this.getPlayingPlayers(), (p) => {
+            let player = new Player(p.name, p.suspect.cardIndex, this.getNumberOfCardsForPlayer(p));
+            players.push(player);
+
+            if (this.playerIsDetective(p))
+                detective = player;
+        });
+
+        this.navCtrl.setRoot(GameTabsPage, {
+            players: players, 
+            detective: detective, 
+            detectivesCards: detectivesCards
+        });
     }
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
-import { } from 'ionic-angular';
+import { NavParams } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Card, Suspect, Player } from '../../../app/game/index';
+import { GameTracker, Player } from '../../../app/game/index';
 
 @Component({
     selector: 'game-home-page',
@@ -13,18 +13,14 @@ export class GameHomePage {
     activePlayer: Player;
     gameTracker: GameTracker
 
-    constructor() 
+    constructor(private navParams : NavParams) 
     {
-        //Fake Data - to be passed in from setup page
-        let players = [ 
-            new Player("Mom", Suspect.WHITE, 3), new Player("David", Suspect.MUSTARD, 3), 
-            new Player("Dad", Suspect.GREEN, 3), new Player("Mike", Suspect.PLUM, 3),
-            new Player("Steph", Suspect.PEACOCK, 3), new Player("Jackie", Suspect.SCARLET, 3)
-        ];
-        let cards = [ new Card(CardCategory.SUSPECT, Suspect.GREEN), new Card(CardCategory.SUSPECT, Suspect.WHITE), new Card(CardCategory.SUSPECT, Suspect.PEACOCK)]
-        
+        let detective = this.navParams.get('detective');
+        let players = this.navParams.get('players');
+        let detectivesCards = this.navParams.get('detectivesCards');
+
         this.activePlayer = players[0];
-        this.gameTracker = new GameTracker(players[0], players, cards);
+        this.gameTracker = new GameTracker(detective, players, detectivesCards);
     }
 
     guessEntered(guess) : void
