@@ -41,7 +41,9 @@
             </ion-item> 
         </ion-list>
 
-        <button ion-button *ngIf="setupStep == 4 && isStep1Valid() && isStep2Valid() && isStep3Valid()" full (click)="startGame()">Start Game</button>
+        <div padding *ngIf="setupStep == 4 && isStep1Valid() && isStep2Valid() && isStep3Valid()">
+            <button ion-button full (click)="startGame()">Start Game</button>
+        </div>
     </ion-card>
 
     

@@ -17,7 +17,7 @@
             
             <span *ngIf="playerThatShowed || shownCategory != null">
                 <span [ngClass]="{'card-entry-space': !playerThatShowed}" class="card-entry">{{getShowingPlayerDisplay()}}</span>
-                disproved it by showing 
+                disproved it by showing you
                 <span *ngIf="shownCategory != CardCategory.SUSPECT"> the </span>
                 <span [ngClass]="{'card-entry-space': !getShownCard()}" class="card-entry">{{getShownCardDisplay()}}</span>.
             </span> 
