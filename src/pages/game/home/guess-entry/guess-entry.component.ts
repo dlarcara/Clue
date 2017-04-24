@@ -51,7 +51,6 @@ export class GuessEntryComponent {
     enterGuess() : void
     {
         this.guessEntered.emit(this.buildGuess());
-        this.resetEntry();
     }
 
     buildGuess() : Guess
@@ -76,7 +75,6 @@ export class GuessEntryComponent {
     enterPass() : void
     {
         this.guessEntered.emit(null);
-        this.resetEntry();
     }
 
     resetEntry() : void 
