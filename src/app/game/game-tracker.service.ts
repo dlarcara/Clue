@@ -74,6 +74,9 @@ export class GameTracker
         if (this.gameAlgorithm.getPlayerWhoHasCard(card))
             return false;
 
+        if (this.getStatusForPlayerAndCard(player, card) != CellStatus.UNKNOWN)
+            return false;
+
         let unresolvedShowsForPlayer = _.filter(this.gameAlgorithm.unresolvedGuesses, (g) => _.isEqual(player, g.playerThatShowed));
         
         return _.some(unresolvedShowsForPlayer, (g : Guess) => {
