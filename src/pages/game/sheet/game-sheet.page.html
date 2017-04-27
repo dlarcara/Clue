@@ -1,4 +1,17 @@
-<ion-content>
+<ion-content padding>
+    <ion-grid class="game-sheet">
+        <ion-row>
+            <ion-col class="sheet-cell-icon card-had sheet-legend">Player has card</ion-col>
+            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Doesn't have card</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col class="sheet-cell-icon card-maybe sheet-legend">Play might have card</ion-col>
+            <ion-col class="sheet-cell-icon card-unknown sheet-legend">Unknown</ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <br>
+
     <ion-grid class="game-sheet">
         <!-- Suspects -->
         <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
@@ -17,6 +30,8 @@
             </ion-col>
         </ion-row>
 
+        <br>
+
         <!-- Weapons -->
         <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
         <ion-row>
@@ -33,6 +48,8 @@
             <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
             </ion-col>
         </ion-row>
+
+        <br>
 
         <!-- Rooms -->
         <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>

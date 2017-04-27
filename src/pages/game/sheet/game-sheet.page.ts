@@ -31,14 +31,15 @@ export class GameSheetPage {
         let card = new Card(gameCard.cardCategory, gameCard.cardIndex);
         let cellStatus = this.gameTracker.getStatusForPlayerAndCard(player, card);
         
+        if (cellStatus == CellStatus.HAD)
+            return 'card-had';
+
+        if (cellStatus == CellStatus.NOTHAD)
+            return 'card-not-had';
+
         if(this.gameTracker.playerMightHaveCard(player, card))
             return "card-maybe";
         
-        switch(cellStatus)
-        {
-            case CellStatus.HAD: return 'card-had';
-            case CellStatus.NOTHAD: return 'card-not-had';
-            default: return 'card-unknown';
-        }
+        return 'card-unknown';
     }
 }
