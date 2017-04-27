@@ -38,8 +38,15 @@ export class GameHomePage {
         if (entrySuccessful)
         {
             this.guessEntry.resetEntry();
+            this.showGuessEntered(guess);
             this.activePlayer = this.gameTracker.getNextPlayer(this.activePlayer);
         }
+    }
+
+    private showGuessEntered(guess)
+    {
+        let toast = this.toastCtrl.create({ message: `Guess entered for ${guess.playerThatGuessed.name}`, duration: 1500, position: 'top'});
+        toast.present();
     }
 
     private showGuessError(message : string)
