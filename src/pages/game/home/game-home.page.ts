@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 
 import { NavParams, ToastController  } from 'ionic-angular';
 
-import { GameTracker, Player } from '../../../app/game/index';
-import { GameDetails, GameLoaderService } from '../../../app/shared/index';
+import { GameTracker, Player, Card, CellStatus } from '../../../app/game/index';
+import { GameDetails, GameLoaderService, GameCardService } from '../../../app/shared/index';
 import { GuessEntryComponent } from '../index';
 
 import * as _ from "lodash";
@@ -19,7 +19,8 @@ export class GameHomePage {
 
     @ViewChild('guessEntry') guessEntry: GuessEntryComponent
 
-    constructor(private navParams : NavParams, public toastCtrl: ToastController, private gameLoaderService : GameLoaderService) 
+    constructor(private navParams : NavParams, public toastCtrl: ToastController, private gameLoaderService : GameLoaderService,
+                private gameCardService : GameCardService) 
     {
         this.gameTracker = this.navParams.get('gameTracker');
         
@@ -53,6 +54,23 @@ export class GameHomePage {
 
             this.saveGame();
         }
+    }
+
+    getProgress() : number
+    {
+        let solvedCount = 0;
+        let totalCount = 0;
+        _.forEach(this.gameTracker.players, (player) => {
+            _.forEach(this.gameCardService.ALLCARDS, (c) => {
+                let status = this.gameTracker.getStatusForPlayerAndCard(player, new Card(c.cardCategory, c.cardIndex));
+                if (status != CellStatus.UNKNOWN)
+                    solvedCount ++;
+
+                totalCount++;
+            });
+        });
+
+        return solvedCount / totalCount;
     }
 
     private saveGame() : void

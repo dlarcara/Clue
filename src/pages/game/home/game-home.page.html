@@ -13,6 +13,13 @@
 </ion-header>
 
 <ion-content>
+    <ion-card no-padding>
+        <ion-card-content>
+            <p>Turn: #{{gameTracker.turns.length + 1}}</p>
+            <p>Progress: {{getProgress() | percent:'2.1'}}</p>
+        </ion-card-content>
+    </ion-card>
+
     <guess-entry-component [enterShownCard]="activePlayer.isDetective" 
                            [activePlayer]="activePlayer" 
                            [players]="gameTracker.players"
