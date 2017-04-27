@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
 
 import { GameCardService, GameCard } from '../../../app/shared/index';
-import { GameTracker, Player, Card, CardCategory, CellStatus } from '../../../app/game/index';
+import { GameTracker, Player, Card, CardCategory, CellStatus, Verdict } from '../../../app/game/index';
+
+import * as _ from "lodash";
 
 @Component({
     selector: 'game-sheet-page',
@@ -16,7 +18,7 @@ export class GameSheetPage {
     readonly roomCards: GameCard[]
 
     gameTracker : GameTracker
-    
+
     constructor(private navParams : NavParams, private gameCardService : GameCardService) 
     {
         this.suspectCards = gameCardService.getCardsByCategory(CardCategory.SUSPECT);
@@ -41,5 +43,16 @@ export class GameSheetPage {
             return "card-maybe";
         
         return 'card-unknown';
+    }
+
+    getVerdict() : any
+    {
+        let verdict = this.gameTracker.getVerdict();
+        
+        return {
+            suspect: verdict ? this.gameCardService.getCard(CardCategory.SUSPECT, verdict.suspect) : null,
+            weapon: verdict ? this.gameCardService.getCard(CardCategory.WEAPON, verdict.weapon) : null,
+            room: verdict ? this.gameCardService.getCard(CardCategory.ROOM, verdict.room) : null,
+        }
     }
 }

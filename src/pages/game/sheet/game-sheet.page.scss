@@ -11,4 +11,12 @@ game-sheet-page {
     .card-unknown { background-color: #FFF; }
 
     .sheet-legend { color: #000; font-weight: bold; padding-top: 8px; }
+
+    .verdict-row
+    {
+        background-color: #FFF;
+
+        .verdict-header { background-color: #717070; color: #000; font-weight: bold; }
+        .icon { font-size: 1.6em; }
+    }
 }

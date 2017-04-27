@@ -10,6 +10,30 @@
         </ion-row>
     </ion-grid>
 
+    <br>    
+
+    <ion-grid class="game-sheet verdict-row">
+        <ion-row>
+            <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
+            <ion-col class="sheet-cell-icon verdict-header">Weapon</ion-col>
+            <ion-col class="sheet-cell-icon verdict-header">Room</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col class="sheet-cell-icon">
+                <img [src]="getVerdict().suspect.icon" *ngIf="getVerdict().suspect" class="game-card-icon"/>
+                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().suspect" color="invalid"></ion-icon>
+            </ion-col>
+            <ion-col class="sheet-cell-icon">
+                <img [src]="getVerdict().weapon.icon" *ngIf="getVerdict().weapon" class="game-card-icon"/>
+                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().weapon" color="invalid"></ion-icon>
+            </ion-col>
+            <ion-col class="sheet-cell-icon">
+                <img [src]="getVerdict().room.icon" *ngIf="getVerdict().room" class="game-card-icon"/>
+                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().room" color="invalid"></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
     <br>
 
     <ion-grid class="game-sheet">
