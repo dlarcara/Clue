@@ -7,7 +7,7 @@ import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
 import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent } from '../pages/game/index';
 
-import { GameCardService, PlayerIconComponent } from './shared/index';
+import { GameLoaderService, GameCardService, PlayerIconComponent } from './shared/index';
 import { GameAlgorithm } from './game/index';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -51,7 +51,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GameCardService,
-    GameAlgorithm
+    GameAlgorithm,
+    GameLoaderService
   ]
 })
 

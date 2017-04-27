@@ -4,7 +4,10 @@ import { NavParams } from 'ionic-angular';
 
 import { GameHomePage, GameSheetPage } from './index';
 
+import { GameDetails } from '../../app/shared/index';
 import { GameTracker } from '../../app/game/index';
+
+import * as _ from "lodash";
 
 @Component({
     templateUrl: 'game-tabs.page.html'
@@ -22,10 +25,25 @@ export class GameTabsPage {
         this.gameHome = GameHomePage;
         this.gameSheet = GameSheetPage;
 
-        let detectivesCards = navParams.get('detectivesCards');
-        let players = navParams.get('players');
+        if (this.navParams.get('gameDetails'))
+        {
+            //Bulid game from saved data
+            let gameDetails : GameDetails = this.navParams.get('gameDetails');
+            let gameTracker = new GameTracker(gameDetails.players, gameDetails.detectivesCards);
+            _.forEach(gameDetails.turns, (turn) => {
+                gameTracker.enterTurn(turn.player, turn.guess);
+            });
 
-        this.gameTracker = new GameTracker(players, detectivesCards);
-        this.tabParams = { gameTracker: this.gameTracker};
+            this.gameTracker = gameTracker;
+            this.tabParams = { gameTracker: this.gameTracker, activePlayer: gameDetails.activePlayer };
+        }
+        else
+        {
+            let detectivesCards = navParams.get('detectivesCards');
+            let players = navParams.get('players');
+
+            this.gameTracker = new GameTracker(players, detectivesCards);
+            this.tabParams = { gameTracker: this.gameTracker };
+        }
     }
 }

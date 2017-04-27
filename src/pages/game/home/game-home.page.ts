@@ -3,7 +3,10 @@ import { Component, ViewChild } from '@angular/core';
 import { NavParams, ToastController  } from 'ionic-angular';
 
 import { GameTracker, Player } from '../../../app/game/index';
+import { GameDetails, GameLoaderService } from '../../../app/shared/index';
 import { GuessEntryComponent } from '../index';
+
+import * as _ from "lodash";
 
 @Component({
     selector: 'game-home-page',
@@ -16,10 +19,17 @@ export class GameHomePage {
 
     @ViewChild('guessEntry') guessEntry: GuessEntryComponent
 
-    constructor(private navParams : NavParams, public toastCtrl: ToastController) 
+    constructor(private navParams : NavParams, public toastCtrl: ToastController, private gameLoaderService : GameLoaderService) 
     {
         this.gameTracker = this.navParams.get('gameTracker');
-        this.activePlayer = this.gameTracker.players[0];
+        
+        let activePlayer = this.navParams.get('activePlayer');
+        if (activePlayer)
+            this.activePlayer = _.find(this.gameTracker.players, activePlayer);
+        else
+            this.activePlayer = this.gameTracker.players[0];
+
+        this.saveGame();
     }
 
     guessEntered(guess) : void
@@ -40,7 +50,16 @@ export class GameHomePage {
             this.guessEntry.resetEntry();
             this.showGuessEntered(this.activePlayer, guess);
             this.activePlayer = this.gameTracker.getNextPlayer(this.activePlayer);
+
+            this.saveGame();
         }
+    }
+
+    private saveGame() : void
+    {
+        let gameDetails = new GameDetails(this.gameTracker.players, this.gameTracker.detectiveCards, this.gameTracker.turns, this.activePlayer)
+
+        this.gameLoaderService.saveGame(gameDetails);
     }
 
     private showGuessEntered(activePlayer, guess)
