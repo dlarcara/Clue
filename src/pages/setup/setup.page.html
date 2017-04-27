@@ -54,7 +54,7 @@
                 <img item-left src="{{player.suspect.icon}}" class="game-card-icon" />
 
                 <!-- Step 1: Players -->
-                <ion-input type="text" [(ngModel)]="player.name" name="playerName" [placeholder]="player.suspect.friendlyName" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-input>
+                <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-input>
                 <ion-toggle item-right [(ngModel)]="player.isPlaying" *ngIf="setupStep == 1"></ion-toggle>
 
                 <!-- Step 2: Detective, Extra Cards, Order -->
