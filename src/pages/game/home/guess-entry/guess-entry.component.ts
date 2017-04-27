@@ -60,7 +60,7 @@ export class GuessEntryComponent {
         let accusedRoom = this.accusedRoom ? +this.accusedRoom.cardIndex : null;
 
         let shownGameCard = this.getShownCard();
-        let shownCard = this.enterShownCard ? this.gameCardService.convertToCard(shownGameCard.cardCategory, shownGameCard.cardIndex) : null;
+        let shownCard = (shownGameCard && this.enterShownCard) ? this.gameCardService.convertToCard(shownGameCard.cardCategory, shownGameCard.cardIndex) : null;
 
         return new Guess(accusedSuspect, accusedWeapon, accusedRoom, this.activePlayer, this.playerThatShowed, shownCard);
     }
