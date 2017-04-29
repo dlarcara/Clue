@@ -4,6 +4,7 @@ game-sheet-page {
     .sheet-cell { height: 35px; border: 1px solid #000; background-color: #FFF; }
     .sheet-cell-header { height: 35px; border: 1px solid #000; background-color: #717070; text-align: center; font-weight: bold; }
     .sheet-cell-icon { height: 35px; border: 1px solid #000; color: gray; background-color: #717070; width: 40px; text-align: center; }
+    .avatar { font-size: 1.6em; }
 
     .card-had { background-color: color($colors, primary); }
     .card-not-had { background-color: color($colors, medium); }

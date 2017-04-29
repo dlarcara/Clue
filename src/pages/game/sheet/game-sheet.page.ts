@@ -54,4 +54,9 @@ export class GameSheetPage {
             room: verdict ? this.gameCardService.getCard(CardCategory.ROOM, verdict.room) : null,
         }
     }
+
+    showPlayerDetails(element) : void
+    {
+        alert("here");
+    }
 }

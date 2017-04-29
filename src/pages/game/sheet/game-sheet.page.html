@@ -41,8 +41,8 @@
         <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
         <ion-row>
             <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
-                <player-icon [player]="player"></player-icon>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
             </ion-col>
         </ion-row>
         <ion-row *ngFor="let suspect of suspectCards">
@@ -60,8 +60,8 @@
         <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
         <ion-row>
             <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
-                <player-icon [player]="player"></player-icon>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
             </ion-col>
         </ion-row>
         <ion-row *ngFor="let weapon of weaponCards">
@@ -79,8 +79,8 @@
         <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>
         <ion-row>
             <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon">
-                <player-icon [player]="player"></player-icon>
+            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
             </ion-col>
         </ion-row>
         <ion-row *ngFor="let room of roomCards">

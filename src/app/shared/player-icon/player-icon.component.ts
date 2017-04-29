@@ -1,16 +1,25 @@
 import { Component, Input } from '@angular/core';
 
-import { Player } from '../../game/index';
+import { Player, Suspect } from '../../game/index';
 
 @Component({
     selector: 'player-icon',
-    template: `<span [style.color]=suspectBgColors[player.suspect]>
-        {{player.name.substring(0,1)}}
-    </span>`
+    template: `<ion-icon name="contact" [color]="getColor()"></ion-icon>`
 })
 
 export class PlayerIconComponent {
-    private suspectBgColors : string[] = ['#253783','#B22E2D','#000000','#522D61','#DFBD45','#1A4C28']
-    
     @Input() player: Player
+
+    getColor() : string
+    {
+        switch(this.player.suspect)
+        {
+            case Suspect.GREEN: return "green";
+            case Suspect.MUSTARD: return "mustard";
+            case Suspect.PEACOCK: return "peacock";
+            case Suspect.PLUM: return "plum";
+            case Suspect.SCARLET: return "scarlet";
+            case Suspect.WHITE: return "white";
+        }
+    }
 }
