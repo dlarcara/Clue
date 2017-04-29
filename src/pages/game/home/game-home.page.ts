@@ -58,19 +58,7 @@ export class GameHomePage {
 
     getProgress() : number
     {
-        let solvedCount = 0;
-        let totalCount = 0;
-        _.forEach(this.gameTracker.players, (player) => {
-            _.forEach(this.gameCardService.ALLCARDS, (c) => {
-                let status = this.gameTracker.getStatusForPlayerAndCard(player, new Card(c.cardCategory, c.cardIndex));
-                if (status != CellStatus.UNKNOWN)
-                    solvedCount ++;
-
-                totalCount++;
-            });
-        });
-
-        return solvedCount / totalCount;
+        return this.gameTracker.getProgress();
     }
 
     private saveGame() : void

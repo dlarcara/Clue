@@ -38,9 +38,48 @@ export class GameSheet
         return this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)];
     }
 
-    resetData(dataToResetTo : any[]) : void
+    getPlayerWhoHasCard(card : Card) : Player
     {
-        this._data = dataToResetTo;
+        return _.find(this._players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
+    }
+
+    getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
+    {
+        //Ensure player is playing
+        if (!_.find(this._players, player))
+            throw new Error("Player not found");
+
+        //Get all cards that are in a particular status
+        return GameConstants.ALLCARDS.filter((card) => {
+            return this.getStatusForPlayerAndCard(player, card) == cellStatus;
+        });
+    }
+
+    getVerdict() : Verdict
+    {
+        let verdict = new Verdict();
+        verdict.suspect = this.getVerdictForCategory(CardCategory.SUSPECT);
+        verdict.weapon = this.getVerdictForCategory(CardCategory.WEAPON);
+        verdict.room = this.getVerdictForCategory(CardCategory.ROOM);
+        return verdict;
+    }
+
+    //TODO: Test this
+    getProgress() : number
+    {
+        let solvedCount = 0;
+        let totalCount = 0;
+        _.forEach(this._players, (player) => {
+            _.forEach(GameConstants.ALLCARDS, (c) => {
+                let status = this.getStatusForPlayerAndCard(player, c);
+                if (status != CellStatus.UNKNOWN)
+                    solvedCount ++;
+
+                totalCount++;
+            });
+        });
+
+        return solvedCount / totalCount;
     }
 
     markCardAsHadByPlayer(player : Player, card : Card) : void
@@ -86,30 +125,9 @@ export class GameSheet
         this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
     }
 
-    getPlayerWhoHasCard(card : Card) : Player
+    resetData(dataToResetTo : any[]) : void
     {
-        return _.find(this._players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
-    }
-
-    getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
-    {
-        //Ensure player is playing
-        if (!_.find(this._players, player))
-            throw new Error("Player not found");
-
-        //Get all cards that are in a particular status
-        return GameConstants.ALLCARDS.filter((card) => {
-            return this.getStatusForPlayerAndCard(player, card) == cellStatus;
-        });
-    }
-
-    getVerdict() : Verdict
-    {
-        let verdict = new Verdict();
-        verdict.suspect = this.getVerdictForCategory(CardCategory.SUSPECT);
-        verdict.weapon = this.getVerdictForCategory(CardCategory.WEAPON);
-        verdict.room = this.getVerdictForCategory(CardCategory.ROOM);
-        return verdict;
+        this._data = dataToResetTo;
     }
 
     private getVerdictForCategory(cardCategory : CardCategory) : number

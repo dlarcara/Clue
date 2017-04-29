@@ -14,6 +14,8 @@ export class GameAlgorithm
     private _playersArray: CircularArray<Player>;
     get _players(): Player[] { return this._playersArray.values; }
 
+    get detective(): Player { return _.find(this._players, { 'isDetective': true }); }
+
     private _gameSheet: GameSheet;
     get gameSheet() : GameSheet { return this._gameSheet; }
     
@@ -32,23 +34,15 @@ export class GameAlgorithm
         this._gameSheet = new GameSheet(players);
         this._unresolvedGuesses = [];
 
-        this.fillOutKnownCards(this.getDetective(), detectivesCards);
-    }
-
-    getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
-    {     
-        if (!this.playerIsPlaying(player))
-            throw new Error("Player not found");
-
-        return this._gameSheet.getStatusForPlayerAndCard(player, card);
+        this.fillOutKnownCards(this.detective, detectivesCards);
     }
 
     applyGuess(guess : Guess) : void
     {   
-        if (!this.playerIsPlaying(guess.playerThatGuessed))
+        if (!_.find(this._players, guess.playerThatGuessed))
             throw new Error("Guessing player not found");
             
-        if (!!guess.playerThatShowed && !this.playerIsPlaying(guess.playerThatShowed))
+        if (!!guess.playerThatShowed && !_.find(this._players, guess.playerThatShowed))
             throw new Error("Showing player not found");
 
         //Create copy of game sheet data and unresolved guesses
@@ -70,19 +64,9 @@ export class GameAlgorithm
         }
     }
 
-    getPlayerWhoHasCard(card : Card) : Player
-    {
-        return this._gameSheet.getPlayerWhoHasCard(card);
-    }
-
     getNextPlayer(player: Player) : Player
     {
         return this._playersArray.getNext(player);
-    }
-
-    private getDetective() : Player
-    {
-        return _.find(this._players, { 'isDetective': true });
     }
 
     private fillOutKnownCards(player : Player, cardsInHand : Card[]) : void
@@ -112,14 +96,15 @@ export class GameAlgorithm
     private markCardAsHadByPlayer(player : Player, card : Card) : void
     {
         //Short circuit any work if the card is already marked as had
-        if(this.getStatusForPlayerAndCard(player, card) == CellStatus.HAD)
+        if(this._gameSheet.getStatusForPlayerAndCard(player, card) == CellStatus.HAD)
             return;
 
         //Mark this card as had by this player
         this._gameSheet.markCardAsHadByPlayer(player, card);
 
         //Mark all other players as not having this card
-        _.forEach(this.getAllOtherPlayers(player), (p) => { this.markCardAsNotHadByPlayer(p, card); });
+        let allOtherPlayers = _.differenceWith(this._players, [player], _.isEqual);
+        _.forEach(allOtherPlayers, (p) => { this.markCardAsNotHadByPlayer(p, card); });
 
         //Mark all other cards as not had by this player if all their cards are known
         let knownHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
@@ -130,7 +115,7 @@ export class GameAlgorithm
     private markCardAsNotHadByPlayer(player : Player, card : Card) : void
     {
         //Short circuit any work if the card is already marked as not had
-        if(this.getStatusForPlayerAndCard(player, card) == CellStatus.NOTHAD)
+        if(this._gameSheet.getStatusForPlayerAndCard(player, card) == CellStatus.NOTHAD)
             return;
 
         //Mark this card as not had by a player
@@ -199,7 +184,7 @@ export class GameAlgorithm
 
         //If any of the cards is known to be had by the shower we can stop trying to resolve this guess
         //They may have more than one of these cards, but there is no way of knowing which one it is they showed for sure
-        let cardsPlayerDefinitelyHas = _.filter(guessedCards, (card) => { return this.getStatusForPlayerAndCard(shower, card) == CellStatus.HAD});
+        let cardsPlayerDefinitelyHas = _.filter(guessedCards, (card) => { return this._gameSheet.getStatusForPlayerAndCard(shower, card) == CellStatus.HAD});
         if (cardsPlayerDefinitelyHas.length)
         {
             _.remove(this._unresolvedGuesses, guess);
@@ -207,7 +192,7 @@ export class GameAlgorithm
         }
 
         //If there is only 1 card left that this player might have than we can resolve this guess
-        let cardsPlayerMightHave = _.filter(guessedCards, (card) => { return this.getStatusForPlayerAndCard(shower, card) == CellStatus.UNKNOWN});
+        let cardsPlayerMightHave = _.filter(guessedCards, (card) => { return this._gameSheet.getStatusForPlayerAndCard(shower, card) == CellStatus.UNKNOWN});
         if (cardsPlayerMightHave.length == 1)
         {
             this.markCardAsHadByPlayer(shower, cardsPlayerMightHave[0]);
@@ -267,15 +252,5 @@ export class GameAlgorithm
             if (notHadCount == (this._players.length - 1) && unknownCount == 1)
                 this.markCardAsHadByPlayer(cellStatusForPlayers[CellStatus.UNKNOWN][0], card);
         });
-    }
-
-    private playerIsPlaying(player : Player) : Boolean
-    {
-        return !!_.find(this._players, player);
-    }
-
-    private getAllOtherPlayers(playerToExclude : Player) : Player[] 
-    {
-        return _.differenceWith(this._players, [playerToExclude], _.isEqual);
     }
 }

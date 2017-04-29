@@ -65,13 +65,13 @@ export class GameTracker
     
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {     
-        return this.gameAlgorithm.getStatusForPlayerAndCard(player, card);
+        return this.gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card);
     }
 
     //TODO: Test This
     playerMightHaveCard(player : Player, card : Card) : Boolean
     {
-        if (this.gameAlgorithm.getPlayerWhoHasCard(card))
+        if (this.gameAlgorithm.gameSheet.getPlayerWhoHasCard(card))
             return false;
 
         if (this.getStatusForPlayerAndCard(player, card) != CellStatus.UNKNOWN)
@@ -89,6 +89,11 @@ export class GameTracker
     getVerdict() : Verdict
     {
         return this.gameAlgorithm.gameSheet.getVerdict()
+    }
+
+    getProgress() : number
+    {
+        return this.gameAlgorithm.gameSheet.getProgress();
     }
 
     //Return possible number of cards a player can have based on the total number of players

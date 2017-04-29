@@ -27,7 +27,7 @@ describe("When interacting with the game algorithm", () => {
             
             let player = new Player("Player 4", Suspect.SCARLET, 6, true);
             let card = new Card(CardCategory.SUSPECT, Suspect.WHITE);
-            expect(() => gameAlgroithm.getStatusForPlayerAndCard(player, card))
+            expect(() => gameAlgroithm.gameSheet.getStatusForPlayerAndCard(player, card))
                                     .toThrowError("Player not found");
         });
 
@@ -71,7 +71,7 @@ describe("When interacting with the game algorithm", () => {
             let card = new Card(CardCategory.SUSPECT, suspectIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Suspect[suspectIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
-            expect(gameAlgorithm.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
+            expect(gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
         });
 
         //For all Weapon Cards
@@ -79,7 +79,7 @@ describe("When interacting with the game algorithm", () => {
             let card = new Card(CardCategory.WEAPON, weaponIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Weapon[weaponIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
-            expect(gameAlgorithm.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
+            expect(gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
         });
 
         //For all Room Cards
@@ -87,7 +87,7 @@ describe("When interacting with the game algorithm", () => {
             let card = new Card(CardCategory.ROOM, roomIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Room[roomIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
-            expect(gameAlgorithm.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
+            expect(gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card)).toBe(expectedCellStatus, failMessage);
         });
     };
 
