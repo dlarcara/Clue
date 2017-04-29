@@ -38,13 +38,27 @@ export class GameAlgorithm
     }
 
     applyGuess(guess : Guess) : void
-    {   
+    {
         if (!_.find(this._players, guess.playerThatGuessed))
             throw new Error("Guessing player not found");
             
         if (!!guess.playerThatShowed && !_.find(this._players, guess.playerThatShowed))
             throw new Error("Showing player not found");
 
+        //Ensure that the shower might still have one of the guessed cards
+        if (guess.playerThatShowed)
+        {
+            let guessedCards = [new Card(CardCategory.SUSPECT, guess.suspect), new Card(CardCategory.WEAPON, guess.weapon), new Card(CardCategory.ROOM, guess.room)];
+            let cardsNotHad = _.filter(guessedCards, (card) => this._gameSheet.getStatusForPlayerAndCard(guess.playerThatShowed, card) == CellStatus.NOTHAD);
+            if (cardsNotHad.length == 3)
+            {
+                if (_.isEqual(guess.playerThatShowed, this.detective))
+                    throw new Error(`You do not have any of the cards being guessed`);
+                else
+                    throw new Error(`${guess.playerThatShowed.name} does not have any of the cards being guessed`);
+            }
+        }
+  
         //Create copy of game sheet data and unresolved guesses
         //If something goes wrong during applying this guess we'll need to reset this
         let priorGameSheetData = _.cloneDeep(this._gameSheet.data);
