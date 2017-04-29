@@ -5,6 +5,12 @@
 </ion-header>
 
 <ion-content>
+    <ion-card *ngIf="!gameTracker.turns.length">
+        <ion-card-content>
+            No turns yet
+        </ion-card-content>
+    </ion-card>
+    
     <ion-card *ngFor="let turn of getTurns()">
         <ion-card-header>Turn #{{turn.number}}</ion-card-header>
 
