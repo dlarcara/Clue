@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Game Replay</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card *ngFor="let turn of getTurns()">
+        <ion-card-header>Turn #{{turn.number}}</ion-card-header>
+
+        <ion-card-content>
+            <p *ngIf="!turn.guess"><i>{{getPlayerDisplay(turn.player)}}</i> passed.</p>
+            <p *ngIf="turn.guess">
+                <i>{{getPlayerDisplay(turn.player)}}</i> guessed 
+                <i>{{getCardDisplay(CardCategory.SUSPECT, turn.guess.suspect)}}</i> in the 
+                <i>{{getCardDisplay(CardCategory.ROOM, turn.guess.room)}}</i> with the
+                <i>{{getCardDisplay(CardCategory.WEAPON, turn.guess.weapon)}}</i>.
+                
+                <span *ngIf="!turn.guess.playerThatShowed"><i>No one</i> disproved it.</span>
+                <span *ngIf="turn.guess.playerThatShowed">
+                    <span *ngIf="!playerIsDetective(turn.player)">
+                        <i>{{getPlayerDisplay(turn.guess.playerThatShowed)}}</i> disproved it.
+                    </span>
+                    <span *ngIf="playerIsDetective(turn.player)">
+                        <i>{{getPlayerDisplay(turn.guess.playerThatShowed)}}</i> disproved it by showing you 
+                        <span *ngIf="turn.guess.cardShown.category != CardCategory.SUSPECT">the </span>
+                        <i>{{getCardDisplay(turn.guess.cardShown.category, turn.guess.cardShown.cardIndex)}}</i>.
+                    </span>
+                </span>
+            </p>
+
+            <ion-label>Progress: {{turn.resultingSheet.getProgress() | percent:'2.0-0'}}</ion-label>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

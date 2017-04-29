@@ -5,7 +5,6 @@
                 <ion-col *ngFor="let player of gameTracker.players" 
                          class="player-space" 
                          [ngClass]="{'active': player == activePlayer}">
-                    <!--<player-display [player]="player"></player-display>-->
                     {{player.name}}
                 </ion-col>
             </ion-row>
@@ -15,9 +14,9 @@
 
 <ion-content>
     <ion-card no-padding>
+        <ion-card-header>Turn #{{gameTracker.turns.length + 1}}</ion-card-header>
         <ion-card-content>
-            <p>Turn: #{{gameTracker.turns.length + 1}}</p>
-            <p>Progress: {{getProgress() | percent:'2.1'}}</p>
+            <p>Progress: {{getProgress() | percent:'2.0-0'}}</p>
         </ion-card-content>
     </ion-card>
 
