@@ -26,6 +26,6 @@ export class HomePage {
 
   resumeGame()
   {
-    this.navCtrl.setRoot(GameTabsPage, { gameDetails: this.savedGame });  
+    this.navCtrl.push(GameTabsPage, { gameDetails: this.savedGame });  
   }
 }
