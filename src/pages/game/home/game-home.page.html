@@ -5,7 +5,8 @@
                 <ion-col *ngFor="let player of gameTracker.players" 
                          class="player-space" 
                          [ngClass]="{'active': player == activePlayer}">
-                    <player-icon [player]="player"></player-icon>
+                    <!--<player-display [player]="player"></player-display>-->
+                    {{player.name}}
                 </ion-col>
             </ion-row>
         </ion-grid>

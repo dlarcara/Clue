@@ -1,5 +1,4 @@
 import { NgModule, ErrorHandler } from '@angular/core';
-import { Ng2LetterAvatar } from "ng2letteravatar/ng2letteravatar";
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
@@ -28,8 +27,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     PlayerEntryComponent,
     PlayerListComponent,
 
-    PlayerIconComponent,
-    //Ng2LetterAvatar
+    PlayerIconComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp)

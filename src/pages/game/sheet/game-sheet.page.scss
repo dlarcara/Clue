@@ -3,19 +3,18 @@ game-sheet-page {
 
     .sheet-cell { height: 35px; border: 1px solid #000; background-color: #FFF; }
     .sheet-cell-header { height: 35px; border: 1px solid #000; background-color: #717070; text-align: center; font-weight: bold; }
-    .sheet-cell-icon { height: 35px; border: 1px solid #000; color: gray; width: 40px; text-align: center; }
+    .sheet-cell-icon { height: 35px; border: 1px solid #000; color: gray; background-color: #717070; width: 40px; text-align: center; }
 
-    .card-had { background-color: green; }
-    .card-not-had { background-color: #919191; }
-    .card-maybe { background-color: #FF7E00; }
+    .card-had { background-color: color($colors, primary); }
+    .card-not-had { background-color: color($colors, medium); }
+    .card-maybe { background-color: #EE9238; }
     .card-unknown { background-color: #FFF; }
 
     .sheet-legend { color: #000; font-weight: bold; padding-top: 8px; }
 
     .verdict-row
     {
-        background-color: #FFF;
-
+        .sheet-cell-icon { background-color: color($colors, light); }
         .verdict-header { background-color: #717070; color: #000; font-weight: bold; }
         .icon { font-size: 1.6em; }
     }

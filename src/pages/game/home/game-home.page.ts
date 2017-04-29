@@ -74,13 +74,13 @@ export class GameHomePage {
             `Guess entered for ${guess.playerThatGuessed.name}` : 
             `${activePlayer.name} passed`;
 
-        let toast = this.toastCtrl.create({ message: message, duration: 1500, position: 'top'});
+        let toast = this.toastCtrl.create({ message: message, duration: 1500 });
         toast.present();
     }
 
     private showGuessError(message : string)
     {
-        let toast = this.toastCtrl.create({ message: message, duration: 5000});
+        let toast = this.toastCtrl.create({ message: message, duration: 5000 });
         toast.present();
     }
 }

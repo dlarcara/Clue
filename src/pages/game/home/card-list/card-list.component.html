@@ -1,7 +1,7 @@
 <ion-content>
     <ion-list>
         <ion-item-group *ngFor="let cardsForCategory of getCardsGroupedByCategory()">
-            <ion-item-divider color="light">{{cardsForCategory.category}}</ion-item-divider>
+            <ion-item-divider color="dark">{{cardsForCategory.category}}</ion-item-divider>
 
             <button ion-item *ngFor="let card of cardsForCategory.cards" (click)="selectCard(card)">
                 <ion-icon item-left><img src="{{card.icon}}" class="game-card-icon" /></ion-icon>

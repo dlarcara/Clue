@@ -24,20 +24,32 @@ $font-path: "../assets/fonts";
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    green,
-  secondary:  blue,
-
-  danger:     #f53d3d,
-
-  light:      #f4f4f4,
-  dark:       #222,
+  primary:    #547A44,
+  secondary:  #154EC4,
+  
+  light:      #F0F0F0,
+  medium:     #B8B8B8,
+  dark:       #3F3F46,
 
   invalid:    #f53d3d,
   valid:      #32db64
 );
 
-$background-color: #CBCBCB;
-$list-background-color: #fff;
+//Core Colors
+$background-color: #313131;
+$link-color: #FFFFFF;
+$list-background-color: #F0F0F0;
+
+//Tabs
+$tabs-background: #48484F;
+$tabs-md-tab-icon-color: color($colors, medium);
+
+//Toobar
+$toolbar-background: color($colors, dark);
+
+//Toggle Styling
+$toggle-md-active-color: #000000;
+$toggle-md-handle-background-color-off: color($colors, medium);
 
 // App iOS Variables
 // --------------------------------------------------

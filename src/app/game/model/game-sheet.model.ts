@@ -84,6 +84,7 @@ export class GameSheet
 
     markCardAsHadByPlayer(player : Player, card : Card) : void
     {
+        debugger;
         //Ensure player is playing
         if (!_.find(this._players, player))
             throw new Error("Player not found");

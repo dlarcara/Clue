@@ -67,7 +67,7 @@
         <!-- Step 3: Detective Cards -->
         <ion-list *ngIf="setupStep == 3">
             <ion-item-group *ngFor="let cardsForCategory of allCardsByCategory">
-                <ion-item-divider color="light">{{cardsForCategory.category}}</ion-item-divider>
+                <ion-item-divider color="dark">{{cardsForCategory.category}}</ion-item-divider>
                 
                 <ion-item *ngFor="let card of cardsForCategory.cards">
                     <img item-left src="{{card.icon}}" class="game-card-icon" />
