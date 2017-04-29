@@ -15,4 +15,8 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-img.game-card-icon { width: 25px; height: 25px; margin: 0 !important; }
+.icon-item
+{
+    .item-inner { margin-left: 0px !important; }
+    img.game-card-icon { width: 25px; height: 25px; margin: 0 !important; }
+}

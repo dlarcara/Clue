@@ -50,8 +50,8 @@
     <ion-card *ngIf="setupStep != 4">
         <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
         <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
-            <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)">
-                <img item-left src="{{player.suspect.icon}}" class="game-card-icon" />
+            <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)" class="icon-item">
+                <ion-icon item-left><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
 
                 <!-- Step 1: Players -->
                 <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-input>
@@ -69,8 +69,8 @@
             <ion-item-group *ngFor="let cardsForCategory of allCardsByCategory">
                 <ion-item-divider color="dark">{{cardsForCategory.category}}</ion-item-divider>
                 
-                <ion-item *ngFor="let card of cardsForCategory.cards">
-                    <img item-left src="{{card.icon}}" class="game-card-icon" />
+                <ion-item *ngFor="let card of cardsForCategory.cards" class="icon-item">
+                    <ion-icon item-left><img item-left src="{{card.icon}}" class="game-card-icon" /></ion-icon>
 
                     <ion-label>{{card.friendlyName}}</ion-label>
                     <ion-checkbox [(ngModel)]="card.selected" item-right></ion-checkbox>
