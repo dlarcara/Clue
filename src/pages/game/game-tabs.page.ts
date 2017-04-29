@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavParams } from 'ionic-angular';
 
-import { GameHomePage, GameSheetPage, GameDetailsPage } from './index';
+import { GameHomePage, GameSheetPage, GameDetailsPage, GameSettingsPage } from './index';
 
 import { GameDetails } from '../../app/shared/index';
 import { GameTracker } from '../../app/game/index';
@@ -18,7 +18,8 @@ export class GameTabsPage {
     gameHome: any;
     gameSheet: any;
     gameDetails: any;
-
+    gameSettings : any;
+    
     tabParams: any;
     gameTracker: GameTracker
 
@@ -26,7 +27,8 @@ export class GameTabsPage {
         this.gameHome = GameHomePage;
         this.gameSheet = GameSheetPage;
         this.gameDetails = GameDetailsPage;
-        
+        this.gameSettings = GameSettingsPage;
+
         if (this.navParams.get('gameDetails'))
         {
             //Bulid game from saved data

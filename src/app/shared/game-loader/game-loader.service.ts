@@ -20,4 +20,9 @@ export class GameLoaderService
 
         return JSON.parse(localStorage.getItem('gameDetails'));
     }
+
+    removeGame() : void
+    {
+        localStorage.removeItem('gameDetails');
+    }
 }
