@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavParams } from 'ionic-angular';
 
-import { GameCardService, GameCard } from '../../../app/shared/index';
+import { GameCardService } from '../../../app/shared/index';
 import { GameTracker, Player, Card, CardCategory, CellStatus, Verdict } from '../../../app/game/index';
 
 import * as _ from "lodash";
@@ -13,9 +13,9 @@ import * as _ from "lodash";
 })
 
 export class GameSheetPage {
-    readonly suspectCards: GameCard[]
-    readonly weaponCards: GameCard[]
-    readonly roomCards: GameCard[]
+    readonly suspectCards: Card[]
+    readonly weaponCards: Card[]
+    readonly roomCards: Card[]
 
     gameTracker : GameTracker
 
@@ -28,9 +28,8 @@ export class GameSheetPage {
         this.gameTracker = this.navParams.get('gameTracker');
     }
 
-    getCellClass(player : Player, gameCard: GameCard) : string
+    getCellClass(player : Player, card: Card) : string
     {
-        let card = new Card(gameCard.cardCategory, gameCard.cardIndex);
         let cellStatus = this.gameTracker.getStatusForPlayerAndCard(player, card);
         
         if (cellStatus == CellStatus.HAD)

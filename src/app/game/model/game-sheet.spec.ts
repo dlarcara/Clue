@@ -46,7 +46,7 @@ describe("When filling out a game sheet", () => {
 
         gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
         expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
-            .toThrowError("WHITE is already marked as NOTHAD for Player 1, can't mark it as HAD");
+            .toThrowError("Mrs. White is already marked as not had by Player 1, can't mark it as had");
     });
 
     it("it should throw an error when a card is already marked as had and is requested to be marked as not had", () => {
@@ -55,7 +55,16 @@ describe("When filling out a game sheet", () => {
 
         gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
         expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
-            .toThrowError("WHITE is already marked as HAD for Player 1, can't mark it as NOTHAD");
+            .toThrowError("Mrs. White is already marked as had by Player 1, can't mark it as not had");
+    });
+
+    it("it should throw an error when a card is already marked as had and is requested to be marked as not had", () => {
+        let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
+        let gameSheet = new GameSheet(players);
+
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE));
+        expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE)))
+            .toThrowError("The rope is already marked as had by Player 1, can't mark it as not had");
     });
 
     it("it should throw an error when the card is already had by someone else", () => {
@@ -64,7 +73,7 @@ describe("When filling out a game sheet", () => {
 
         gameSheet.markCardAsHadByPlayer(players[1], new Card(CardCategory.SUSPECT, Suspect.WHITE));
         expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
-            .toThrowError("Player 2 already already has WHITE");
+            .toThrowError("Player 2 already has Mrs. White, can't mark it as had by Player 1");
     });
 
     it("it should throw an error when attempting to mark the card has had and all the players cards are already identified", () => {
@@ -78,7 +87,7 @@ describe("When filling out a game sheet", () => {
         gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.SCARLET));
         gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
         expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE)))
-            .toThrowError("All 6 cards for Player 1 are already identified, can't mark ROPE as HAD");
+            .toThrowError("All 6 cards for Player 1 are already identified, can't mark the rope as had");
     });
 
     it("it should throw an error when marking a card as not known for all players and a verdict in that category has already been reached", () => {
@@ -89,7 +98,7 @@ describe("When filling out a game sheet", () => {
         _.forEach(players.slice(0,2), (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.GREEN)));
         
         expect(() => gameSheet.markCardAsNotHadByPlayer(players[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)))
-            .toThrowError("Can't mark GREEN as not had for Player 3, no one else has GREEN and a verdict has already been reached in this category");        
+            .toThrowError("Can't mark Mr. Green as not had by Player 3, no one else has Mr. Green and a verdict has already been reached in this category");        
     });
 
     it("it should show card as UNKNOWN if it's not known if the card is had or not", () => {

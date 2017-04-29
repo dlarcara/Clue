@@ -75,7 +75,7 @@ export class GameAlgorithm
         _.forEach(cardsInHand, (card) => { this.markCardAsHadByPlayer(player, card); });
 
         //Mark all other cards as not had for this player
-        _.forEach(GameConstants.allCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
+        _.forEach(GameConstants.getAllCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
     private evaluateGuess(guess : Guess) : void 
@@ -109,7 +109,7 @@ export class GameAlgorithm
         //Mark all other cards as not had by this player if all their cards are known
         let knownHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (player.numberOfCards == knownHadCardsForPlayer.length)
-            _.forEach(GameConstants.allCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
+            _.forEach(GameConstants.getAllCardsExcept(knownHadCardsForPlayer), (c) => { this.markCardAsNotHadByPlayer(player, c)});
     }
 
     private markCardAsNotHadByPlayer(player : Player, card : Card) : void
@@ -124,7 +124,7 @@ export class GameAlgorithm
         //Mark all remaining cards as had by this player if all their not had cards have been identified
         let knowNotHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
         if ((GameConstants.ALLCARDS.length - knowNotHadCardsForPlayer.length) == player.numberOfCards)
-            _.forEach(GameConstants.allCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
+            _.forEach(GameConstants.getAllCardsExcept(knowNotHadCardsForPlayer), (c) => { this.markCardAsHadByPlayer(player, c)});
     }
 
     private markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess : Guess)
@@ -212,7 +212,7 @@ export class GameAlgorithm
     private attemptToDeduceVerdictInCategory(cardCategory : CardCategory) : void
     {
         //Get all cards in the given category
-        let allCardsInCategory = GameConstants.allCardsInCategory(cardCategory);
+        let allCardsInCategory = GameConstants.getAllCardsInCategory(cardCategory);
         
         //Check if all but one card in this category has an identified owner, if so no one has the last card
         let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this._gameSheet.getPlayerWhoHasCard(card); });
@@ -241,7 +241,7 @@ export class GameAlgorithm
 
     private attemptToResolveMustHaveForCategory(cardCategory : CardCategory)
     {
-        _.forEach(GameConstants.allCardsInCategory(cardCategory), (card : Card) => {
+        _.forEach(GameConstants.getAllCardsInCategory(cardCategory), (card : Card) => {
             let cellStatusForPlayers = _.groupBy(this._players, (player : Player) => {
                 return this._gameSheet.getStatusForPlayerAndCard(player, card);
             });

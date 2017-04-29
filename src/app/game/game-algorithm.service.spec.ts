@@ -93,7 +93,7 @@ describe("When interacting with the game algorithm", () => {
 
     let allCardsExcept = (cards : Card[]) : Card[] =>
     {
-        return GameConstants.allCardsExcept(cards);
+        return GameConstants.getAllCardsExcept(cards);
     }
 
     describe("for a 3 player game", () => {
@@ -666,7 +666,7 @@ describe("When interacting with the game algorithm", () => {
             }).toThrowError("Invalid guess, all cards are already marked as owned by someone else");
         });
 
-        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess", () => {
+        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess and throw proper error", () => {
             let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
   
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)));
@@ -675,7 +675,22 @@ describe("When interacting with the game algorithm", () => {
             let previousUnresolvedGuesses = _.cloneDeep(gameAlgorithm.unresolvedGuesses);   
             expect(() => {
                 gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.DINING, gamePlayers[0], null, null));
-            }).toThrowError("GREEN is already marked as HAD for Player 3, can't mark it as NOTHAD");
+            }).toThrowError("Mr. Green is already marked as had by Player 3, can't mark it as not had");
+
+            expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
+            expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);
+        });
+
+        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess and throw proper error", () => {
+            let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
+  
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.WEAPON, Weapon.ROPE)));
+            
+            let previousSheet = _.cloneDeep(gameAlgorithm.gameSheet.data);
+            let previousUnresolvedGuesses = _.cloneDeep(gameAlgorithm.unresolvedGuesses);   
+            expect(() => {
+                gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], null, null));
+            }).toThrowError("The rope is already marked as had by Player 3, can't mark it as not had");
 
             expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
             expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);

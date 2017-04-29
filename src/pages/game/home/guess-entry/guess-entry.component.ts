@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { } from 'ionic-angular';
 
 import { CardCategory, Player, Guess, Card } from '../../../../app/game/index';
-import { GameCard, GameCardService } from '../../../../app/shared/index';
+import { GameCardService } from '../../../../app/shared/index';
 
 import * as _ from "lodash";
 
@@ -13,9 +13,9 @@ import * as _ from "lodash";
 })
 
 export class GuessEntryComponent {
-    accusedSuspect: GameCard
-    accusedWeapon: GameCard
-    accusedRoom: GameCard
+    accusedSuspect: Card
+    accusedWeapon: Card
+    accusedRoom: Card
     playerThatShowed: Player
     shownCategory : CardCategory
 
@@ -60,7 +60,7 @@ export class GuessEntryComponent {
         let accusedRoom = this.accusedRoom ? +this.accusedRoom.cardIndex : null;
 
         let shownGameCard = this.getShownCard();
-        let shownCard = (shownGameCard && this.enterShownCard) ? this.gameCardService.convertToCard(shownGameCard.cardCategory, shownGameCard.cardIndex) : null;
+        let shownCard = (shownGameCard && this.enterShownCard) ? shownGameCard : null;
 
         return new Guess(accusedSuspect, accusedWeapon, accusedRoom, this.activePlayer, this.playerThatShowed, shownCard);
     }
@@ -99,19 +99,19 @@ export class GuessEntryComponent {
             this.shownCategory = null;
     }
 
-    getShownCard() : GameCard
+    getShownCard() : Card
     {
         switch(this.shownCategory)
         {
-            case CardCategory.SUSPECT: return this.gameCardService.getCard(CardCategory.SUSPECT, this.accusedSuspect.cardIndex);
-            case CardCategory.WEAPON: return this.gameCardService.getCard(CardCategory.WEAPON, this.accusedWeapon.cardIndex);
-            case CardCategory.ROOM: return this.gameCardService.getCard(CardCategory.ROOM, this.accusedRoom.cardIndex);
+            case CardCategory.SUSPECT: return new Card(CardCategory.SUSPECT, +this.accusedSuspect.cardIndex);
+            case CardCategory.WEAPON: return new Card(CardCategory.WEAPON, +this.accusedWeapon.cardIndex);
+            case CardCategory.ROOM: return new Card(CardCategory.ROOM, +this.accusedRoom.cardIndex);
             default: return null;
         }
     }
 
-    suspectSelected(selectedSuspect : GameCard) : void { this.accusedSuspect = selectedSuspect; }
-    weaponSelected(selectedWeapon : GameCard) : void { this.accusedWeapon = selectedWeapon; }
-    roomSelected(selectedRoom : GameCard) : void { this.accusedRoom = selectedRoom; }
+    suspectSelected(selectedSuspect : Card) : void { this.accusedSuspect = selectedSuspect; }
+    weaponSelected(selectedWeapon : Card) : void { this.accusedWeapon = selectedWeapon; }
+    roomSelected(selectedRoom : Card) : void { this.accusedRoom = selectedRoom; }
     playerThatShowedSelected(selectedPlayer : Player) : void { this.playerThatShowed = selectedPlayer; }
 }

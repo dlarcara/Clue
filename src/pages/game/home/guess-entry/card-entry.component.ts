@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
-import { CardCategory } from '../../../../app/game/index';
-import { GameCardService, GameCard } from '../../../../app/shared/index';
+import { CardCategory, Card } from '../../../../app/game/index';
+import { GameCardService } from '../../../../app/shared/index';
 import { CardListComponent } from '../../index';
 
 @Component({
@@ -13,7 +13,7 @@ import { CardListComponent } from '../../index';
 
 export class CardEntryComponent {
     @Input() cardCategory : CardCategory
-    @Input() selectedCard: GameCard
+    @Input() selectedCard: Card
     
     @Input() icon : string
     @Input() entryText : string
@@ -26,7 +26,7 @@ export class CardEntryComponent {
 
     constructor(private navController : NavController, private gameCardService : GameCardService) {}
 
-    getCardsForList() : GameCard[]
+    getCardsForList() : Card[]
     {
         if (this.cardCategory == undefined)
             return this.gameCardService.getAllCards();
@@ -36,7 +36,7 @@ export class CardEntryComponent {
 
     showCardSelect()
     {
-        let callback = (card : GameCard) => 
+        let callback = (card : Card) => 
             { 
                 return new Promise((resolve, reject) => {
                     this.cardSelected.emit(card);

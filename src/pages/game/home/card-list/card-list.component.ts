@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 import { NavController, NavParams } from 'ionic-angular';
 
-import { CardCategory } from '../../../../app/game/index';
-import { GameCard } from '../../../../app/shared/index';
+import { CardCategory, Card } from '../../../../app/game/index';
+import { GameCardService } from '../../../../app/shared/index';
 
 import * as _ from 'lodash';
 
@@ -13,11 +13,11 @@ import * as _ from 'lodash';
 })
 
 export class CardListComponent {
-    cards: GameCard[]
-    selectedCard: GameCard
+    cards: Card[]
+    selectedCard: Card
     callback: any
 
-    constructor(private navCtrl : NavController, private navParams : NavParams) 
+    constructor(private navCtrl : NavController, private navParams : NavParams, private gameCardService : GameCardService) 
     {
         this.callback = this.navParams.get("callback");
         this.cards = this.navParams.get("cards");
@@ -26,24 +26,7 @@ export class CardListComponent {
 
     getCardsGroupedByCategory() : any[]
     {
-        return _.chain(this.cards)
-                .groupBy('cardCategory')
-                .toPairs()
-                .map(item => _.zipObject(['category', 'cards'], item))
-                .map((item : {category, cards}) =>  { return {category: this.getCategoryDisplay(+item.category), cards: item.cards }; })
-                .value();
-    }
-
-    getCategoryDisplay(cardCategory : CardCategory) : string
-    {
-        switch(cardCategory)
-        {
-            case CardCategory.SUSPECT: return "Suspect";
-            case CardCategory.WEAPON: return "Weapon";
-            case CardCategory.ROOM: return "Room";
-        }
-
-        return "";
+        return this.gameCardService.groupCardsByCategory(this.cards);
     }
 
     selectCard(selectedCard) : void

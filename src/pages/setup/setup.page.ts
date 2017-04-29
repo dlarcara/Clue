@@ -92,7 +92,7 @@ export class SetupPage {
     startGame() : void
     {
         let players : Player[] = [];
-        let detectivesCards = this.getSelectedCards().map((c) => new Card(c.cardCategory, c.cardIndex));
+        let detectivesCards = this.getSelectedCards();
 
         _.forEach(this.getPlayingPlayers(), (p) => {
             let player = new Player(p.name, p.suspect.cardIndex, this.getNumberOfCardsForPlayer(p), p == this.detective);

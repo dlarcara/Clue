@@ -91,17 +91,17 @@ export class GameSheet
         //Ensure card is not already marked as NOTHAD
         let currentStatus = this.getStatusForPlayerAndCard(player, card);
         if (currentStatus != CellStatus.UNKNOWN && currentStatus == CellStatus.NOTHAD)
-            throw new Error(`${card.getFriendlyDisplay()} is already marked as NOTHAD for ${player.name}, can't mark it as HAD`);
+            throw new Error(`${this.getCardFriendlyNameDispalyForError(card, true, true)} is already marked as not had by ${player.name}, can't mark it as had`);
 
         //Ensure another player doesn't already have the card
         let currentCardOwner = this.getPlayerWhoHasCard(card)
         if(currentCardOwner && currentCardOwner != player)
-            throw new Error(`${currentCardOwner.name} already already has ${card.getFriendlyDisplay()}`);
+            throw new Error(`${currentCardOwner.name} already has ${this.getCardFriendlyNameDispalyForError(card, false, false)}, can't mark it as had by ${player.name}`);
 
         //Ensure there are still cards left to be marked as had for this player
         let allPlayersCards = this.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
         if (allPlayersCards.length == player.numberOfCards && !_.find(allPlayersCards, card))
-            throw new Error(`All ${player.numberOfCards} cards for ${player.name} are already identified, can't mark ${card.getFriendlyDisplay()} as HAD`)
+            throw new Error(`All ${player.numberOfCards} cards for ${player.name} are already identified, can't mark ${this.getCardFriendlyNameDispalyForError(card, false, false)} as had`)
 
         this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.HAD;
     }
@@ -115,12 +115,12 @@ export class GameSheet
         //Ensure card is not already marked as NOTHAD
         let currentStatus = this.getStatusForPlayerAndCard(player, card);
         if (currentStatus != CellStatus.UNKNOWN && currentStatus == CellStatus.HAD)
-            throw new Error(`${card.getFriendlyDisplay()} is already marked as HAD for ${player.name}, can't mark it as NOTHAD`);
+            throw new Error(`${this.getCardFriendlyNameDispalyForError(card, true, true)} is already marked as had by ${player.name}, can't mark it as not had`);
 
-        //Ensure you're not marking the last card in the category as fully own, avoid duplicate verdicts in category
+        //Ensure you're not marking the last card in the category as fully not had, avoid duplicate verdicts in category
         let verdictInCategory = this.getVerdictForCategory(card.category);
         if (verdictInCategory && verdictInCategory != card.cardIndex && _.countBy(this._data[card.category][+card.cardIndex])[1] == (this._players.length - 1))
-            throw new Error(`Can't mark ${card.getFriendlyDisplay()} as not had for ${player.name}, no one else has ${card.getFriendlyDisplay()} and a verdict has already been reached in this category`)
+            throw new Error(`Can't mark ${this.getCardFriendlyNameDispalyForError(card, false, false)} as not had by ${player.name}, no one else has ${this.getCardFriendlyNameDispalyForError(card, false, false)} and a verdict has already been reached in this category`)
 
         this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = CellStatus.NOTHAD;
     }
@@ -128,6 +128,14 @@ export class GameSheet
     resetData(dataToResetTo : any[]) : void
     {
         this._data = dataToResetTo;
+    }
+
+    private getCardFriendlyNameDispalyForError(card : Card, capitalizeCard : boolean, capitalizeThe : boolean) : string
+    {
+        if (card.category == CardCategory.SUSPECT)
+            return card.friendlyName;
+
+        return `${capitalizeThe ?  "The" : "the"} ${_.lowerCase(card.friendlyName)}`;
     }
 
     private getVerdictForCategory(cardCategory : CardCategory) : number
