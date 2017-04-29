@@ -214,6 +214,23 @@ describe("When interacting with the game algorithm", () => {
             expect(gameAlgorithm.unresolvedGuesses.length).toBe(0);
         });
 
+        it("it should mark a a card as had in a category if the verdict in the category is already known and the player is the only one left who might have that card", () => {
+            initializeAlgorithm(0);
+
+            let suspectVerdict = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let weaponVerdict = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let roomVerdict = new Card(CardCategory.ROOM, Room.LOUNGE);
+            let suspectCard = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+            let weaponCard = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let roomCard = new Card(CardCategory.ROOM, Room.CONSERVATORY);
+            gameAlgorithm.applyGuess(new Guess(+suspectVerdict.cardIndex, +weaponVerdict.cardIndex, +roomVerdict.cardIndex, gamePlayers[0], null, null));
+            gameAlgorithm.applyGuess(new Guess(+suspectCard.cardIndex, +weaponCard.cardIndex, +roomCard.cardIndex, gamePlayers[1], null, null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [suspectCard, weaponCard, roomCard], cardsInHand.concat(suspectVerdict, weaponVerdict, roomVerdict));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand.concat([suspectCard, weaponCard, roomCard, suspectVerdict, weaponVerdict, roomVerdict]));             
+        });
+
         it("it should resolve guess based on another resolved guess", () => {
             initializeAlgorithm(1);
 

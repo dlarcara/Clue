@@ -161,9 +161,8 @@ export class GameAlgorithm
 
     private replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut() : void
     {
-        let previousNumberOfUnresolvedGuesses = this._unresolvedGuesses.length;
-
         //Itereate through all unresolved guesses and attempt to resolve them
+        let previousNumberOfUnresolvedGuesses = this._unresolvedGuesses.length;
         _.forEach(this._unresolvedGuesses, (guess) => {this.attemptToResolveGuess(guess); });
 
         //If any guess was resolved try replaying guesses again in case the new information resolves another guess
@@ -174,9 +173,17 @@ export class GameAlgorithm
         //Can be done if the owner for all other cards in that category have been identified
         let previousVerdict = this._gameSheet.getVerdict();
         this.attemptToDeduceVerdictInEachCategory();
-        
+
         //If verdict has changed attempt replaying all guesses again, the board now has new informtion on it
         if (!_.isEqual(previousVerdict, this._gameSheet.getVerdict()))
+            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+
+        //If only one player can have a card in a given category and the verdict is already known for that category, that player has that card
+        let previousGameSheet = _.cloneDeep(this._gameSheet);
+        this.attemptToResolveMustHaves();
+        
+        //If the game sheet has changed in any way attempt replaying all guess again
+        if (!_.isEqual(this._gameSheet, previousGameSheet))
             this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
     }
 
@@ -229,6 +236,37 @@ export class GameAlgorithm
             let verdictInCategory = _.difference(allCardsInCategory, knownCardsInCategory)[0];
             _.forEach(this._players, (player) => { this.markCardAsNotHadByPlayer(player, verdictInCategory)});
         }
+    }
+
+    //If only one player is left as possibly having a card in a given category, and the verdict for that category is known
+    //then that player must have the card
+    private attemptToResolveMustHaves()
+    {
+        let verdict = this._gameSheet.getVerdict();
+
+        if (verdict.suspect != null)
+            this.attemptToResolveMustHaveForCategory(CardCategory.SUSPECT);
+
+        if (verdict.weapon != null)
+            this.attemptToResolveMustHaveForCategory(CardCategory.WEAPON);
+
+        if (verdict.room != null)
+            this.attemptToResolveMustHaveForCategory(CardCategory.ROOM);
+    }
+
+    private attemptToResolveMustHaveForCategory(cardCategory : CardCategory)
+    {
+        _.forEach(GameConstants.allCardsInCategory(cardCategory), (card : Card) => {
+            let cellStatusForPlayers = _.groupBy(this._players, (player : Player) => {
+                return this._gameSheet.getStatusForPlayerAndCard(player, card);
+            });
+
+            let notHadCount = cellStatusForPlayers[CellStatus.NOTHAD] ? cellStatusForPlayers[CellStatus.NOTHAD].length : 0;
+            let unknownCount = cellStatusForPlayers[CellStatus.UNKNOWN] ? cellStatusForPlayers[CellStatus.UNKNOWN].length : 0;
+            
+            if (notHadCount == (this._players.length - 1) && unknownCount == 1)
+                this.markCardAsHadByPlayer(cellStatusForPlayers[CellStatus.UNKNOWN][0], card);
+        });
     }
 
     private playerIsPlaying(player : Player) : Boolean
