@@ -7,7 +7,7 @@
 <ion-content>
     <ion-segment [(ngModel)]="setupStep" color="primary">
         <ion-segment-button value="1">Players</ion-segment-button>
-        <ion-segment-button value="2" [disabled]="!isStep1Valid()">Details</ion-segment-button>    
+        <ion-segment-button value="2" [disabled]="!isStep1Valid()" (click)="goToStep2()">Details</ion-segment-button>    
         <ion-segment-button value="3" [disabled]="!isStep2Valid()">Cards</ion-segment-button>
         <ion-segment-button value="4" [disabled]="!isStep3Valid()">Review</ion-segment-button>
     </ion-segment>

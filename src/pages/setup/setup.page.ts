@@ -19,7 +19,6 @@ export class SetupPage {
 
     detective: any
     players: any[];
-    selectedCards: any[]
 
     CardCategory = CardCategory;
 
@@ -29,12 +28,14 @@ export class SetupPage {
     {
         this.setupStep = "1";  
         this.allCardsByCategory = this.gameCardService.groupAllCardsByCategory();
-
+        _.forEach(this.allCardsByCategory[CardCategory.SUSPECT].cards, (c) => { c.selected = false; });
+        _.forEach(this.allCardsByCategory[CardCategory.WEAPON].cards, (c) => { c.selected = false; });
+        _.forEach(this.allCardsByCategory[CardCategory.ROOM].cards, (c) => { c.selected = false; });
+        
         //Default template for players
         this.players = _.map(this.allCardsByCategory[CardCategory.SUSPECT].cards, (suspect, index) => {
             return { name: '', suspect: suspect, isPlaying: index < 3, extraCard: false, cards: [] }
         });
-        this.detective = this.players[0];
     }
 
     getPlayersToDisplayBasedOnSetupStep(setupStep) : any[]
@@ -76,6 +77,14 @@ export class SetupPage {
     areExtraCardsIdentified = () : Boolean => this.getPlayersWithExtraCard() == this.getNumberOfExtraCards();
     shouldShowExtraCardValidation = () : Boolean => (this.setupStep == "2" || this.setupStep == "4") && this.getNumberOfExtraCards() !=0;
     getPlayerOrderDisplay = () : string => this.getPlayingPlayers().map((item) => item.name).join(", ");
+
+    goToStep2() : void
+    {
+        if (!this.getDetective().isPlaying)
+            this.detective = _.find(this.players, 'isPlaying');
+        else
+            this.detective = this.getDetective();
+    }
 
     //Step 3 Validation
     isStep3Valid = () : Boolean => this.isStep2Valid() && this.allDetectivesCardsSelected();
