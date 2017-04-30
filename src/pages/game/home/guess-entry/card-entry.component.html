@@ -6,6 +6,7 @@
     <ion-label *ngIf="selectedCard">{{selectedCard.friendlyName}}</ion-label>
     
     <ion-toggle *ngIf="selectedCard && enableActivateEntry" 
+                (click)="toggleTapped($event)"
                 [(ngModel)]="isActive"
                 (ionChange)="onActiveStatusChanged()" 
                 [disabled]="!selectedCard" 
