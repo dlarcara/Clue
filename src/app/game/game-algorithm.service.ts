@@ -188,6 +188,10 @@ export class GameAlgorithm
 
     private attemptToResolveGuess(guess : Guess) : void
     {
+        //Defensive addition for casses where method is called without a guess
+        if(!guess)
+            return;
+            
         let shower = guess.playerThatShowed;
         let guessedCards = [new Card(CardCategory.SUSPECT, guess.suspect), new Card(CardCategory.WEAPON, guess.weapon), new Card(CardCategory.ROOM, guess.room)];
 
