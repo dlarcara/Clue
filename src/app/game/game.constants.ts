@@ -34,7 +34,7 @@ export class GameConstants
         { card: GameConstants.ALLCARDS[11], friendlyName: 'Wrench', icon: `${weaponIconLocation}/wrench.png` },
         { card: GameConstants.ALLCARDS[12], friendlyName: 'Ballroom', icon: `${roomIconLocation}/ballroom.png` },
         { card: GameConstants.ALLCARDS[13], friendlyName: 'Billiard Room', icon: `${roomIconLocation}/billiardroom.png` },
-        { card: GameConstants.ALLCARDS[14], friendlyName: 'Convservatory', icon: `${roomIconLocation}/conservatory.png` },
+        { card: GameConstants.ALLCARDS[14], friendlyName: 'Conservatory', icon: `${roomIconLocation}/conservatory.png` },
         { card: GameConstants.ALLCARDS[15], friendlyName: 'Dining Room', icon: `${roomIconLocation}/diningroom.png` },
         { card: GameConstants.ALLCARDS[16], friendlyName: 'Hall', icon: `${roomIconLocation}/hall.png` },
         { card: GameConstants.ALLCARDS[17], friendlyName: 'Kitchen', icon: `${roomIconLocation}/kitchen.png` },
