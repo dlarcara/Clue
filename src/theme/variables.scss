@@ -49,28 +49,25 @@ $list-background-color: #F0F0F0;
 
 //Tabs
 $tabs-background: #48484F;
-$tabs-md-tab-icon-color: color($colors, medium);
 
 //Toobar
 $toolbar-background: color($colors, dark);
 
-//Toggle Styling
-$toggle-md-active-color: #000000;
-$toggle-md-handle-background-color-off: color($colors, medium);
-
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
+$tabs-ios-tab-icon-color: color($colors, medium);
 
-
-
+$toggle-ios-active-color: #000000;
+$toggle-ios-handle-background-color-off: color($colors, medium);
 
 // App Material Design Variables
 // --------------------------------------------------
 // Material Design only Sass variables can go here
+$tabs-md-tab-icon-color: color($colors, medium);
 
-
-
+$toggle-md-active-color: #000000;
+$toggle-md-handle-background-color-off: color($colors, medium);
 
 // App Windows Variables
 // --------------------------------------------------
