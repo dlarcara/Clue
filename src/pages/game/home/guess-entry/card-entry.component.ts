@@ -55,9 +55,4 @@ export class CardEntryComponent {
     {
         this.activeStatusChanged.emit(this.isActive);
     }
-
-    toggleTapped($event) : void 
-    {
-        $event.srcEvent.stopPropagation();   
-    }
 }
