@@ -1,41 +1,144 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Game Replay</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>Game Replay</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="showFilters = true" *ngIf="!showFilters">
+                <ion-icon name="search"></ion-icon>
+            </button>
+            <button ion-button icon-only (click)="showFilters = false" *ngIf="showFilters">
+                <ion-icon name="list-box"></ion-icon>
+            </button>            
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-card *ngIf="!gameTracker.turns.length">
-        <ion-card-content>
-            No turns yet
-        </ion-card-content>
-    </ion-card>
+    <!-- Filter Display -->
+    <div *ngIf="showFilters" padding>
+        <div class="filter-header">Genreal</div>
+        <div class="filter-group">
+            <!-- Passes -->
+            <ion-segment [(ngModel)]="filterDoNotShowPasses">
+                <ion-segment-button [value]="false">Include Passes</ion-segment-button>
+                <ion-segment-button [value]="true">Ignore Passes</ion-segment-button>
+            </ion-segment>
+
+            <!-- Turn Types -->
+            <ion-segment [(ngModel)]="filterShowOnlyUnresolvedGuesses">
+                <ion-segment-button [value]="false">All Guesses</ion-segment-button>
+                <ion-segment-button [value]="true">Unresolved Guesses</ion-segment-button>
+            </ion-segment>
+        </div>
+
+        <!-- Player -->
+        <div class="filter-header">Players</div>
+        <div class="filter-group">
+            <ion-segment [(ngModel)]="filterPlayer" (ngModelChange)="filterPlayer = $event ? $event : null">
+                <ion-segment-button value="">Any</ion-segment-button>
+                <ion-segment-button *ngFor="let player of gameTracker.players" [value]="player">
+                    <player-icon [player]="player"></player-icon>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+
+        <!--Suspects-->
+        <div class="filter-header">Suspects</div>
+        <div class="filter-group">
+            <ion-segment [(ngModel)]="filterSuspect" (ngModelChange)="filterSuspect = $event ? $event : null">
+                <ion-segment-button value="">Any</ion-segment-button>
+                <ion-segment-button *ngFor="let suspect of suspectCards" [value]="suspect">
+                    <ion-icon><img src="{{suspect.icon}}" class="game-card-icon" /></ion-icon>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+
+        <!--Weapons-->
+        <div class="filter-header">Weapons</div>
+        <div class="filter-group">
+            <ion-segment [(ngModel)]="filterWeapon" (ngModelChange)="filterWeapon = $event ? $event : null">
+                <ion-segment-button value="">Any</ion-segment-button>
+                <ion-segment-button *ngFor="let weapon of weaponCards" [value]="weapon">
+                    <ion-icon><img src="{{weapon.icon}}" class="game-card-icon" /></ion-icon>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+        
+        <!--Rooms-->
+        <div class="filter-header">Rooms</div>
+        <div class="filter-group">
+            <ion-segment [(ngModel)]="filterRoom" (ngModelChange)="filterRoom = $event ? $event : null">
+                <ion-segment-button value="" col-auto>Any</ion-segment-button>
+                <ion-segment-button *ngFor="let room of roomCards.slice(0,4)" [value]="room">
+                    <ion-icon><img src="{{room.icon}}" class="game-card-icon" /></ion-icon>
+                </ion-segment-button>
+            </ion-segment>
+            <ion-segment [(ngModel)]="filterRoom" (ngModelChange)="filterRoom = $event ? $event : null">
+                <ion-segment-button *ngFor="let room of roomCards.slice(4,9)" [value]="room">
+                    <ion-icon><img src="{{room.icon}}" class="game-card-icon" /></ion-icon>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+    </div>
     
-    <ion-card *ngFor="let turn of getTurns()">
-        <ion-card-header>Turn #{{turn.number}}</ion-card-header>
+    <!-- Turns Display -->
+    <div *ngIf="!showFilters">
+        <ion-card *ngIf="!getTurns().length">
+            <ion-card-content>
+                <p>No turns to display</p>
+            </ion-card-content>
+        </ion-card>
+        
+        <ion-card *ngFor="let turn of getTurns()">
+            <ion-card-header>
+                <div class="item row">
+                    <span align="left" class="col col-80">Turn #{{turn.number}}</span>
+                    <span align="right" class="col col-20">
+                        <player-icon [player]="turn.player"></player-icon>
+                    </span>
+                </div>
+            </ion-card-header>
 
-        <ion-card-content>
-            <p *ngIf="!turn.guess"><i>{{getPlayerDisplay(turn.player)}}</i> passed.</p>
-            <p *ngIf="turn.guess">
-                <i>{{getPlayerDisplay(turn.player)}}</i> guessed 
-                <i>{{getCardDisplay(CardCategory.SUSPECT, turn.guess.suspect)}}</i> in the 
-                <i>{{getCardDisplay(CardCategory.ROOM, turn.guess.room)}}</i> with the
-                <i>{{getCardDisplay(CardCategory.WEAPON, turn.guess.weapon)}}</i>.
+            <ion-card-content>
+                <p *ngIf="!turn.guess"><span class="display-value">{{getPlayerDisplay(turn.player)}}</span> passed.</p>
+                <div *ngIf="turn.guess">
+                    <p>
+                        <span class="display-value">{{getPlayerDisplay(turn.player)}}</span> guessed 
+                        <span class="display-value">{{getCardDisplay(CardCategory.SUSPECT, turn.guess.suspect)}}</span> in the 
+                        <span class="display-value">{{getCardDisplay(CardCategory.ROOM, turn.guess.room)}}</span> with the
+                        <span class="display-value">{{getCardDisplay(CardCategory.WEAPON, turn.guess.weapon)}}</span>.
+                        
+                        <span *ngIf="!turn.guess.playerThatShowed"><span class="display-value">No one</span> disproved it.</span>
+                        <span *ngIf="turn.guess.playerThatShowed">
+                            <span *ngIf="!playerIsDetective(turn.player)">
+                                <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> disproved it.
+                            </span>
+                            <span *ngIf="playerIsDetective(turn.player)">
+                                <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> disproved it by showing you 
+                                <span *ngIf="turn.guess.cardShown.category != CardCategory.SUSPECT">the </span>
+                                <span class="display-value">{{getCardDisplay(turn.guess.cardShown.category, turn.guess.cardShown.cardIndex)}}</span>.
+                            </span>
+                        </span>
+                    </p>
+                    
+                    <p *ngIf="turn.player != gameTracker.getDetective()">
+                        <span>
+                            Guess was resolved in <span class="display-value">Turn #15</span>.
+                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> showed 
+                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatGuessed)}}</span> 
+                            <span class="display-value">Profressor Plum or Colonel Mustard</span>.
+                        </span>
+                    </p>
+                    <p *ngIf="turn.player != gameTracker.getDetective()">
+                        <span>
+                            Guess is stil not resolved.
+                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> must have at least one of 
+                            <span class="display-value">Profressor Plum, Colonel Mustard</span>.
+                        </span>
+                    </p>
+                </div>
                 
-                <span *ngIf="!turn.guess.playerThatShowed"><i>No one</i> disproved it.</span>
-                <span *ngIf="turn.guess.playerThatShowed">
-                    <span *ngIf="!playerIsDetective(turn.player)">
-                        <i>{{getPlayerDisplay(turn.guess.playerThatShowed)}}</i> disproved it.
-                    </span>
-                    <span *ngIf="playerIsDetective(turn.player)">
-                        <i>{{getPlayerDisplay(turn.guess.playerThatShowed)}}</i> disproved it by showing you 
-                        <span *ngIf="turn.guess.cardShown.category != CardCategory.SUSPECT">the </span>
-                        <i>{{getCardDisplay(turn.guess.cardShown.category, turn.guess.cardShown.cardIndex)}}</i>.
-                    </span>
-                </span>
-            </p>
-
-            <ion-label>Progress: {{turn.resultingSheet.getProgress() | percent:'2.0-0'}}</ion-label>
-        </ion-card-content>
-    </ion-card>
+                <span class="progress-bar" [style.width]="(turn.resultingSheet.getProgress() * 100) + '%'"></span>
+            </ion-card-content>
+        </ion-card>
+    </div>
 </ion-content>

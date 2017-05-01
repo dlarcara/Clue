@@ -1,0 +1,35 @@
+game-details-page {
+    ion-card-header { padding: 3px 3px 0 3px !important; font-size: 1.5rem; }
+
+    .filter-header {
+        font-weight: bold;
+        color: #FFFFFF;
+        min-height: 22px;
+        text-align: center;
+        border-bottom: 1px solid color($colors, medium);
+        margin-bottom: 5px; 
+    }
+
+    .filter-group { padding-bottom: 20px; }
+
+    ion-card-content { 
+        padding: 0 !important;
+        line-height: 1 !important;
+
+        p { 
+            padding: 6px !important; line-height: 1.5 !important;
+
+            .display-value
+            {
+                font-weight: bold;
+                font-style: italic;
+            }
+        }
+
+        .progress-bar {
+            background-color: color($colors, primary);
+            display: block;
+            height: 5px;
+        }
+    }
+}
