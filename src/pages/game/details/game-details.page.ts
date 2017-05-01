@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavParams } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Turn, Player, Card, Suspect, Weapon, Room } from '../../../app/game/index';
+import { GameTracker, CardCategory, Turn, Player, Card } from '../../../app/game/index';
 import { GameCardService } from '../../../app/shared/index';
 
 import * as _ from "lodash";
@@ -20,9 +20,6 @@ export class GameDetailsPage
     filterDoNotShowPasses: Boolean
     filterShowOnlyUnresolvedGuesses: Boolean
     filterPlayer: Player
-    filterSuspect: Card
-    filterWeapon: Card
-    filterRoom: Card
 
     suspectCards: Card[]
     weaponCards: Card[]
@@ -37,9 +34,6 @@ export class GameDetailsPage
         this.filterDoNotShowPasses = false;
         this.filterShowOnlyUnresolvedGuesses = false;
         this.filterPlayer = null;
-        this.filterSuspect = null;
-        this.filterWeapon = null;
-        this.filterRoom = null;
 
         this.gameTracker = navParams.get('gameTracker');
 
@@ -55,15 +49,6 @@ export class GameDetailsPage
                 return false;
                 
             if (this.filterPlayer && !_.isEqual(t.player, this.filterPlayer))
-                return false;
-
-            if (this.filterSuspect != null && !(t.guess && _.isEqual(t.guess.suspect, this.filterSuspect.cardIndex)))
-                return false;
-
-            if (this.filterWeapon != null && !(t.guess && _.isEqual(t.guess.weapon, this.filterWeapon.cardIndex)))
-                return false;
-
-            if (this.filterRoom != null && !(t.guess && _.isEqual(t.guess.room, this.filterRoom.cardIndex)))
                 return false;
 
             return true;

@@ -40,44 +40,6 @@
                 </ion-segment-button>
             </ion-segment>
         </div>
-
-        <!--Suspects-->
-        <div class="filter-header">Suspects</div>
-        <div class="filter-group">
-            <ion-segment [(ngModel)]="filterSuspect" (ngModelChange)="filterSuspect = $event ? $event : null">
-                <ion-segment-button value="">Any</ion-segment-button>
-                <ion-segment-button *ngFor="let suspect of suspectCards" [value]="suspect">
-                    <ion-icon><img src="{{suspect.icon}}" class="game-card-icon" /></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-        </div>
-
-        <!--Weapons-->
-        <div class="filter-header">Weapons</div>
-        <div class="filter-group">
-            <ion-segment [(ngModel)]="filterWeapon" (ngModelChange)="filterWeapon = $event ? $event : null">
-                <ion-segment-button value="">Any</ion-segment-button>
-                <ion-segment-button *ngFor="let weapon of weaponCards" [value]="weapon">
-                    <ion-icon><img src="{{weapon.icon}}" class="game-card-icon" /></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-        </div>
-        
-        <!--Rooms-->
-        <div class="filter-header">Rooms</div>
-        <div class="filter-group">
-            <ion-segment [(ngModel)]="filterRoom" (ngModelChange)="filterRoom = $event ? $event : null">
-                <ion-segment-button value="" col-auto>Any</ion-segment-button>
-                <ion-segment-button *ngFor="let room of roomCards.slice(0,4)" [value]="room">
-                    <ion-icon><img src="{{room.icon}}" class="game-card-icon" /></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-            <ion-segment [(ngModel)]="filterRoom" (ngModelChange)="filterRoom = $event ? $event : null">
-                <ion-segment-button *ngFor="let room of roomCards.slice(4,9)" [value]="room">
-                    <ion-icon><img src="{{room.icon}}" class="game-card-icon" /></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-        </div>
     </div>
     
     <!-- Turns Display -->
