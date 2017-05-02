@@ -1,17 +1,4 @@
 <ion-content padding>
-    <ion-grid class="game-sheet">
-        <ion-row>
-            <ion-col class="sheet-cell-icon card-had sheet-legend">Player has card</ion-col>
-            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Doesn't have card</ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col class="sheet-cell-icon card-maybe sheet-legend">Player might have card</ion-col>
-            <ion-col class="sheet-cell-icon card-unknown sheet-legend">Unknown</ion-col>
-        </ion-row>
-    </ion-grid>
-
-    <br>    
-
     <ion-grid class="game-sheet verdict-row">
         <ion-row>
             <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
@@ -21,16 +8,22 @@
         <ion-row>
             <ion-col class="sheet-cell-icon">
                 <img [src]="getVerdict().suspect.icon" *ngIf="getVerdict().suspect" class="game-card-icon" (tap)="showVerdict(getVerdict().suspect)"/>
-                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().suspect" color="invalid"></ion-icon>
             </ion-col>
             <ion-col class="sheet-cell-icon">
                 <img [src]="getVerdict().weapon.icon" *ngIf="getVerdict().weapon" class="game-card-icon" (tap)="showVerdict(getVerdict().weapon)"/>
-                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().weapon" color="invalid"></ion-icon>
             </ion-col>
             <ion-col class="sheet-cell-icon">
                 <img [src]="getVerdict().room.icon" *ngIf="getVerdict().room" class="game-card-icon" (tap)="showVerdict(getVerdict().room)"/>
-                <ion-icon name="close-circle" class="game-card-icon" *ngIf="!getVerdict().room" color="invalid"></ion-icon>
             </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <br>
+
+     <ion-grid class="game-sheet">
+        <ion-row>
+            <ion-col class="sheet-cell-icon card-had sheet-legend">Player has card</ion-col>
+            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Doesn't have card</ion-col>
         </ion-row>
     </ion-grid>
 

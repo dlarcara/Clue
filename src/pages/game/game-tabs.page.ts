@@ -35,7 +35,10 @@ export class GameTabsPage {
             let gameDetails : GameDetails = this.navParams.get('gameDetails');
             let gameTracker = new GameTracker(gameDetails.players, gameDetails.detectivesCards);
             _.forEach(gameDetails.turns, (turn) => {
-                gameTracker.enterTurn(turn.player, turn.guess);
+                if (!turn.guess)
+                    gameTracker.enterPass(turn.player);
+                else
+                    gameTracker.enterTurn(turn.guess);
             });
 
             this.gameTracker = gameTracker;

@@ -2,12 +2,13 @@ import { Player, Suspect, Weapon, Room, Card } from '../index';
 
 export class Guess
 {
-    suspect: Suspect;
-    weapon: Weapon;
-    room: Room;
-    playerThatGuessed: Player;
-    playerThatShowed: Player;
-    cardShown: Card;
+    suspect: Suspect
+    weapon: Weapon
+    room: Room
+    playerThatGuessed: Player
+    playerThatShowed: Player
+    cardShown: Card
+    resolvedTurn: number
 
     constructor(suspect : Suspect, weapon : Weapon, room : Room, playerThatGuessed : Player, playerThatShowed : Player, cardShown : Card)
     {

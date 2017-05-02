@@ -38,9 +38,6 @@ export class GameSheetPage {
         if (cellStatus == CellStatus.NOTHAD)
             return 'card-not-had';
 
-        if(this.gameTracker.playerMightHaveCard(player, card))
-            return "card-maybe";
-        
         return 'card-unknown';
     }
 

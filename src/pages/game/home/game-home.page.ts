@@ -38,7 +38,10 @@ export class GameHomePage {
         //Make sure guess is entered successfully before moving on to next player
         let entrySuccessful : Boolean = true;       
         try{
-            this.gameTracker.enterTurn(this.activePlayer, guess);
+            if (!guess)
+                this.gameTracker.enterPass(this.activePlayer);
+            else
+                this.gameTracker.enterTurn(guess);
         }
         catch(error)
         {

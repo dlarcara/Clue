@@ -211,7 +211,7 @@ describe("When interacting with the game algorithm", () => {
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[1], gamePlayers[2], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.WHITE)));
 
-            expect(gameAlgorithm.unresolvedGuesses.length).toBe(0);
+            expect(gameAlgorithm.turns[0].guess.resolvedTurn).toBe(2);
         });
 
         it("it should mark a a card as had in a category if the verdict in the category is already known and the player is the only one left who might have that card", () => {
@@ -656,44 +656,44 @@ describe("When interacting with the game algorithm", () => {
             new Card(CardCategory.WEAPON, Weapon.KNIFE), new Card(CardCategory.SUSPECT, Suspect.PEACOCK)
         ];
 
-        it("it should throw an error when an impproper guess is entered", () => {
+        it("it should throw an error when an improper guess is entered", () => {
             let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
 
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[1], gamePlayers[2], null));
 
             expect(() => {
                 gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.KITCHEN, gamePlayers[1], gamePlayers[2], null));
-            }).toThrowError("Invalid guess, all cards are already marked as owned by someone else");
+            }).toThrowError("Player 3 does not have any of the cards being guessed");
         });
 
-        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess and throw proper error", () => {
+        it("it should reset the game sheet and turns when an error occurs when making a guess and throw proper error", () => {
             let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
   
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)));
             
             let previousSheet = _.cloneDeep(gameAlgorithm.gameSheet.data);
-            let previousUnresolvedGuesses = _.cloneDeep(gameAlgorithm.unresolvedGuesses);   
+            let previousTurns = _.cloneDeep(gameAlgorithm.turns);   
             expect(() => {
                 gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.DINING, gamePlayers[0], null, null));
             }).toThrowError("Mr. Green is already marked as had by Player 3, can't mark it as not had");
 
             expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
-            expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);
+            expect(gameAlgorithm.turns).toEqual(previousTurns);
         });
 
-        it("it should reset the game sheet and unresolved guesses when an error occurs when making a guess and throw proper error", () => {
+        it("it should reset the game sheet and turns when an error occurs when making a guess and throw proper error", () => {
             let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
   
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.WEAPON, Weapon.ROPE)));
             
             let previousSheet = _.cloneDeep(gameAlgorithm.gameSheet.data);
-            let previousUnresolvedGuesses = _.cloneDeep(gameAlgorithm.unresolvedGuesses);   
+            let previousTurns = _.cloneDeep(gameAlgorithm.turns);   
             expect(() => {
                 gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], null, null));
             }).toThrowError("The rope is already marked as had by Player 3, can't mark it as not had");
 
             expect(gameAlgorithm.gameSheet.data).toEqual(previousSheet);
-            expect(gameAlgorithm.unresolvedGuesses).toEqual(previousUnresolvedGuesses);
+            expect(gameAlgorithm.turns).toEqual(previousTurns);
         });
     });
 });

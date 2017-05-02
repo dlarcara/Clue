@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus, Guess, GameConstants } from "./index";
+import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus, Guess, Turn, GameConstants } from "./index";
 import { CircularArray } from "../shared/index";
 
 import { EnumValues } from 'enum-values';
@@ -19,8 +19,8 @@ export class GameAlgorithm
     private _gameSheet: GameSheet;
     get gameSheet() : GameSheet { return this._gameSheet; }
     
-    private _unresolvedGuesses : Guess[]
-    get unresolvedGuesses() : Guess[] { return this._unresolvedGuesses; }
+    private _turns: Turn[];
+    get turns() : Turn[] { return this._turns; }
 
     constructor(players : Player[], detectivesCards : Card[])
     {
@@ -30,15 +30,24 @@ export class GameAlgorithm
         if (players.length < 3)
             throw new Error("At least 3 players are required to play a game");
 
+        this._turns = [];
         this._playersArray = new CircularArray(players);
         this._gameSheet = new GameSheet(players);
-        this._unresolvedGuesses = [];
-
+        
         this.fillOutKnownCards(this.detective, detectivesCards);
+    }
+
+    enterPass(player : Player) : void
+    {
+        this._turns.push(new Turn(this._turns.length + 1, player, null, _.cloneDeep(this._gameSheet)));
     }
 
     applyGuess(guess : Guess) : void
     {
+        //Check validity of guess
+        if (!guess)
+            throw new Error("Error entering guess, on information entered");
+
         if (!_.find(this._players, guess.playerThatGuessed))
             throw new Error("Guessing player not found");
             
@@ -58,24 +67,25 @@ export class GameAlgorithm
                     throw new Error(`${guess.playerThatShowed.name} does not have any of the cards being guessed`);
             }
         }
-  
-        //Create copy of game sheet data and unresolved guesses
+
+        //Create copy of game sheet data and turns
         //If something goes wrong during applying this guess we'll need to reset this
         let priorGameSheetData = _.cloneDeep(this._gameSheet.data);
-        let priorUnresolvedGuesses = _.cloneDeep(this._unresolvedGuesses);
+        let priorTurns = _.cloneDeep(this._turns);
 
         try
         {
-            this.evaluateGuess(guess);
+            let turn = new Turn(this._turns.length + 1, guess.playerThatGuessed, guess, null);
+            this.evaluateTurn(turn);
         }
         catch(error)
         {
-            //Reset game sheet data and unresolved guesses
+            //Reset game sheet data and turns
             this._gameSheet.resetData(priorGameSheetData);
-            this._unresolvedGuesses = priorUnresolvedGuesses;
+            this._turns = priorTurns;
             
             throw error; //Rethrow error
-        }
+        }        
     }
 
     getNextPlayer(player: Player) : Player
@@ -92,19 +102,26 @@ export class GameAlgorithm
         _.forEach(GameConstants.getAllCardsExcept(cardsInHand), (card) => { this.markCardAsNotHadByPlayer(player, card); });
     }
 
-    private evaluateGuess(guess : Guess) : void 
-    {
+    private evaluateTurn(turn : Turn) : void 
+    {  
+        //Enter Turn
+        this._turns.push(turn);
+
         //Mark all people who passed as not having any of the cards
-        this.markCardsAsNotHadForPlayersWhoDidNotShowByGuess(guess);
+        this.markCardsAsNotHadForPlayersWhoDidNotShowByGuess(turn.guess);
 
-        //If shower and shown card is known mark it appropiately, otherwise start tracking the guess as unresolved if someone did show
-        if (guess.playerThatShowed && guess.cardShown)
-            this.markCardAsHadByPlayer(guess.playerThatShowed, guess.cardShown);
-        else if (guess.playerThatShowed)
-            this._unresolvedGuesses.push(guess);
+        //If shower and shown card is known mark it appropiately
+        if (turn.guess.playerThatShowed && turn.guess.cardShown)
+        {
+            this.markCardAsHadByPlayer(turn.guess.playerThatShowed, turn.guess.cardShown);
+            this.markTurnAsResolved(turn);
+        }
 
-        //Recursively attempt to resovle all unresolved guesses and deduce verdicts for each category until nothing new is found out
-        this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+        //Recursively assess different scenarios on card until nothing new is found out
+        this.replayAllTurnsUntilNothingNewIsFoundOut();
+
+        //Tack on resulting sheet to turn
+        this._turns[this._turns.length-1].resultingSheet = _.cloneDeep(this._gameSheet);
     }
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void
@@ -158,15 +175,15 @@ export class GameAlgorithm
         }
     }
 
-    private replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut() : void
+    private replayAllTurnsUntilNothingNewIsFoundOut() : void
     {
-        //Itereate through all unresolved guesses and attempt to resolve them
-        let previousNumberOfUnresolvedGuesses = this._unresolvedGuesses.length;
-        _.forEach(this._unresolvedGuesses, (guess) => {this.attemptToResolveGuess(guess); });
+        //Itereate through all unresolved turns and attempt to resolve them
+        let previousNumberOfUnresolvedTurns = this.getUnresolvedTurns().length;
+        _.forEach(this.getUnresolvedTurns(), (turn : Turn) => { this.attemptToResolveTurn(turn); });
 
-        //If any guess was resolved try replaying guesses again in case the new information resolves another guess
-        if (previousNumberOfUnresolvedGuesses != this._unresolvedGuesses.length)
-            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+        //If any turn was resolved try replaying turns again in case the new information resolves another turn
+        if (previousNumberOfUnresolvedTurns != this.getUnresolvedTurns().length)
+            this.replayAllTurnsUntilNothingNewIsFoundOut();
 
         //Check all categories to see if the verdict can be deduced for that category
         //Can be done if the owner for all other cards in that category have been identified
@@ -175,7 +192,7 @@ export class GameAlgorithm
 
         //If verdict has changed attempt replaying all guesses again, the board now has new informtion on it
         if (!_.isEqual(previousVerdict, this._gameSheet.getVerdict()))
-            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+            this.replayAllTurnsUntilNothingNewIsFoundOut();
 
         //If only one player can have a card in a given category and the verdict is already known for that category, that player has that card
         let previousGameSheet = _.cloneDeep(this._gameSheet);
@@ -183,15 +200,24 @@ export class GameAlgorithm
         
         //If the game sheet has changed in any way attempt replaying all guess again
         if (!_.isEqual(this._gameSheet, previousGameSheet))
-            this.replayAllGuessesAndCheckVerdictsUntilNothingNewIsFoundOut();
+            this.replayAllTurnsUntilNothingNewIsFoundOut();
     }
 
-    private attemptToResolveGuess(guess : Guess) : void
+    //Get unresolved turns, either no card was shown or the turn is not yet marked as resolved
+    private getUnresolvedTurns() : Turn[]
     {
-        //Defensive addition for casses where method is called without a guess
-        if(!guess)
+        return _.filter(this._turns, (t) => {
+            return t.guess && (!t.guess.cardShown || !t.guess.resolvedTurn);
+        });
+    }
+
+    private attemptToResolveTurn(turn : Turn) : void
+    {
+        //Defensive check for ensuring there is a guess to attept to resolve
+        if(!turn || !turn.guess)
             return;
             
+        let guess = turn.guess;
         let shower = guess.playerThatShowed;
         let guessedCards = [new Card(CardCategory.SUSPECT, guess.suspect), new Card(CardCategory.WEAPON, guess.weapon), new Card(CardCategory.ROOM, guess.room)];
 
@@ -200,24 +226,32 @@ export class GameAlgorithm
         if (cardOwners.length == 3 && !_.find(cardOwners, shower))
             throw new Error("Invalid guess, all cards are already marked as owned by someone else")
 
-        //If any of the cards is known to be had by the shower we can stop trying to resolve this guess
+        //If any of the cards is known to be had by the shower we can stop trying to resolve this turn
         //They may have more than one of these cards, but there is no way of knowing which one it is they showed for sure
         let cardsPlayerDefinitelyHas = _.filter(guessedCards, (card) => { return this._gameSheet.getStatusForPlayerAndCard(shower, card) == CellStatus.HAD});
         if (cardsPlayerDefinitelyHas.length)
         {
-            _.remove(this._unresolvedGuesses, guess);
+            this.markTurnAsResolved(turn);
             return; 
         }
 
-        //If there is only 1 card left that this player might have than we can resolve this guess
+        //If there is only 1 card left that this player might have than we can resolve this turn
         let cardsPlayerMightHave = _.filter(guessedCards, (card) => { return this._gameSheet.getStatusForPlayerAndCard(shower, card) == CellStatus.UNKNOWN});
         if (cardsPlayerMightHave.length == 1)
         {
             this.markCardAsHadByPlayer(shower, cardsPlayerMightHave[0]);
-            _.remove(this._unresolvedGuesses, guess); 
+            this.markTurnAsResolved(turn);
+            return;
         }
 
-        //Otherwise we don't have enough information to resolve the guess and it remains unresolved
+        //Otherwise we don't have enough information to resolve the turn and it remains unresolved
+    }
+
+    private markTurnAsResolved(turn : Turn) : void
+    {
+        //Find this turn in the list of turns and update the resolved turn number to the active turn
+        let activeTurn = this._turns.length;
+        _.find(this._turns, (t : Turn) => t.number == turn.number).guess.resolvedTurn = activeTurn;
     }
 
     private attemptToDeduceVerdictInEachCategory() : void

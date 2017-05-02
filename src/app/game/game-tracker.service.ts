@@ -6,7 +6,8 @@ export class GameTracker
 {
     detectiveCards : Card[]
     players : Player[]
-    turns: Turn[] = [];
+
+    get turns() : Turn[] { return this.gameAlgorithm.turns; }
 
     private gameAlgorithm : GameAlgorithm;
 
@@ -40,22 +41,19 @@ export class GameTracker
         this.gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
     }
 
-    enterTurn(player : Player, guess : Guess) : Turn
+    enterPass(player : Player) : void
     {
-        if (guess)
-            this.gameAlgorithm.applyGuess(guess);
+        this.gameAlgorithm.enterPass(player);
+    }
 
-        let resultingSheet = _.cloneDeep(this.gameAlgorithm.gameSheet);
-        let turn = new Turn(this.turns.length + 1, player, guess, resultingSheet);
-
-        this.turns.push(turn);
-
-        return turn;
+    enterTurn(guess : Guess) : void
+    {
+        this.gameAlgorithm.applyGuess(guess);
     }
 
     getDetective() : Player
     {
-        return _.find(this.players, (p) => p.isDetective);
+        return this.gameAlgorithm.detective;
     }
 
     getNextPlayer(player : Player) : Player
@@ -66,24 +64,6 @@ export class GameTracker
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {     
         return this.gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card);
-    }
-
-    //TODO: Test This
-    playerMightHaveCard(player : Player, card : Card) : Boolean
-    {
-        if (this.gameAlgorithm.gameSheet.getPlayerWhoHasCard(card))
-            return false;
-
-        if (this.getStatusForPlayerAndCard(player, card) != CellStatus.UNKNOWN)
-            return false;
-
-        let unresolvedShowsForPlayer = _.filter(this.gameAlgorithm.unresolvedGuesses, (g) => _.isEqual(player, g.playerThatShowed));
-        
-        return _.some(unresolvedShowsForPlayer, (g : Guess) => {
-            return (card.category == CardCategory.SUSPECT && card.cardIndex == g.suspect) ||
-                   (card.category == CardCategory.WEAPON && card.cardIndex == g.weapon) ||
-                   (card.category == CardCategory.ROOM && card.cardIndex == g.room)
-        });
     }
 
     getVerdict() : Verdict
