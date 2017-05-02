@@ -24,9 +24,9 @@
             </ion-segment>
 
             <!-- Turn Types -->
-            <ion-segment [(ngModel)]="filterShowOnlyUnresolvedGuesses">
-                <ion-segment-button [value]="false">All Guesses</ion-segment-button>
-                <ion-segment-button [value]="true">Unresolved Guesses</ion-segment-button>
+            <ion-segment [(ngModel)]="filterShowOnlyUnresolvedTurns">
+                <ion-segment-button [value]="false">All Turns</ion-segment-button>
+                <ion-segment-button [value]="true">Unresolved Truns</ion-segment-button>
             </ion-segment>
         </div>
 
@@ -82,21 +82,38 @@
                         </span>
                     </p>
                     
-                    <p *ngIf="turn.player != gameTracker.getDetective()">
-                        <span>
-                            Guess was resolved in <span class="display-value">Turn #15</span>.
-                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> showed 
-                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatGuessed)}}</span> 
-                            <span class="display-value">Profressor Plum or Colonel Mustard</span>.
-                        </span>
-                    </p>
-                    <p *ngIf="turn.player != gameTracker.getDetective()">
-                        <span>
-                            Guess is stil not resolved.
-                            <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> must have at least one of 
-                            <span class="display-value">Profressor Plum, Colonel Mustard</span>.
-                        </span>
-                    </p>
+                    <!-- Show resolution information about the guess from this turn, if it wasn't your turn or you weren't the one who showed -->
+                    <div *ngIf="shouldShowTurnResolution(turn)" class="guess-resolution">
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col></ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <img [src]="getCardByCategory(turn.guess, CardCategory.SUSPECT).icon" class="game-card-icon"/>
+                                </ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <ion-icon name="checkmark-circle" color="valid" *ngIf="getStatusForCard(turn.guess, CardCategory.SUSPECT) == CellStatus.HAD"></ion-icon>
+                                    <ion-icon name="close-circle" color="invalid" *ngIf="getStatusForCard(turn.guess, CardCategory.SUSPECT) == CellStatus.NOTHAD"></ion-icon>
+                                </ion-col>
+                                <ion-col></ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <img [src]="getCardByCategory(turn.guess, CardCategory.WEAPON).icon" class="game-card-icon"/>
+                                </ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <ion-icon name="checkmark-circle" color="valid" *ngIf="getStatusForCard(turn.guess, CardCategory.WEAPON) == CellStatus.HAD"></ion-icon>
+                                    <ion-icon name="close-circle" color="invalid" *ngIf="getStatusForCard(turn.guess, CardCategory.WEAPON) == CellStatus.NOTHAD"></ion-icon>
+                                </ion-col>
+                                <ion-col></ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <img [src]="getCardByCategory(turn.guess, CardCategory.ROOM).icon" class="game-card-icon"/>
+                                </ion-col>
+                                <ion-col class="sheet-cell-icon" col-auto>
+                                    <ion-icon name="checkmark-circle" color="valid" *ngIf="getStatusForCard(turn.guess, CardCategory.ROOM) == CellStatus.HAD"></ion-icon>
+                                    <ion-icon name="close-circle" color="invalid" *ngIf="getStatusForCard(turn.guess, CardCategory.ROOM) == CellStatus.NOTHAD"></ion-icon>
+                                </ion-col>
+                                <ion-col></ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
                 </div>
                 
                 <span class="progress-bar" [style.width]="(turn.resultingSheet.getProgress() * 100) + '%'"></span>

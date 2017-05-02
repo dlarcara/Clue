@@ -31,5 +31,17 @@ game-details-page {
             display: block;
             height: 5px;
         }
+
+        .guess-resolution
+        {
+            .icon { font-size: 1.6em; }
+            .sheet-cell-icon { 
+                height: 35px; 
+                border: 1px solid #000; 
+                background-color: color($colors, light);
+                width: 40px; 
+                text-align: center; 
+            }
+        }
     }
 }
