@@ -5,12 +5,14 @@
         <span [ngClass]="{'card-entry-space': !accusedRoom}" class="card-entry">{{getRoomDisplay()}}</span> with the 
         <span [ngClass]="{'card-entry-space': !accusedWeapon}" class="card-entry">{{getWeaponDisplay()}}</span>.
         
+        <br><br>
+
         <span *ngIf="!activePlayer.isDetective">
             <span class="card-entry">{{playerThatShowed ? getShowingPlayerDisplay() : 'No one' }}</span>
             disproved it.
         </span>
 
-         <span *ngIf="activePlayer.isDetective">
+        <span *ngIf="activePlayer.isDetective">
             <span *ngIf="!playerThatShowed && shownCategory == null"><span class="card-entry">No one</span> disproved it.</span>
             
             <span *ngIf="playerThatShowed || shownCategory != null">

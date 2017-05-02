@@ -32,7 +32,7 @@ export class GameDetailsPage
     {
         //Set Default Filter Values;
         this.showFilters = false;
-        this.filterDoNotShowPasses = false;
+        this.filterDoNotShowPasses = true;
         this.filterShowOnlyUnresolvedTurns = false;
         this.filterPlayer = null;
 
