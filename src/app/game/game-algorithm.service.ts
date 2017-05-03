@@ -207,7 +207,7 @@ export class GameAlgorithm
     private getUnresolvedTurns() : Turn[]
     {
         return _.filter(this._turns, (t) => {
-            return t.guess && (!t.guess.cardShown || !t.guess.resolvedTurn);
+            return t.guess && !(t.guess.cardShown || t.guess.resolvedTurn);
         });
     }
 
