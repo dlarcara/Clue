@@ -1,10 +1,18 @@
 game-sheet-page {
-    .game-sheet { padding: 0; }
+    .header-group { background-color: color($colors, medium); padding: 5px; border-bottom: 2px solid #000000;}
+    .turn-selector { height: 10px; }
 
-    .sheet-cell { height: 35px; border: 1px solid #000; background-color: #FFF; }
-    .sheet-cell-header { height: 35px; border: 1px solid #000; background-color: #717070; text-align: center; font-weight: bold; }
-    .sheet-cell-icon { height: 35px; border: 1px solid #000; color: gray; background-color: #717070; width: 40px; text-align: center; }
-    .avatar { font-size: 1.6em; }
+    .group-padding { padding: 5px; }
+
+    .game-sheet { padding: 0; }
+    .game-row { padding: 0 0 5px 0; }
+
+    .sheet-cell { height: 32px; border: 1px solid #000; background-color: #FFF; }
+    .sheet-cell-header { height: 32px; border: 1px solid #000; background-color: #717070; text-align: center; font-weight: bold; }
+    .sheet-cell-icon { height: 32px; border: 1px solid #000; color: gray; background-color: #717070; width: 40px; text-align: center; }
+    
+    .avatar { font-size: 1.4em; }
+    .game-card-icon { height: 24px !important; width: 24px !important; }
 
     .card-had { background-color: color($colors, primary); }
     .card-not-had { background-color: color($colors, medium); }

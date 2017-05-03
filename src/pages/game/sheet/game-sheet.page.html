@@ -1,88 +1,105 @@
-<ion-content padding>
-    <ion-grid class="game-sheet verdict-row">
-        <ion-row>
-            <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
-            <ion-col class="sheet-cell-icon verdict-header">Weapon</ion-col>
-            <ion-col class="sheet-cell-icon verdict-header">Room</ion-col>
-        </ion-row>
-        <ion-row>
-            <ion-col class="sheet-cell-icon">
-                <img [src]="getVerdict().suspect.icon" *ngIf="getVerdict().suspect" class="game-card-icon" (tap)="showVerdict(getVerdict().suspect)"/>
-            </ion-col>
-            <ion-col class="sheet-cell-icon">
-                <img [src]="getVerdict().weapon.icon" *ngIf="getVerdict().weapon" class="game-card-icon" (tap)="showVerdict(getVerdict().weapon)"/>
-            </ion-col>
-            <ion-col class="sheet-cell-icon">
-                <img [src]="getVerdict().room.icon" *ngIf="getVerdict().room" class="game-card-icon" (tap)="showVerdict(getVerdict().room)"/>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-
-    <br>
-
-     <ion-grid class="game-sheet">
-        <ion-row>
-            <ion-col class="sheet-cell-icon card-had sheet-legend">Player has card</ion-col>
-            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Doesn't have card</ion-col>
-        </ion-row>
-    </ion-grid>
-
-    <br>
-
+<ion-header>
     <ion-grid class="game-sheet">
-        <!-- Suspects -->
-        <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
         <ion-row>
-            <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
-                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
+            <ion-col class="sheet-cell-icon card-had sheet-legend">Card Had</ion-col>
+            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Not Had</ion-col>
+            <ion-col class="sheet-cell-icon sheet-legend" col-auto (click)="toggleVerdict()">
+                <ion-icon ios="ios-folder-open" md="ios-folder-open" *ngIf="showVerdict"></ion-icon>
+                <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
             </ion-col>
-        </ion-row>
-        <ion-row *ngFor="let suspect of suspectCards">
-            <ion-col class="sheet-cell-icon" col-auto>
-                <img [src]="suspect.icon" class="game-card-icon" (tap)="showCardDetails(suspect)"/>
-            </ion-col>
-    
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, suspect)">
-            </ion-col>
-        </ion-row>
-
-        <br>
-
-        <!-- Weapons -->
-        <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
-        <ion-row>
-            <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
-                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
-            </ion-col>
-        </ion-row>
-        <ion-row *ngFor="let weapon of weaponCards">
-            <ion-col class="sheet-cell-icon" col-auto>
-                <img [src]="weapon.icon" class="game-card-icon" (tap)="showCardDetails(weapon)"/>
-            </ion-col>
-    
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
-            </ion-col>
-        </ion-row>
-
-        <br>
-
-        <!-- Rooms -->
-        <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>
-        <ion-row>
-            <ion-col class="sheet-cell-icon" col-auto></ion-col>
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
-                <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
-            </ion-col>
-        </ion-row>
-        <ion-row *ngFor="let room of roomCards">
-            <ion-col class="sheet-cell-icon" col-auto>
-                <img [src]="room.icon" class="game-card-icon" (tap)="showCardDetails(room)"/>
-            </ion-col>
-    
-            <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, room)">
+            <ion-col class="sheet-cell-icon sheet-legend" col-auto (click)="toggleTurnSlide()">
+                <span [color]="getTurnColor()">#{{displayedTurn + 1}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
+
+    <div class="header-group" *ngIf="showTurnSlide">
+        <ion-item class="turn-selector">
+            <ion-range min="0" [max]="gameTracker.turns.length-1" step="1" [(ngModel)]="displayedTurn"></ion-range>
+        </ion-item>
+    </div>
+</ion-header>
+
+<ion-content>
+    <div class="group-padding">
+        <div *ngIf="showVerdict" style="padding-bottom: 5px;">
+            <ion-grid class="game-sheet verdict-row">
+                <ion-row>
+                    <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
+                    <ion-col class="sheet-cell-icon verdict-header">Weapon</ion-col>
+                    <ion-col class="sheet-cell-icon verdict-header">Room</ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="sheet-cell-icon">
+                        <img [src]="getVerdict().suspect.icon" *ngIf="getVerdict().suspect" class="game-card-icon" (tap)="showVerdictAlert(getVerdict().suspect)"/>
+                    </ion-col>
+                    <ion-col class="sheet-cell-icon">
+                        <img [src]="getVerdict().weapon.icon" *ngIf="getVerdict().weapon" class="game-card-icon" (tap)="showVerdictAlert(getVerdict().weapon)"/>
+                    </ion-col>
+                    <ion-col class="sheet-cell-icon">
+                        <img [src]="getVerdict().room.icon" *ngIf="getVerdict().room" class="game-card-icon" (tap)="showVerdictAlert(getVerdict().room)"/>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+
+        <ion-grid class="game-sheet">
+            <!-- Suspects -->
+            <div class="game-row">
+                <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
+                <ion-row>
+                    <ion-col class="sheet-cell-icon" col-auto></ion-col>
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                        <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let suspect of suspectCards">
+                    <ion-col class="sheet-cell-icon" col-auto>
+                        <img [src]="suspect.icon" class="game-card-icon" (tap)="showCardDetails(suspect)"/>
+                    </ion-col>
+            
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, suspect)">
+                    </ion-col>
+                </ion-row>
+            </div>
+
+            <!-- Weapons -->
+            <div class="game-row">
+                <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
+                <ion-row>
+                    <ion-col class="sheet-cell-icon" col-auto></ion-col>
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                        <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let weapon of weaponCards">
+                    <ion-col class="sheet-cell-icon" col-auto>
+                        <img [src]="weapon.icon" class="game-card-icon" (tap)="showCardDetails(weapon)"/>
+                    </ion-col>
+            
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
+                    </ion-col>
+                </ion-row>
+            </div>
+
+            <!-- Rooms -->
+            <div>
+                <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>
+                <ion-row>
+                    <ion-col class="sheet-cell-icon" col-auto></ion-col>
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                        <player-icon [player]="player" (tap)="showPlayerDetails(player)"></player-icon>
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let room of roomCards">
+                    <ion-col class="sheet-cell-icon" col-auto>
+                        <img [src]="room.icon" class="game-card-icon" (tap)="showCardDetails(room)"/>
+                    </ion-col>
+            
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, room)">
+                    </ion-col>
+                </ion-row>
+            </div>
+        </ion-grid>
+    </div>
 </ion-content>
