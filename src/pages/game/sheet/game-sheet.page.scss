@@ -26,4 +26,22 @@ game-sheet-page {
         .verdict-header { background-color: #717070; color: #000; font-weight: bold; }
         .icon { font-size: 1.6em; }
     }
+
+    //Check Mark for Guessed cells
+   .guess-tick {
+        width: 20px;    
+        height: 20px;
+        color: #fff;
+        position: relative;
+    }
+
+    .guess-tick:after {
+        content: '';
+        border: 5px solid;
+        border-color: color($colors, warning) color($colors, warning) rgba(0,0,255,0) rgba(255,0,0,0);
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: -5px -25px;
+    }
 }

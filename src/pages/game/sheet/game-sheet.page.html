@@ -8,14 +8,14 @@
                 <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
             </ion-col>
             <ion-col class="sheet-cell-icon sheet-legend" col-auto (click)="toggleTurnSlide()">
-                <span [color]="getTurnColor()">#{{displayedTurn + 1}}</span>
+                <span [color]="getTurnColor()">#{{displayedTurn}}</span>
             </ion-col>
         </ion-row>
     </ion-grid>
 
     <div class="header-group" *ngIf="showTurnSlide">
         <ion-item class="turn-selector">
-            <ion-range min="0" [max]="gameTracker.turns.length-1" step="1" [(ngModel)]="displayedTurn"></ion-range>
+            <ion-range min="1" [max]="gameTracker.turns.length" step="1" [(ngModel)]="displayedTurn"></ion-range>
         </ion-item>
     </div>
 </ion-header>
@@ -59,6 +59,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, suspect)">
+                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, suspect)"></div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -78,6 +79,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
+                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, weapon)"></div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -97,6 +99,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, room)">
+                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, room)"></div>
                     </ion-col>
                 </ion-row>
             </div>

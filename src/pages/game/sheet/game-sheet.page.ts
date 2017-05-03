@@ -43,7 +43,7 @@ export class GameSheetPage {
     {
         this.showTurnSlide = false;
         this.showVerdict = true;
-        this.displayedTurn = (this.gameTracker.turns.length-1);
+        this.displayedTurn = (this.gameTracker.turns.length);
     }
 
     toggleVerdict() : void
@@ -60,7 +60,7 @@ export class GameSheetPage {
 
     getTurnColor() : string
     {
-        if (this.displayedTurn == (this.gameTracker.turns.length - 1))
+        if (this.displayedTurn == this.gameTracker.turns.length)
             return 'valid';
 
         if ((this.displayedTurn / this.gameTracker.turns.length) > .25)
@@ -83,6 +83,34 @@ export class GameSheetPage {
         return 'card-unknown';
     }
 
+    cardIsBeingTracked(player : Player, card : Card) : Boolean
+    {
+        let turns = this.gameTracker.turns.slice(0, this.displayedTurn);
+        let gameSheetForActiveTurn = this.getGameSheetForDisplayedTurn();
+
+        return _.some(turns, (t) => {
+            if(!t.guess || t.guess.cardShown || _.isEqual(t.guess.playerThatGuessed, this.gameTracker.getDetective()))
+                return false;
+
+            if(!_.isEqual(t.guess.playerThatShowed, player))
+                return false;
+
+            if (t.guess.resolvedTurn && t.guess.resolvedTurn <= this.displayedTurn)
+                return false;
+
+            if (card.category == CardCategory.SUSPECT && t.guess.suspect == card.cardIndex)
+                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
+            
+            if (card.category == CardCategory.WEAPON && t.guess.weapon == card.cardIndex)
+                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
+
+            if (card.category == CardCategory.ROOM && t.guess.room == card.cardIndex)
+                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
+                
+            return false;
+        });
+    }
+
     getVerdict() : any
     {
         let gameSheet = this.getGameSheetForDisplayedTurn();
@@ -97,7 +125,7 @@ export class GameSheetPage {
 
     private getGameSheetForDisplayedTurn() : GameSheet
     {
-        return this.gameTracker.turns[this.displayedTurn].resultingSheet;
+        return this.gameTracker.turns[this.displayedTurn-1].resultingSheet;
     }
 
     showPlayerDetails(player) : void
