@@ -131,7 +131,7 @@ export class GameAlgorithm
             return;
 
         //Mark this card as had by this player
-        this._gameSheet.markCardAsHadByPlayer(player, card);
+        this._gameSheet.markCardAsHadByPlayer(player, card, this._turns.length + 1);
 
         //Mark all other players as not having this card
         let allOtherPlayers = _.differenceWith(this._players, [player], _.isEqual);
@@ -150,7 +150,7 @@ export class GameAlgorithm
             return;
 
         //Mark this card as not had by a player
-        this._gameSheet.markCardAsNotHadByPlayer(player, card);
+        this._gameSheet.markCardAsNotHadByPlayer(player, card, this._turns.length + 1);
 
         //Mark all remaining cards as had by this player if all their not had cards have been identified
         let knowNotHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);

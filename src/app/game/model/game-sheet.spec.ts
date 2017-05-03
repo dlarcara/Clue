@@ -36,7 +36,7 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        expect(() => gameSheet.markCardAsHadByPlayer(new Player("Player 2", Suspect.WHITE, 6, false), new Card(CardCategory.SUSPECT, Suspect.WHITE)))
+        expect(() => gameSheet.markCardAsHadByPlayer(new Player("Player 2", Suspect.WHITE, 6, false), new Card(CardCategory.SUSPECT, Suspect.WHITE), 1))
             .toThrowError("Player not found");
     });
 
@@ -44,8 +44,8 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
-        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
+        gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 1);
+        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 2))
             .toThrowError("Mrs. White is already marked as not had by Player 1, can't mark it as had");
     });
 
@@ -53,8 +53,8 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
-        expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 1);
+        expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 2))
             .toThrowError("Mrs. White is already marked as had by Player 1, can't mark it as not had");
     });
 
@@ -62,8 +62,8 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE));
-        expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE)))
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE), 1);
+        expect(() => gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE), 2))
             .toThrowError("The rope is already marked as had by Player 1, can't mark it as not had");
     });
 
@@ -71,8 +71,8 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsHadByPlayer(players[1], new Card(CardCategory.SUSPECT, Suspect.WHITE));
-        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
+        gameSheet.markCardAsHadByPlayer(players[1], new Card(CardCategory.SUSPECT, Suspect.WHITE),1 );
+        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 2))
             .toThrowError("Player 2 already has Mrs. White, can't mark it as had by Player 1");
     });
 
@@ -80,13 +80,13 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.MUSTARD));
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.GREEN));
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.PEACOCK));
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.PLUM));
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.SCARLET));
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
-        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE)))
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.MUSTARD), 1);
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.GREEN), 2);
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.PEACOCK), 3);
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.PLUM), 4);
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.SCARLET), 5);
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 6);
+        expect(() => gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.WEAPON, Weapon.ROPE), 7))
             .toThrowError("All 6 cards for Player 1 are already identified, can't mark the rope as had");
     });
 
@@ -94,10 +94,10 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD)));
-        _.forEach(players.slice(0,2), (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.GREEN)));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD), 1));
+        _.forEach(players.slice(0,2), (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.GREEN), 2));
         
-        expect(() => gameSheet.markCardAsNotHadByPlayer(players[2], new Card(CardCategory.SUSPECT, Suspect.GREEN)))
+        expect(() => gameSheet.markCardAsNotHadByPlayer(players[2], new Card(CardCategory.SUSPECT, Suspect.GREEN), 3))
             .toThrowError("Can't mark Mr. Green as not had by Player 3, no one else has Mr. Green and a verdict has already been reached in this category");        
     });
 
@@ -113,7 +113,7 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
+        gameSheet.markCardAsHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 1);
         expect(gameSheet.getStatusForPlayerAndCard(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
             .toBe(CellStatus.HAD);
     });
@@ -122,7 +122,7 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE));
+        gameSheet.markCardAsNotHadByPlayer(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE), 1);
         expect(gameSheet.getStatusForPlayerAndCard(players[0], new Card(CardCategory.SUSPECT, Suspect.WHITE)))
             .toBe(CellStatus.NOTHAD);
     });
@@ -139,8 +139,8 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD)));
-        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.ROOM, Room.HALL)));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD), 1));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.ROOM, Room.HALL), 2));
 
         expect(gameSheet.getVerdict()).toEqual(new Verdict(Suspect.MUSTARD, null, Room.HALL));
     });
