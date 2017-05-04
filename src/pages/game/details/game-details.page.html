@@ -53,10 +53,7 @@
         <ion-card *ngFor="let turn of getTurns()">
             <ion-card-header>
                 <div class="item row">
-                    <span align="left" class="col col-80">Turn #{{turn.number}}</span>
-                    <span align="right" class="col col-20">
-                        <player-icon [player]="turn.player"></player-icon>
-                    </span>
+                    <player-icon [player]="turn.player"></player-icon>&nbsp;Turn #{{turn.number}}
                 </div>
             </ion-card-header>
 
@@ -113,6 +110,25 @@
                                 <ion-col></ion-col>
                             </ion-row>
                         </ion-grid>
+                    </div>
+
+                    <div class="lessons">   
+                        <div class="item row">      
+                            <span align="left" class="col col-80">You learned that...</span>
+                            <span align="right" class="col col-20">
+                                <ion-icon name="arrow-dropdown-circle" *ngIf="!turn.showLessons" (click)="turn.showLessons = true"></ion-icon>
+                                <ion-icon name="arrow-dropup-circle" *ngIf="turn.showLessons" (click)="turn.showLessons = false"></ion-icon>
+                            </span>
+                        </div>
+                
+                        <div *ngIf="turn.showLessons" style="padding-left: 5px;">
+                            <div *ngFor="let lessonLearned of getLessonsLearnedFromTurn(turn)" class="lesson-learned">
+                                <span [innerHTML]="lessonLearned.toFriendlyString()"></span>
+                            </div>
+                            <div *ngIf="!getLessonsLearnedFromTurn(turn).length" class="lesson-learned">
+                                Nothing was learned from this turn.
+                            </div>
+                        </div>
                     </div>
                 </div>
                 

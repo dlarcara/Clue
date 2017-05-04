@@ -4,6 +4,7 @@ import { NavParams } from 'ionic-angular';
 
 import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus } from '../../../app/game/index';
 import { GameCardService } from '../../../app/shared/index';
+import { LessonsLearnedForPlayer } from './lesson-learned-for-player.model';
 
 import * as _ from "lodash";
 
@@ -94,6 +95,21 @@ export class GameDetailsPage
             return false;
 
         return true;
+    }
+
+    getLessonsLearnedFromTurn(turn : Turn) : LessonsLearnedForPlayer[]
+    {
+        let lessonsLearned = [];
+
+        _.forEach(this.gameTracker.players, (player : Player) => {
+            let cardsHad = turn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turn.number, CellStatus.HAD);
+            let cardsNotHad = turn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turn.number, CellStatus.NOTHAD);
+
+            if (cardsHad.length || cardsNotHad.length)
+                lessonsLearned.push(new LessonsLearnedForPlayer(player, cardsHad, cardsNotHad));
+        })
+
+        return lessonsLearned;
     }
 
     getCardByCategory(guess : Guess, cardCategory : CardCategory) : Card

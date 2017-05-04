@@ -88,6 +88,20 @@ export class GameSheet
         return solvedCount / totalCount;
     }
 
+    //TODO: Test this
+    getAllEntriesForPlayerAndTurnAndStatus(player : Player, turnNumber : number, cellStatus : CellStatus)
+    {
+        let result = [];
+        
+        _.forEach(GameConstants.ALLCARDS, (card : Card) => {
+            let cell = this.getCell(player, card);
+            if (cell.enteredTurn == turnNumber && cell.status == cellStatus)
+                result.push(card);
+        });
+
+        return result;
+    }
+
     markCardAsHadByPlayer(player : Player, card : Card, turnNumber : number) : void
     {
         //Ensure player is playing
@@ -138,9 +152,6 @@ export class GameSheet
 
     private setStatus(player : Player, card : Card, cellData : CellData) : void
     {
-        if (this.getCell(player, card).status == cellData.status)
-            return;
-
         this._data[card.category][+card.cardIndex][this.getPlayerIndex(player)] = cellData;
     }
 
