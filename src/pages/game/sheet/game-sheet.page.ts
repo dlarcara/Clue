@@ -125,6 +125,9 @@ export class GameSheetPage {
 
     private getGameSheetForDisplayedTurn() : GameSheet
     {
+        if (!this.gameTracker.turns.length)
+            return this.gameTracker.getGameSheet();
+            
         return this.gameTracker.turns[this.displayedTurn-1].resultingSheet;
     }
 

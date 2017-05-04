@@ -86,6 +86,11 @@ export class GameTracker
         return this.gameAlgorithm.gameSheet.getPlayerWhoHasCard(card);
     }
 
+    getGameSheet() : GameSheet
+    {
+        return this.gameAlgorithm.gameSheet;
+    }
+
     //Return possible number of cards a player can have based on the total number of players
     private getCardCountPossibilities (numberOfPlayers : number) : number[]
     {
