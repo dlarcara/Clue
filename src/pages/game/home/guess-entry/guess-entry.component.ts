@@ -27,7 +27,10 @@ export class GuessEntryComponent {
 
     CardCategory = CardCategory
 
-    constructor(private gameCardService : GameCardService) {}
+    constructor(private gameCardService : GameCardService) 
+    {
+        this.resetEntry();
+    }
 
     guessIsValid() : Boolean
     {
