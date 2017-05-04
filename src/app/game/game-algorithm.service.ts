@@ -35,6 +35,7 @@ export class GameAlgorithm
         this._gameSheet = new GameSheet(players);
         
         this.fillOutKnownCards(this.detective, detectivesCards);
+        this._turns.push(new Turn(0, this.detective, null, _.cloneDeep(this._gameSheet)));
     }
 
     enterPass(player : Player) : void
