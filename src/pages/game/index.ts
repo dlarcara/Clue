@@ -10,5 +10,6 @@ export * from './home/player-list/player-list.component';
 export * from './sheet/game-sheet.page';
 
 export * from './details/game-details.page';
+export * from './details/turn/turn.component';
 
 export * from './settings/game-settings.page';

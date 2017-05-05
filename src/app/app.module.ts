@@ -4,7 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
-import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent, GameDetailsPage, GameSettingsPage } from '../pages/game/index';
+import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent, GameDetailsPage, GameSettingsPage, TurnComponent } from '../pages/game/index';
 
 import { GameLoaderService, GameCardService, PlayerIconComponent } from './shared/index';
 import { GameAlgorithm } from './game/index';
@@ -28,7 +28,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     CardListComponent,
     PlayerEntryComponent,
     PlayerListComponent,
-
+    TurnComponent,
     PlayerIconComponent
   ],
   imports: [
