@@ -4,8 +4,8 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import { SetupPage } from "../../index"; 
 import { GameTabsPage } from "../index"; 
-import { GameTracker, Player } from "../../../app/game/index";
-import { GameLoaderService } from "../../../app/shared/index";
+import { GameTracker, Player, CardCategory, Card } from "../../../app/game/index";
+import { GameLoaderService, GameCardService } from "../../../app/shared/index";
 
 @Component({
     selector: 'game-settings-page',
@@ -14,11 +14,16 @@ import { GameLoaderService } from "../../../app/shared/index";
 
 export class GameSettingsPage
 {
+    selectedCategory : number
     players: Player[]
 
-    constructor(private navController : NavController, private navParams : NavParams, private gameLoaderService : GameLoaderService)
+    CardCategory = CardCategory
+
+    constructor(private navController : NavController, private navParams : NavParams, private gameLoaderService : GameLoaderService,
+        private gameCardService : GameCardService)
     {
         this.players = this.navParams.get('gameTracker').players;
+        this.selectedCategory = 4;
     }
 
     startNewGame() : void
@@ -32,5 +37,10 @@ export class GameSettingsPage
         let gameTracker : GameTracker = this.navParams.get('gameTracker');
         let params = { players: gameTracker.players, detectivesCards: gameTracker.detectiveCards }
         this.navController.parent.parent.setRoot(GameTabsPage, params);
+    }
+
+    getCardsForCategory(cardCategory : CardCategory): Card[]
+    {
+        return this.gameCardService.getCardsByCategory(cardCategory);
     }
 }

@@ -2,20 +2,33 @@
   <ion-toolbar>
     <ion-title>Settings</ion-title>
   </ion-toolbar>
+  <ion-segment [(ngModel)]="selectedCategory">
+    <ion-segment-button [value]="4">Players</ion-segment-button>
+    <ion-segment-button [value]="CardCategory.SUSPECT">Suspects</ion-segment-button>
+    <ion-segment-button [value]="CardCategory.WEAPON">Weapons</ion-segment-button>
+    <ion-segment-button [value]="CardCategory.ROOM">Room</ion-segment-button>
+  </ion-segment>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <ion-card>
-    <ion-list>
+    <ion-list *ngIf="selectedCategory == 4">
         <ion-item ion-item *ngFor="let player of players">
             <ion-icon item-left><player-icon [player]="player"></player-icon></ion-icon>
             <ion-label>{{player.isDetective ? "You" : player.name}}</ion-label>
         </ion-item>
     </ion-list>
+
+    <ion-list *ngIf="selectedCategory != 4">
+        <ion-item ion-item *ngFor="let card of getCardsForCategory(selectedCategory)">
+            <ion-icon item-left><img src="{{card.icon}}" class="game-card-icon" /></ion-icon>
+            {{card.friendlyName}}
+        </ion-item>
+    </ion-list>
   </ion-card>
 </ion-content>
 
-<ion-footer padding>
-    <button ion-button full (click)="startNewGame()">Start New Game</button>
-    <button ion-button full color="secondary" (click)="restartGame()">Restart Game</button>
+<ion-footer style="text-align: center; padding: 5px 0;">
+    <button ion-button (click)="startNewGame()">Start New Game</button>
+    <button ion-button color="secondary" (click)="restartGame()">Restart Game</button>
 </ion-footer>
