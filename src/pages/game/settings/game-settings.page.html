@@ -4,9 +4,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-card padding>
-        <button ion-button full (click)="startNewGame()">Start New Game</button>
-        <button ion-button full color="secondary" (click)="restartGame()">Restart Game</button>
-    </ion-card>
+<ion-content padding>
+  <ion-card>
+    <ion-list>
+        <ion-item ion-item *ngFor="let player of players">
+            <ion-icon item-left><player-icon [player]="player"></player-icon></ion-icon>
+            <ion-label>{{player.isDetective ? "You" : player.name}}</ion-label>
+        </ion-item>
+    </ion-list>
+  </ion-card>
 </ion-content>
+
+<ion-footer padding>
+    <button ion-button full (click)="startNewGame()">Start New Game</button>
+    <button ion-button full color="secondary" (click)="restartGame()">Restart Game</button>
+</ion-footer>

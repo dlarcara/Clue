@@ -4,7 +4,7 @@ import { NavController, NavParams } from 'ionic-angular';
 
 import { SetupPage } from "../../index"; 
 import { GameTabsPage } from "../index"; 
-import { GameTracker } from "../../../app/game/index";
+import { GameTracker, Player } from "../../../app/game/index";
 import { GameLoaderService } from "../../../app/shared/index";
 
 @Component({
@@ -14,9 +14,11 @@ import { GameLoaderService } from "../../../app/shared/index";
 
 export class GameSettingsPage
 {
+    players: Player[]
+
     constructor(private navController : NavController, private navParams : NavParams, private gameLoaderService : GameLoaderService)
     {
-        
+        this.players = this.navParams.get('gameTracker').players;
     }
 
     startNewGame() : void
