@@ -1,13 +1,13 @@
 <ion-header>
-    <ion-grid class="game-sheet">
+    <ion-grid class="game-sheet header">
         <ion-row>
             <ion-col class="sheet-cell-icon card-had sheet-legend">Card Had</ion-col>
             <ion-col class="sheet-cell-icon card-not-had sheet-legend">Not Had</ion-col>
-            <ion-col class="sheet-cell-icon sheet-legend" col-auto (click)="toggleVerdict()">
+            <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleVerdict()">
                 <ion-icon ios="ios-folder-open" md="ios-folder-open" *ngIf="showVerdict"></ion-icon>
                 <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
             </ion-col>
-            <ion-col class="sheet-cell-icon sheet-legend" col-auto (click)="toggleTurnSlide()">
+            <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleTurnSlide()">
                 <span [color]="getTurnColor()">#{{displayedTurn}}</span>
             </ion-col>
         </ion-row>

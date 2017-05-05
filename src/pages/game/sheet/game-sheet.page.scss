@@ -1,4 +1,9 @@
 game-sheet-page {
+    .header
+    {
+        .sheet-cell-icon { height: 40px !important; padding-top: 10px; }
+        .header-button { width: 50px; }
+    }
     .header-group { background-color: color($colors, medium); padding: 5px; border-bottom: 2px solid #000000;}
     .turn-selector { height: 10px; }
 
