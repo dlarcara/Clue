@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavParams } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus } from '../../../app/game/index';
+import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus, CellData } from '../../../app/game/index';
 import { GameCardService } from '../../../app/shared/index';
 import { LessonsLearnedForPlayer } from './lesson-learned-for-player.model';
 
@@ -18,8 +18,10 @@ export class GameDetailsPage
     gameTracker: GameTracker
     
     showFilters: Boolean
-    filterDoNotShowPasses: Boolean
-    filterShowOnlyUnresolvedTurns: Boolean
+    useGuessTracking: Boolean
+    useLessonsLearned: Boolean
+    showPasses: Boolean
+    onlyShowOpenGuesses: Boolean
     filterPlayer: Player
 
     suspectCards: Card[]
@@ -33,9 +35,12 @@ export class GameDetailsPage
     {
         //Set Default Filter Values;
         this.showFilters = false;
-        this.filterDoNotShowPasses = true;
-        this.filterShowOnlyUnresolvedTurns = false;
+        this.showPasses = false;
+        this.onlyShowOpenGuesses = false;
         this.filterPlayer = null;
+
+        this.useGuessTracking = true;
+        this.useLessonsLearned = true;
 
         this.gameTracker = navParams.get('gameTracker');
 
@@ -47,13 +52,13 @@ export class GameDetailsPage
     getTurns() : Turn[]
     {
         let filteredTurns = _.filter(this.gameTracker.turns, (t : Turn) => {
-            if (this.filterDoNotShowPasses && !t.guess)
+            if (!this.showPasses && !t.guess)
                 return false;
                 
             if (this.filterPlayer && !_.isEqual(t.player, this.filterPlayer))
                 return false;
 
-            if (this.filterShowOnlyUnresolvedTurns)
+            if (this.onlyShowOpenGuesses)
             {
                 if (!t.guess)
                     return false
@@ -97,6 +102,12 @@ export class GameDetailsPage
         return true;
     }
 
+    getTotalNumberOfLessonsLearnedFromTurn(turn : Turn) : number
+    {
+        let lessonsLearned = this.getLessonsLearnedFromTurn(turn);
+        return _.sumBy(lessonsLearned, (ll : LessonsLearnedForPlayer) => ll.cardsHad.length + ll.cardsNotHad.length);
+    }
+
     getLessonsLearnedFromTurn(turn : Turn) : LessonsLearnedForPlayer[]
     {
         let lessonsLearned = [];
@@ -122,9 +133,9 @@ export class GameDetailsPage
         }
     }
 
-    getStatusForCard(guess : Guess, cardCategory : CardCategory) : CellStatus
+    getDataForPlayerAndCard(guess : Guess, cardCategory : CardCategory) : CellData
     {
         let card = this.getCardByCategory(guess, cardCategory);
-        return this.gameTracker.getStatusForPlayerAndCard(guess.playerThatShowed, card);
+        return this.gameTracker.getCellDataForPlayerAndCard(guess.playerThatShowed, card);
     }
 }

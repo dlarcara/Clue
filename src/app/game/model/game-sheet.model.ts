@@ -44,12 +44,21 @@ export class GameSheet
         return this.getCell(player, card).status;
     }
 
+    getCellDataForPlayerAndCard(player: Player, card : Card) : CellData
+    {
+        //Ensure player is playing
+        if (!_.find(this._players, player))
+            throw new Error("Player not found");
+
+        return this.getCell(player, card);
+    }
+
     getPlayerWhoHasCard(card : Card) : Player
     {
         return _.find(this._players, (p) => { return this.getStatusForPlayerAndCard(p, card) == CellStatus.HAD; });
     }
 
-    getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus)
+    getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus) : Card[]
     {
         //Ensure player is playing
         if (!_.find(this._players, player))

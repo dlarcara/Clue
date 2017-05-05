@@ -1,4 +1,4 @@
-import { Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict } from './index';
+import { Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData } from './index';
 
 import * as _ from 'lodash';
 
@@ -64,6 +64,11 @@ export class GameTracker
     getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
     {     
         return this.gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card);
+    }
+
+    getCellDataForPlayerAndCard(player: Player, card : Card) : CellData
+    {     
+        return this.gameAlgorithm.gameSheet.getCellDataForPlayerAndCard(player, card);
     }
 
     getVerdict() : Verdict

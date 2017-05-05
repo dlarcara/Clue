@@ -1,16 +1,38 @@
-game-details-page {
-    ion-card-header { padding: 3px 3px 0 3px !important; font-size: 1.5rem; }
-
+game-details-page {   
     .filter-header {
         font-weight: bold;
         color: #FFFFFF;
         min-height: 22px;
         text-align: center;
         border-bottom: 1px solid color($colors, medium);
-        margin-bottom: 5px; 
     }
 
-    .filter-group { padding-bottom: 20px; }
+    .filter-group { 
+        padding-bottom: 20px; 
+    
+        .item-block {
+            padding-left: 0px !important;
+        }
+
+        ion-label {
+            padding-left: 10px;
+        }
+    }
+
+    ion-card-header { 
+        padding: 0 !important; 
+        font-size: 1.5rem; 
+
+        .progress-bar {
+            background-color: color($colors, primary);
+            height: 5px;
+        }    
+
+        .header-text 
+        {
+            padding: 5px;
+        }
+    }
 
     ion-card-content { 
         padding: 0 !important;
@@ -26,40 +48,65 @@ game-details-page {
             font-style: italic;
         }
 
-        .lessons
-        {
-            margin: 0 0 2px;
+        
+        .accordion {
             font-size: 1.4rem;
             font-weight: normal;
-            line-height: 1.5;
-            padding: 6px !important;
             line-height: 1.5 !important;
-        }
 
-        .lesson-learned {
-            display: block;
-            margin-left: 5px;
-        }
+            .accordion-header {
+                border-top: 1px solid color($colors, dark);
+                border-bottom: 1px solid color($colors, dark);
+                background-color: color($colors, medium);
+                font-weight: bold;
+                padding: 0 3px;
+                padding-top: 4px;
+                height: 40px;
+            }
 
-        .lesson-learned:before {
-            content:"• ";
-        }
+            .accordion-header.active {
+                background-color: darken(color($colors, medium), 10%);
+            }
 
-        .progress-bar {
-            background-color: color($colors, primary);
-            display: block;
-            height: 5px;
-        }
+            .lessons-learned {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.25s;
+            }
 
-        .guess-resolution
-        {
-            .icon { font-size: 1.6em; }
-            .sheet-cell-icon { 
-                height: 35px; 
-                border: 1px solid #000; 
-                background-color: color($colors, light);
-                width: 40px; 
-                text-align: center; 
+            .lessons-learned.active {
+                transition: max-height 0.25s;
+                max-height: 500px;
+            }
+
+            .lesson-learned:before {
+                content:"• ";
+            }
+
+            .guess-resolution
+            {
+                max-height: 0;
+                transition: max-height 0.25s;
+                overflow: hidden;
+
+                .icon { font-size: 1.6em; }
+                
+                .sheet-cell-icon { 
+                    border: 1px solid #000; 
+                    background-color: color($colors, light);
+                    min-width: 40px;
+                    text-align: center; 
+
+                    ion-badge {
+                        margin-top: 3px
+                    }
+                }
+            }
+
+            .guess-resolution.active
+            {
+                transition: max-height 0.25s;
+                max-height: 200px;
             }
         }
     }
