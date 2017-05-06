@@ -29,6 +29,11 @@ export class CardListComponent {
         return this.gameCardService.groupCardsByCategory(this.cards);
     }
 
+    getCategoryFriendlyDisplay(category : string) : string
+    {
+        return _.capitalize(category);
+    }
+
     selectCard(selectedCard) : void
     {
         this.callback(selectedCard).then(()=>{

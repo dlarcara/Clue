@@ -1,7 +1,15 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title color="dark" *ngIf="getCardsGroupedByCategory().length == 1">
+            Select {{getCategoryFriendlyDisplay(getCardsGroupedByCategory()[0].category)}}
+        </ion-title>
+        <ion-title color="dark" *ngIf="getCardsGroupedByCategory().length != 1">Select Card</ion-title>
+    </ion-toolbar>
+</ion-header>
 <ion-content>
     <ion-list>
         <ion-item-group *ngFor="let cardsForCategory of getCardsGroupedByCategory()">
-            <ion-item-divider color="dark">{{cardsForCategory.category}}</ion-item-divider>
+            <ion-item-divider color="medium" *ngIf="getCardsGroupedByCategory().length != 1">{{cardsForCategory.category}}</ion-item-divider>
 
             <button ion-item *ngFor="let card of cardsForCategory.cards" (click)="selectCard(card)">
                 <ion-icon item-left><img src="{{card.icon}}" class="game-card-icon" /></ion-icon>
