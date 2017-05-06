@@ -1,23 +1,25 @@
 <ion-header>
-    <ion-grid class="game-sheet header">
-        <ion-row>
-            <ion-col class="sheet-cell-icon card-had sheet-legend">Card Had</ion-col>
-            <ion-col class="sheet-cell-icon card-not-had sheet-legend">Not Had</ion-col>
-            <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleVerdict()">
-                <ion-icon ios="ios-folder-open" md="ios-folder-open" *ngIf="showVerdict"></ion-icon>
-                <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
-            </ion-col>
-            <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleTurnSlide()">
-                <span [color]="getTurnColor()">#{{displayedTurn}}</span>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
-
-    <div class="header-group" *ngIf="showTurnSlide">
-        <ion-item class="turn-selector">
-            <ion-range min="1" [max]="gameTracker.turns.length" step="1" [(ngModel)]="displayedTurn"></ion-range>
-        </ion-item>
-    </div>
+    <ion-toolbar>
+        <ion-grid>
+            <ion-row>
+                <ion-col class="sheet-cell-icon card-had sheet-legend">Card Had</ion-col>
+                <ion-col class="sheet-cell-icon card-not-had sheet-legend">Not Had</ion-col>
+                <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleVerdict()">
+                    <ion-icon ios="ios-folder-open" md="ios-folder-open" *ngIf="showVerdict"></ion-icon>
+                    <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
+                </ion-col>
+                <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleTurnSlide()">
+                    <span [color]="getTurnColor()">#{{displayedTurn}}</span>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        
+        <div class="header-group" *ngIf="showTurnSlide">
+            <ion-item class="turn-selector">
+                <ion-range min="1" [max]="gameTracker.turns.length" step="1" [(ngModel)]="displayedTurn"></ion-range>
+            </ion-item>
+        </div>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
