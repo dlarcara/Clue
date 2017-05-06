@@ -31,6 +31,9 @@ export class PlayerIconComponent {
 
     showPlayerDetails() : void
     {
+        if (!this.message)
+            return;
+
         let alert = this.alertCtrl.create({
             title: this.player.name,
             subTitle: this.message,
