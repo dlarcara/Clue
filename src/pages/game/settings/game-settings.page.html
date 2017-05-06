@@ -29,6 +29,14 @@
 </ion-content>
 
 <ion-footer style="text-align: center; padding: 5px 0;">
-    <button ion-button (click)="startNewGame()">Start New Game</button>
-    <button ion-button color="secondary" (click)="restartGame()">Restart Game</button>
+  <ion-grid>
+    <ion-row>
+      <ion-col width-50>
+        <button ion-button block (click)="startNewGame()">Start New Game</button>
+      </ion-col>
+      <ion-col width-50>
+        <button ion-button block color="secondary" (click)="restartGame()">Restart Game</button>
+      </ion-col>
+   </ion-row>
+ </ion-grid>
 </ion-footer>
