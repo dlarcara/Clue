@@ -29,12 +29,14 @@ export class GameTabsPage {
         if (gameDetails)
         {
             //Replay Game
+            this.gameTracker.configureGame(gameDetails.useOrchid);
             this.gameTracker.startGame(gameDetails.players, gameDetails.detectivesCards);
             this.gameTracker.replayTurns(gameDetails.turns);
         }
         else
         {
             //Start Fresh Game
+            gameTracker.configureGame(navParams.get('useOrchid'));
             gameTracker.startGame(navParams.get('players'), navParams.get('detectivesCards'));
         }
     }

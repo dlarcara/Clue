@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData } from './index';
+import { GameConstants, Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData } from './index';
 import { GameLoaderService, GameDetails } from '../shared/index';
 
 import * as _ from 'lodash';
@@ -11,12 +11,19 @@ export class GameTracker
 {
     detectiveCards : Card[]
     players : Player[]
+    useOrchid : Boolean
 
     get turns() : Turn[] { return this.gameAlgorithm.turns; }
 
     private gameAlgorithm : GameAlgorithm;
 
     constructor(private gameLoaderService : GameLoaderService){}
+
+    configureGame(useOrchid : Boolean)
+    {
+        this.useOrchid = useOrchid; 
+        GameConstants.useDrOrchid(useOrchid);
+    }
 
     startGame(players: Player[], detectiveCards: Card[]) : void 
     {
@@ -152,7 +159,7 @@ export class GameTracker
 
     private saveGame() : void
     {
-        let gameDetails = new GameDetails(this.players, this.detectiveCards, this.turns);
+        let gameDetails = new GameDetails(this.players, this.detectiveCards, this.turns, this.useOrchid);
         this.gameLoaderService.saveGame(gameDetails);
     }
 

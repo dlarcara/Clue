@@ -34,7 +34,7 @@ export class GameSettingsPage
 
     restartGame() : void 
     {
-        let gameDetails = new GameDetails(this.gameTracker.players, this.gameTracker.detectiveCards, []);
+        let gameDetails = new GameDetails(this.gameTracker.players, this.gameTracker.detectiveCards, [], this.gameTracker.useOrchid);
         this.navController.parent.parent.setRoot(GameTabsPage, { gameDetails: gameDetails });
     }
 

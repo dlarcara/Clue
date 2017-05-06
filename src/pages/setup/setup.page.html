@@ -85,3 +85,10 @@
         </ion-list>
     </ion-card>
 </ion-content>
+
+<ion-footer *ngIf="setupStep == 1">
+    <ion-item>
+        <ion-label>Use Dr. Orchid</ion-label>
+        <ion-toggle [(ngModel)]="useOrchid" (ngModelChange)="onOrchidChange()"></ion-toggle>
+    </ion-item>
+</ion-footer>

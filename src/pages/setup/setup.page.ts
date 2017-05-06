@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, reorderArray } from 'ionic-angular';
 
-import { CardCategory, Player, Card } from '../../app/game/index';
+import { GameTracker, CardCategory, Player, Card } from '../../app/game/index';
 import { GameCardService } from '../../app/shared/index';
 import { GameTabsPage } from '../game/index';
 
@@ -20,9 +20,12 @@ export class SetupPage {
     detective: any
     players: any[];
 
+    useOrchid : Boolean = false
+
     CardCategory = CardCategory;
 
-    constructor(private navCtrl : NavController, private gameCardService : GameCardService) {}
+    constructor(private navCtrl : NavController, private gameCardService : GameCardService,
+                private gameTracker : GameTracker) {}
 
     ionViewDidLoad()
     {
@@ -98,6 +101,11 @@ export class SetupPage {
                         .concat(_.filter(this.allCardsByCategory[2].cards, 'selected'));
     }
 
+    onOrchidChange() : void
+    {
+        this.gameTracker.configureGame(this.useOrchid);
+    }
+
     startGame() : void
     {
         let players : Player[] = [];
@@ -110,7 +118,8 @@ export class SetupPage {
 
         this.navCtrl.setRoot(GameTabsPage, {
             players: players,
-            detectivesCards: detectivesCards
+            detectivesCards: detectivesCards,
+            useOrchid: this.useOrchid
         });
     }
 }

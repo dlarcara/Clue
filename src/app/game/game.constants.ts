@@ -19,7 +19,7 @@ export class GameConstants
         new Card(CardCategory.ROOM, Room.LIBRARY), new Card(CardCategory.ROOM, Room.LOUNGE), new Card(CardCategory.ROOM, Room.STUDY)
     ];
 
-    private static readonly displayForCards = [
+    private static displayForCards = [
         { card: GameConstants.ALLCARDS[0], friendlyName: 'Mr. Green', icon: `${suspectIconLocation}/green.png` },
         { card: GameConstants.ALLCARDS[1], friendlyName: 'Colonel Mustard', icon: `${suspectIconLocation}/mustard.png` },
         { card: GameConstants.ALLCARDS[2], friendlyName: 'Mrs. Peacock', icon: `${suspectIconLocation}/peacock.png` },
@@ -43,6 +43,20 @@ export class GameConstants
         { card: GameConstants.ALLCARDS[20], friendlyName: 'Study', icon: `${roomIconLocation}/study.png` }
     ]
     
+    static useDrOrchid(useOrchid : Boolean) : void 
+    {
+        if (useOrchid)
+        {
+            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).friendlyName = "Dr. Orchid";
+            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).icon = `${suspectIconLocation}/orchid.png`;
+        }
+        else 
+        {
+            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).friendlyName = "Mrs. White";
+            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).icon = `${suspectIconLocation}/white.png`;
+        }
+    }
+
     static getAllCards() : Card[]
     {
         return this.ALLCARDS;
