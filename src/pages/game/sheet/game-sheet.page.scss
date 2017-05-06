@@ -15,6 +15,7 @@ game-sheet-page {
     .sheet-cell { height: 32px; border: 1px solid #000; background-color: #FFF; }
     .sheet-cell-header { height: 32px; border: 1px solid #000; background-color: #717070; text-align: center; font-weight: bold; }
     .sheet-cell-icon { height: 32px; border: 1px solid #000; color: gray; background-color: #717070; width: 40px; text-align: center; }
+    .sheet-cell.no-padding { padding: 0px }
     
     .avatar { font-size: 1.4em; }
     .game-card-icon { height: 24px !important; width: 24px !important; }
@@ -34,8 +35,6 @@ game-sheet-page {
 
     //Check Mark for Guessed cells
    .guess-tick {
-        width: 20px;    
-        height: 20px;
         color: #fff;
         position: relative;
     }
@@ -47,6 +46,5 @@ game-sheet-page {
         position: absolute;
         top: 0;
         right: 0;
-        margin: -5px -25px;
     }
 }

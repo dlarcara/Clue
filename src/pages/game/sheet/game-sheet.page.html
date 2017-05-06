@@ -58,7 +58,7 @@
                         <img [src]="suspect.icon" class="game-card-icon" (tap)="showCardDetails(suspect)"/>
                     </ion-col>
             
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, suspect)">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell  no-padding" [ngClass]="getCellClass(player, suspect)">
                         <div class="guess-tick" *ngIf="cardIsBeingTracked(player, suspect)"></div>
                     </ion-col>
                 </ion-row>
@@ -78,7 +78,7 @@
                         <img [src]="weapon.icon" class="game-card-icon" (tap)="showCardDetails(weapon)"/>
                     </ion-col>
             
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, weapon)">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, weapon)">
                         <div class="guess-tick" *ngIf="cardIsBeingTracked(player, weapon)"></div>
                     </ion-col>
                 </ion-row>
@@ -98,7 +98,7 @@
                         <img [src]="room.icon" class="game-card-icon" (tap)="showCardDetails(room)"/>
                     </ion-col>
             
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell" [ngClass]="getCellClass(player, room)">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, room)">
                         <div class="guess-tick" *ngIf="cardIsBeingTracked(player, room)"></div>
                     </ion-col>
                 </ion-row>
