@@ -7,6 +7,10 @@ let suspectIconLocation = `${baseIconLocation}/suspects`;
 let weaponIconLocation = `${baseIconLocation}/weapons`;
 let roomIconLocation = `${baseIconLocation}/rooms`;
 
+class CardDisplay {
+    constructor (public card : Card, public friendlyName : string, public icon : string, public color : string) {}
+}
+
 export class GameConstants
 {
     static ALLCARDS : Card[] = [
@@ -19,41 +23,43 @@ export class GameConstants
         new Card(CardCategory.ROOM, Room.LIBRARY), new Card(CardCategory.ROOM, Room.LOUNGE), new Card(CardCategory.ROOM, Room.STUDY)
     ];
 
-    private static displayForCards = [
-        { card: GameConstants.ALLCARDS[0], friendlyName: 'Mr. Green', icon: `${suspectIconLocation}/green.png` },
-        { card: GameConstants.ALLCARDS[1], friendlyName: 'Colonel Mustard', icon: `${suspectIconLocation}/mustard.png` },
-        { card: GameConstants.ALLCARDS[2], friendlyName: 'Mrs. Peacock', icon: `${suspectIconLocation}/peacock.png` },
-        { card: GameConstants.ALLCARDS[3], friendlyName: 'Professor Plum', icon: `${suspectIconLocation}/plum.png` },
-        { card: GameConstants.ALLCARDS[4], friendlyName: 'Miss Scarlet', icon: `${suspectIconLocation}/scarlet.png` },
-        { card: GameConstants.ALLCARDS[5], friendlyName: 'Mrs. White', icon: `${suspectIconLocation}/white.png` },
-        { card: GameConstants.ALLCARDS[6], friendlyName: 'Candlestick', icon: `${weaponIconLocation}/candlestick.png` },
-        { card: GameConstants.ALLCARDS[7], friendlyName: 'Knife', icon: `${weaponIconLocation}/knife.png` },
-        { card: GameConstants.ALLCARDS[8], friendlyName: 'Lead Pipe', icon: `${weaponIconLocation}/leadpipe.png` },
-        { card: GameConstants.ALLCARDS[9], friendlyName: 'Revolver', icon: `${weaponIconLocation}/revolver.png` },
-        { card: GameConstants.ALLCARDS[10], friendlyName: 'Rope', icon: `${weaponIconLocation}/rope.png` },
-        { card: GameConstants.ALLCARDS[11], friendlyName: 'Wrench', icon: `${weaponIconLocation}/wrench.png` },
-        { card: GameConstants.ALLCARDS[12], friendlyName: 'Ballroom', icon: `${roomIconLocation}/ballroom.png` },
-        { card: GameConstants.ALLCARDS[13], friendlyName: 'Billiard Room', icon: `${roomIconLocation}/billiardroom.png` },
-        { card: GameConstants.ALLCARDS[14], friendlyName: 'Conservatory', icon: `${roomIconLocation}/conservatory.png` },
-        { card: GameConstants.ALLCARDS[15], friendlyName: 'Dining Room', icon: `${roomIconLocation}/diningroom.png` },
-        { card: GameConstants.ALLCARDS[16], friendlyName: 'Hall', icon: `${roomIconLocation}/hall.png` },
-        { card: GameConstants.ALLCARDS[17], friendlyName: 'Kitchen', icon: `${roomIconLocation}/kitchen.png` },
-        { card: GameConstants.ALLCARDS[18], friendlyName: 'Library', icon: `${roomIconLocation}/library.png` },
-        { card: GameConstants.ALLCARDS[19], friendlyName: 'Lounge', icon: `${roomIconLocation}/lounge.png` },
-        { card: GameConstants.ALLCARDS[20], friendlyName: 'Study', icon: `${roomIconLocation}/study.png` }
+    private static displayForCards : CardDisplay[] = [
+        new CardDisplay(GameConstants.ALLCARDS[0], 'Mr. Green', `${suspectIconLocation}/green.png`, 'green' ),
+        new CardDisplay(GameConstants.ALLCARDS[1], 'Colonel Mustard', `${suspectIconLocation}/mustard.png`, 'mustard' ),
+        new CardDisplay(GameConstants.ALLCARDS[2], 'Mrs. Peacock', `${suspectIconLocation}/peacock.png`, 'peacock' ),
+        new CardDisplay(GameConstants.ALLCARDS[3], 'Professor Plum', `${suspectIconLocation}/plum.png`, 'plum' ),
+        new CardDisplay(GameConstants.ALLCARDS[4], 'Miss Scarlet', `${suspectIconLocation}/scarlet.png`, 'scarlet' ),
+        new CardDisplay(GameConstants.ALLCARDS[5], 'Mrs. White', `${suspectIconLocation}/white.png`, 'white' ),
+        new CardDisplay(GameConstants.ALLCARDS[6], 'Candlestick', `${weaponIconLocation}/candlestick.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[7], 'Knife', `${weaponIconLocation}/knife.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[8], 'Lead Pipe', `${weaponIconLocation}/leadpipe.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[9],  'Revolver', `${weaponIconLocation}/revolver.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[10], 'Rope', `${weaponIconLocation}/rope.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[11], 'Wrench', `${weaponIconLocation}/wrench.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[12], 'Ballroom', `${roomIconLocation}/ballroom.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[13], 'Billiard Room', `${roomIconLocation}/billiardroom.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[14], 'Conservatory', `${roomIconLocation}/conservatory.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[15], 'Dining Room', `${roomIconLocation}/diningroom.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[16], 'Hall', `${roomIconLocation}/hall.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[17], 'Kitchen', `${roomIconLocation}/kitchen.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[18], 'Library', `${roomIconLocation}/library.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[19], 'Lounge', `${roomIconLocation}/lounge.png`, ''),
+        new CardDisplay(GameConstants.ALLCARDS[20], 'Study', `${roomIconLocation}/study.png`, ''),
     ]
     
     static useDrOrchid(useOrchid : Boolean) : void 
     {
         if (useOrchid)
         {
-            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).friendlyName = "Dr. Orchid";
-            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).icon = `${suspectIconLocation}/orchid.png`;
+            this.displayForCards[5].friendlyName = "Dr. Orchid";
+            this.displayForCards[5].icon = `${suspectIconLocation}/orchid.png`;
+            this.displayForCards[5].color = `orchid`;
         }
         else 
         {
-            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).friendlyName = "Mrs. White";
-            _.find(this.displayForCards, (c) => c.card == GameConstants.ALLCARDS[5]).icon = `${suspectIconLocation}/white.png`;
+            this.displayForCards[5].friendlyName = "Mrs. White";
+            this.displayForCards[5].icon = `${suspectIconLocation}/white.png`;
+            this.displayForCards[5].color = `white`;
         }
     }
 
@@ -79,8 +85,14 @@ export class GameConstants
 
     static getCardFriendlyName(card : Card)
     {
-        let cardDisplay =  _.find(this.displayForCards, (d) => _.isEqual(d.card, card));
+        let cardDisplay =  _.find(this.displayForCards, (d : CardDisplay) => _.isEqual(d.card, card));
         return cardDisplay ? cardDisplay.friendlyName : '';
+    }
+
+    static getSuspectColor(suspect : Suspect) : string
+    {
+        let cardDisplay =  _.find(this.displayForCards, (d : CardDisplay) => d.card.cardIndex == suspect && d.card.category == CardCategory.SUSPECT);
+        return cardDisplay ? cardDisplay.color : '';
     }
 
     static getCardIcon(card : Card)

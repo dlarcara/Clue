@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { AlertController } from 'ionic-angular';
 
-import { Player, Suspect } from '../../game/index';
+import { Player, Suspect, Card, GameConstants } from '../../game/index';
 
 @Component({
     selector: 'player-icon',
@@ -18,15 +18,7 @@ export class PlayerIconComponent {
 
     getColor() : string
     {
-        switch(this.player.suspect)
-        {
-            case Suspect.GREEN: return "green";
-            case Suspect.MUSTARD: return "mustard";
-            case Suspect.PEACOCK: return "peacock";
-            case Suspect.PLUM: return "plum";
-            case Suspect.SCARLET: return "scarlet";
-            case Suspect.WHITE: return "white";
-        }
+        return GameConstants.getSuspectColor(this.player.suspect);
     }
 
     showPlayerDetails() : void
