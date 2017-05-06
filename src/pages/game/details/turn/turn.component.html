@@ -54,7 +54,7 @@
                         <ion-row>
                             <ion-col></ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <img [src]="getCardByCategory(turn.guess, CardCategory.SUSPECT).icon" class="game-card-icon"/>
+                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.SUSPECT)" [message]="getCardMessage(turn.guess, CardCategory.SUSPECT)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
                                 <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.SUSPECT).status == CellStatus.HAD">
@@ -66,7 +66,7 @@
                             </ion-col>
                             <ion-col></ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <img [src]="getCardByCategory(turn.guess, CardCategory.WEAPON).icon" class="game-card-icon"/>
+                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.WEAPON)" [message]="getCardMessage(turn.guess, CardCategory.WEAPON)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
                                 <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.WEAPON).status == CellStatus.HAD">
@@ -78,7 +78,7 @@
                             </ion-col>
                             <ion-col></ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <img [src]="getCardByCategory(turn.guess, CardCategory.ROOM).icon" class="game-card-icon"/>
+                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.ROOM)" [message]="getCardMessage(turn.guess, CardCategory.ROOM)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
                                 <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.ROOM).status == CellStatus.HAD">

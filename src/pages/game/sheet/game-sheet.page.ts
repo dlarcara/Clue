@@ -1,6 +1,6 @@
 import { Component, ViewChild  } from '@angular/core';
 
-import { AlertController, Content } from 'ionic-angular';
+import { Content } from 'ionic-angular';
 
 import { GameCardService } from '../../../app/shared/index';
 import { GameTracker, Player, Card, CardCategory, CellStatus, Verdict, GameSheet } from '../../../app/game/index';
@@ -23,8 +23,7 @@ export class GameSheetPage {
 
     @ViewChild(Content) content: Content;
 
-    constructor(private gameCardService : GameCardService, private alertCtrl: AlertController, 
-                private gameTracker : GameTracker) 
+    constructor(private gameCardService : GameCardService, private gameTracker : GameTracker) 
     {
         this.suspectCards = gameCardService.getCardsByCategory(CardCategory.SUSPECT);
         this.weaponCards = gameCardService.getCardsByCategory(CardCategory.WEAPON);
@@ -130,41 +129,20 @@ export class GameSheetPage {
         return this.gameTracker.turns[this.displayedTurn-1].resultingSheet;
     }
 
-    showPlayerDetails(player) : void
+    getPlayerMessage(player) : string
     {
         let knownCards = this.gameTracker.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
 
-        let alert = this.alertCtrl.create({
-            title: _.isEqual(this.gameTracker.getDetective(), player) ? "You" : player.name,
-            subTitle: `${knownCards.length}/${player.numberOfCards} cards identified`,
-            buttons: ['Dismiss']
-        });
-        alert.present();
+        return `${knownCards.length}/${player.numberOfCards} cards identified`;
     }
 
-    showCardDetails(card : Card) : void
+    getCardMessage(card : Card) : string
     {
         let playerWhoHasCard = this.gameTracker.getPlayerWhoHasCard(card);
         let youHaveCard = _.isEqual(this.gameTracker.getDetective(), playerWhoHasCard);
 
-        let message = playerWhoHasCard ? 
+        return playerWhoHasCard ? 
             `Had by ${youHaveCard ? "You" : playerWhoHasCard.name}` : 
             'Owner not identified';
-
-        let alert = this.alertCtrl.create({
-            title: card.friendlyName,
-            subTitle: message,
-            buttons: ['Dismiss']
-        });
-        alert.present();
-    }
-
-    showVerdictAlert(card : Card) : void
-    {
-        let alert = this.alertCtrl.create({
-            title: card.friendlyName,
-            buttons: ['Dismiss']
-        });
-        alert.present();
     }
 }

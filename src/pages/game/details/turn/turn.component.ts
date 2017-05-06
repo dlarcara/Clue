@@ -96,4 +96,18 @@ export class TurnComponent
             gameTracker: this.gameTracker
         });
     }
+
+    getCardMessage(guess : Guess, cardCategory : CardCategory) : string
+    {
+        let card = this.getCardByCategory(guess, cardCategory);
+        let cellData = this.getDataForPlayerAndCard(guess, cardCategory);
+
+        if (cellData.status == CellStatus.HAD)
+            return `Identified as had by ${guess.playerThatShowed.numberOfCards} in turn #${cellData.enteredTurn}`;
+
+        if (cellData.status == CellStatus.NOTHAD)
+            return `Identified as not had by ${guess.playerThatShowed.numberOfCards} in turn #${cellData.enteredTurn}`;
+
+        return `Status of card unknown for ${guess.playerThatShowed.numberOfCards}`;
+    }
 }
