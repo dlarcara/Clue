@@ -16,12 +16,12 @@
     <ion-card>
         <ion-list>
             <!-- Step 1 Validations -->
-            <ion-item *ngIf="setupStep == 1 || setupStep == 4" class="validation">
+            <ion-item *ngIf="setupStep == 1" class="validation">
                 <ion-icon name="checkmark-circle" color="{{isPlayerCountValid() ? 'valid' : 'invalid'}}" item-left></ion-icon>
-                3+ players selected
+                At least 3 players selected
             </ion-item>
             <!-- All players have name -->
-            <ion-item *ngIf="setupStep == 1 || setupStep == 4" class="validation">
+            <ion-item *ngIf="setupStep == 1" class="validation">
                 <ion-icon name="checkmark-circle" color="{{arePlayerNamesValid() ? 'valid' : 'invalid'}}" item-left></ion-icon>
                 All players given a name
             </ion-item>    
