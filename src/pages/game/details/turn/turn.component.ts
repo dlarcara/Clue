@@ -43,7 +43,7 @@ export class TurnComponent
 
     shouldShowTurnResolution(turn : Turn) : Boolean
     {
-        if (!turn.guess)
+        if (!turn.guess || !turn.guess.playerThatShowed)
             return false;
 
         if (this.playerIsDetective(turn.player) || this.playerIsDetective(turn.guess.playerThatShowed))
@@ -102,12 +102,15 @@ export class TurnComponent
         let card = this.getCardByCategory(guess, cardCategory);
         let cellData = this.getDataForPlayerAndCard(guess, cardCategory);
 
+        if (!guess.playerThatShowed)
+            return '';
+
         if (cellData.status == CellStatus.HAD)
-            return `Identified as had by ${guess.playerThatShowed.numberOfCards} in turn #${cellData.enteredTurn}`;
+            return `Identified as had by ${guess.playerThatShowed.name} in turn #${cellData.enteredTurn}`;
 
         if (cellData.status == CellStatus.NOTHAD)
-            return `Identified as not had by ${guess.playerThatShowed.numberOfCards} in turn #${cellData.enteredTurn}`;
+            return `Identified as not had by ${guess.playerThatShowed.name} in turn #${cellData.enteredTurn}`;
 
-        return `Status of card unknown for ${guess.playerThatShowed.numberOfCards}`;
+        return `Status of card unknown for ${guess.playerThatShowed.name}`;
     }
 }
