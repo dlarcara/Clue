@@ -1,0 +1,18 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Editing Turn #{{turn.number}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="cancel()"><ion-icon name="close-circle"></ion-icon></button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <guess-entry-component [enterShownCard]="playerIsDetective(turn.player)" 
+                           [activePlayer]="turn.player"
+                           [players]="gameTracker.players"
+                           [editMode]="true"
+                           [editGuess]="turn.guess"
+                           (guessEntered)="guessEntered($event)">
+    </guess-entry-component>
+</ion-content>

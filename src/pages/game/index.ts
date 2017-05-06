@@ -11,5 +11,6 @@ export * from './sheet/game-sheet.page';
 
 export * from './details/game-details.page';
 export * from './details/turn/turn.component';
+export * from './details/turn/edit-turn.page';
 
 export * from './settings/game-settings.page';

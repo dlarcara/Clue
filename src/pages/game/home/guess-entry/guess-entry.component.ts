@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 import { } from 'ionic-angular';
 
-import { CardCategory, Player, Guess, Card } from '../../../../app/game/index';
+import { CardCategory, Player, Guess, Card, Suspect } from '../../../../app/game/index';
 import { GameCardService } from '../../../../app/shared/index';
 
 import * as _ from "lodash";
@@ -12,7 +12,7 @@ import * as _ from "lodash";
     templateUrl: 'guess-entry.component.html'
 })
 
-export class GuessEntryComponent {
+export class GuessEntryComponent implements OnInit {
     accusedSuspect: Card
     accusedWeapon: Card
     accusedRoom: Card
@@ -23,13 +23,30 @@ export class GuessEntryComponent {
     @Input() players: Player[]
     @Input() enterShownCard : Boolean
 
+    //Edit Mode
+    @Input() editMode: Boolean
+    @Input() editGuess : Guess
+
     @Output() guessEntered = new EventEmitter();
 
     CardCategory = CardCategory
 
-    constructor(private gameCardService : GameCardService) 
+    constructor(private gameCardService : GameCardService) {}
+
+    ngOnInit () : void 
     {
-        this.resetEntry();
+        if (this.editMode && this.editGuess)
+        {
+            this.accusedSuspect = new Card(CardCategory.SUSPECT, this.editGuess.suspect);
+            this.accusedWeapon = new Card(CardCategory.WEAPON, this.editGuess.weapon);
+            this.accusedRoom = new Card(CardCategory.ROOM, this.editGuess.room);
+            this.playerThatShowed = this.editGuess.playerThatShowed;
+            this.shownCategory = this.editGuess.cardShown ? this.editGuess.cardShown.category : null;
+        }
+        else 
+        {
+            this.resetEntry();
+        }
     }
 
     guessIsValid() : Boolean

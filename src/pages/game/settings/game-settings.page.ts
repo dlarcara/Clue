@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 
 import { SetupPage } from "../../index"; 
 import { GameTabsPage } from "../index"; 
 import { GameTracker, Player, CardCategory, Card } from "../../../app/game/index";
-import { GameLoaderService, GameCardService } from "../../../app/shared/index";
+import { GameLoaderService, GameCardService, GameDetails } from "../../../app/shared/index";
 
 @Component({
     selector: 'game-settings-page',
@@ -19,10 +19,10 @@ export class GameSettingsPage
 
     CardCategory = CardCategory
 
-    constructor(private navController : NavController, private navParams : NavParams, private gameLoaderService : GameLoaderService,
-        private gameCardService : GameCardService)
+    constructor(private navController : NavController, private gameLoaderService : GameLoaderService, 
+                private gameTracker : GameTracker, private gameCardService : GameCardService)
     {
-        this.players = this.navParams.get('gameTracker').players;
+        this.players = gameTracker.players;
         this.selectedCategory = 4;
     }
 
@@ -34,9 +34,8 @@ export class GameSettingsPage
 
     restartGame() : void 
     {
-        let gameTracker : GameTracker = this.navParams.get('gameTracker');
-        let params = { players: gameTracker.players, detectivesCards: gameTracker.detectiveCards }
-        this.navController.parent.parent.setRoot(GameTabsPage, params);
+        let gameDetails = new GameDetails(this.gameTracker.players, this.gameTracker.detectiveCards, []);
+        this.navController.parent.parent.setRoot(GameTabsPage, { gameDetails: gameDetails });
     }
 
     getCardsForCategory(cardCategory : CardCategory): Card[]

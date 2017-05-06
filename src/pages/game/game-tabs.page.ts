@@ -4,7 +4,7 @@ import { NavParams } from 'ionic-angular';
 
 import { GameHomePage, GameSheetPage, GameDetailsPage, GameSettingsPage } from './index';
 
-import { GameDetails, GameLoaderService } from '../../app/shared/index';
+import { GameDetails } from '../../app/shared/index';
 import { GameTracker } from '../../app/game/index';
 
 import * as _ from "lodash";
@@ -14,35 +14,28 @@ import * as _ from "lodash";
 })
 
 export class GameTabsPage {
-    //Tabs
     gameHome: any;
     gameSheet: any;
     gameDetails: any;
     gameSettings : any;
     
-    tabParams: any;
-    gameTracker: GameTracker
-
-    constructor(private navParams : NavParams, private gameLoader : GameLoaderService) {
+    constructor(private navParams : NavParams, private gameTracker : GameTracker) {
         this.gameHome = GameHomePage;
         this.gameSheet = GameSheetPage;
         this.gameDetails = GameDetailsPage;
         this.gameSettings = GameSettingsPage;
 
-        if (this.navParams.get('gameDetails'))
+        let gameDetails : GameDetails = this.navParams.get('gameDetails');
+        if (gameDetails)
         {
-            //Bulid game from saved data
-            let gameDetails : GameDetails = this.navParams.get('gameDetails');
-            this.gameTracker = gameLoader.replayGame(gameDetails);
-            this.tabParams = { gameTracker: this.gameTracker, activePlayer: gameDetails.activePlayer };
+            //Replay Game
+            this.gameTracker.startGame(gameDetails.players, gameDetails.detectivesCards);
+            this.gameTracker.replayTurns(gameDetails.turns);
         }
         else
         {
-            let detectivesCards = navParams.get('detectivesCards');
-            let players = navParams.get('players');
-
-            this.gameTracker = new GameTracker(players, detectivesCards);
-            this.tabParams = { gameTracker: this.gameTracker };
+            //Start Fresh Game
+            gameTracker.startGame(navParams.get('players'), navParams.get('detectivesCards'));
         }
     }
 }

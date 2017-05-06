@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import { NavParams } from 'ionic-angular';
-
 import { GameTracker, Turn, Player } from '../../../app/game/index';
 
 import * as _ from "lodash";
@@ -13,8 +11,6 @@ import * as _ from "lodash";
 
 export class GameDetailsPage
 {
-    gameTracker: GameTracker
-    
     showFilters: Boolean
     filterPlayer: Player
 
@@ -24,7 +20,7 @@ export class GameDetailsPage
     useGuessTracking: Boolean
     useLessonsLearned: Boolean
 
-    constructor(private navParams : NavParams)
+    constructor(private gameTracker : GameTracker)
     {
         this.showFilters = false;
         this.filterPlayer = null;
@@ -34,8 +30,6 @@ export class GameDetailsPage
 
         this.useGuessTracking = true;
         this.useLessonsLearned = true;
-
-        this.gameTracker = navParams.get('gameTracker');
     }
 
     getTurns() : Turn[]

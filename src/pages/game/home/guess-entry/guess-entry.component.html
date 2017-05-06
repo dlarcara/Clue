@@ -63,11 +63,11 @@
         <button ion-button block
                 [disabled]="!guessIsValid()"
                 (click)="enterGuess()">
-            Enter Guess
+            {{editMode ? 'Re-enter Guess' : 'Enter Guess' }}
         </button>
 
         <button ion-button block (click)="enterPass()" color="secondary">
-            Pass
+            No Guess Made
         </button>
     </div>
 </ion-card>

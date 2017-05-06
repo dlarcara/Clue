@@ -4,7 +4,7 @@
             <ion-row>
                 <ion-col *ngFor="let player of gameTracker.players" 
                          class="player-space" 
-                         [ngClass]="{'active': player == activePlayer}">
+                         [ngClass]="{'active': player == gameTracker.getActivePlayer()}">
                     {{player.name}}
                 </ion-col>
             </ion-row>
@@ -13,8 +13,8 @@
 </ion-header>
 
 <ion-content>
-    <guess-entry-component [enterShownCard]="activePlayer.isDetective" 
-                           [activePlayer]="activePlayer" 
+    <guess-entry-component [enterShownCard]="gameTracker.getActivePlayer().isDetective" 
+                           [activePlayer]="gameTracker.getActivePlayer()" 
                            [players]="gameTracker.players"
                            (guessEntered)="guessEntered($event)"
                            #guessEntry>

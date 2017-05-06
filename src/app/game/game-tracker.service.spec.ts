@@ -1,6 +1,18 @@
 import { GameTracker, Player, Suspect, Card, CardCategory } from './index';
+import { GameDetails } from '../shared/index';
+
+class MockGameLoaderService
+{
+    saveGame(gameDetails : GameDetails) : void { }
+    loadGame() : GameDetails { return null; }
+    removeGame() : void { }
+}
 
 describe("When working with the game tracker", () => {
+  let gameTracker : GameTracker;
+  beforeEach(() => {
+    gameTracker = new GameTracker(new MockGameLoaderService());
+  });
   describe("and starting a game", () => {
     let defaultThreePlayers = [
       new Player("Player 1", Suspect.GREEN, 6, true), new Player("Player 2", Suspect.MUSTARD, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)
@@ -13,7 +25,7 @@ describe("When working with the game tracker", () => {
 
     it("it should make sure only one detective is identified", () => {
       
-      expect(() => new GameTracker(defaultThreePlayers.concat(new Player("Player 4", Suspect.WHITE, 6, true)), allSuspectCards))
+      expect(() => gameTracker.startGame(defaultThreePlayers.concat(new Player("Player 4", Suspect.WHITE, 6, true)), allSuspectCards))
             .toThrowError("Must define a single detective");
     });
 
@@ -21,25 +33,25 @@ describe("When working with the game tracker", () => {
       let noDetectivePlayerList = [
         new Player("Player 1", Suspect.GREEN, 6, false), new Player("Player 2", Suspect.MUSTARD, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)
       ];
-      expect(() => new GameTracker(noDetectivePlayerList, allSuspectCards.slice(0,5))).toThrowError("Must define a single detective");
+      expect(() => gameTracker.startGame(noDetectivePlayerList, allSuspectCards.slice(0,5))).toThrowError("Must define a single detective");
     });
 
 
     it("it should make sure the right number of cards are identified for the detective", () => {
-      expect(() => new GameTracker(defaultThreePlayers, allSuspectCards.slice(0,2)))
+      expect(() => gameTracker.startGame(defaultThreePlayers, allSuspectCards.slice(0,2)))
             .toThrowError("Wrong number of cards identified for the detective");
     });
 
     it("it should make sure a suspect isn't playing twice", () => {
       var players = defaultThreePlayers.slice(0,2).concat(new Player("Player 2", Suspect.MUSTARD, 6, false));
       
-      expect(() => new GameTracker(players, allSuspectCards)).toThrowError("Player suspect used more than once");
+      expect(() => gameTracker.startGame(players, allSuspectCards)).toThrowError("Player suspect used more than once");
     });
 
     it("it should make sure at least 3 players are playing", () => {
       var players = defaultThreePlayers.slice(0,2);
 
-      expect(() => new GameTracker(players, allSuspectCards)).toThrowError("At least 3 players are required to play a game");
+      expect(() => gameTracker.startGame(players, allSuspectCards)).toThrowError("At least 3 players are required to play a game");
     });
 
     it("it should throw an error if total number of cards amongst players is not 18", () => {
@@ -88,7 +100,7 @@ describe("When working with the game tracker", () => {
     it("it should throw an error if duplicate cards are passed in", () => {
       var duplicateCards = allSuspectCards.slice(0,5).concat(new Card(CardCategory.SUSPECT, 1));
  
-      expect(() => new GameTracker(defaultThreePlayers, duplicateCards)).toThrowError('Duplicate cards were supplied');
+      expect(() => gameTracker.startGame(defaultThreePlayers, duplicateCards)).toThrowError('Duplicate cards were supplied');
     });
   });
 });

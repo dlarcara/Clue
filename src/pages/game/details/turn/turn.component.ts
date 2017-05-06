@@ -1,13 +1,16 @@
 import { Component, Input } from '@angular/core';
 
+import { NavController } from 'ionic-angular';
+
 import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus, CellData } from '../../../../app/game/index';
 import { GameCardService } from '../../../../app/shared/index';
 import { LessonsLearnedForPlayer } from '../lesson-learned-for-player.model';
+import { EditTurnPage } from './edit-turn.page';
 
 import * as _ from "lodash";
 
 @Component({
-    selector: 'turn',
+    selector: 'turn-component',
     templateUrl: 'turn.component.html'
 })
 
@@ -21,7 +24,7 @@ export class TurnComponent
     CardCategory = CardCategory;
     CellStatus = CellStatus;
 
-    constructor(private gameCardService : GameCardService) {}
+    constructor(private gameCardService : GameCardService, private navCtrl: NavController) {}
 
     getCardDisplay(cardCategory : CardCategory, cardIndex : number) : string
     {
@@ -84,5 +87,13 @@ export class TurnComponent
     {
         let card = this.getCardByCategory(guess, cardCategory);
         return this.gameTracker.getCellDataForPlayerAndCard(guess.playerThatShowed, card);
+    }
+
+    editTurn(turn : Turn) : void
+    {
+        this.navCtrl.push(EditTurnPage, { 
+            turn: turn,
+            gameTracker: this.gameTracker
+        });
     }
 }

@@ -64,11 +64,11 @@
         </ion-card>
         
         <div *ngFor="let turn of getTurns()">
-            <turn [turn]="turn" 
+            <turn-component [turn]="turn" 
                   [gameTracker]="gameTracker" 
                   [useGuessTracking]="useGuessTracking"
                   [useLessonsLearned]="useLessonsLearned">
-            </turn>
+            </turn-component>
         </div>
     </div>
 </ion-content>

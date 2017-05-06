@@ -2,7 +2,8 @@
     <ion-card-header>
         <div class="progress-bar" [style.width]="(turn.resultingSheet.getProgress() * 100) + '%'"></div>
         <div class="header-text item row">
-            Turn #{{turn.number}}
+            <span align="left" class="col col-80">Turn #{{turn.number}}</span>
+            <ion-icon name="create" align="right" class="col col-20" (click)="editTurn(turn)"></ion-icon>
         </div>
     </ion-card-header>
 

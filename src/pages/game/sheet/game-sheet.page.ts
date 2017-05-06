@@ -1,6 +1,6 @@
 import { Component, ViewChild  } from '@angular/core';
 
-import { NavParams, AlertController, Content } from 'ionic-angular';
+import { AlertController, Content } from 'ionic-angular';
 
 import { GameCardService } from '../../../app/shared/index';
 import { GameTracker, Player, Card, CardCategory, CellStatus, Verdict, GameSheet } from '../../../app/game/index';
@@ -17,20 +17,19 @@ export class GameSheetPage {
     readonly weaponCards: Card[]
     readonly roomCards: Card[]
 
-    gameTracker : GameTracker
     displayedTurn : number
     showTurnSlide : Boolean
     showVerdict : Boolean
 
     @ViewChild(Content) content: Content;
 
-    constructor(private navParams : NavParams, private gameCardService : GameCardService, private alertCtrl: AlertController) 
+    constructor(private gameCardService : GameCardService, private alertCtrl: AlertController, 
+                private gameTracker : GameTracker) 
     {
         this.suspectCards = gameCardService.getCardsByCategory(CardCategory.SUSPECT);
         this.weaponCards = gameCardService.getCardsByCategory(CardCategory.WEAPON);
         this.roomCards = gameCardService.getCardsByCategory(CardCategory.ROOM);
 
-        this.gameTracker = this.navParams.get('gameTracker');
         this.resetFilters();
     }
 

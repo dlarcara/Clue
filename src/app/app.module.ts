@@ -4,10 +4,11 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
-import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, PlayerListComponent, GameDetailsPage, GameSettingsPage, TurnComponent } from '../pages/game/index';
+import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, 
+         PlayerListComponent, GameDetailsPage, GameSettingsPage, TurnComponent, EditTurnPage } from '../pages/game/index';
 
 import { GameLoaderService, GameCardService, PlayerIconComponent } from './shared/index';
-import { GameAlgorithm } from './game/index';
+import { GameAlgorithm, GameTracker } from './game/index';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -17,7 +18,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     SetupPage,
-    
     GameTabsPage,
     GameHomePage,
     GameSheetPage,
@@ -29,6 +29,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     PlayerEntryComponent,
     PlayerListComponent,
     TurnComponent,
+    EditTurnPage,
     PlayerIconComponent
   ],
   imports: [
@@ -46,15 +47,16 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     GameSettingsPage,
     GuessEntryComponent,
     CardListComponent,
-    PlayerListComponent
+    PlayerListComponent,
+    EditTurnPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GameCardService,
-    GameAlgorithm,
-    GameLoaderService
+    GameLoaderService,
+    GameTracker
   ]
 })
 
