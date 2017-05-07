@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { ToastController  } from 'ionic-angular';
 
-import { GameTracker, Verdict, Card, CardCategory } from '../../../app/game/index';
+import { GameTracker, Verdict, Card, CardCategory, Player } from '../../../app/game/index';
 import { GameCardService } from '../../../app/shared/index';
 import { GuessEntryComponent } from '../index';
 
@@ -22,7 +22,7 @@ export class GameHomePage {
     {
         //Make sure guess is entered successfully before moving on to next player
         let entrySuccessful : Boolean = true;      
-        let previousVerdict = this.gameTracker.getVerdict(); 
+        let turnForPlayer : Player = this.gameTracker.getActivePlayer();
         try{
             if (!guess)
                 this.gameTracker.enterPass(this.gameTracker.getActivePlayer());
@@ -39,15 +39,15 @@ export class GameHomePage {
         {
             this.showNewVerdictInformation();
             this.guessEntry.resetEntry();
-            this.showGuessEntered(this.gameTracker.getActivePlayer(), guess);
+            this.showGuessEntered(turnForPlayer, guess);
         }
     }
 
-    private showGuessEntered(activePlayer, guess)
+    private showGuessEntered(turnForPlayer, guess)
     {
         var message = guess ? 
-            `Guess entered for ${guess.playerThatGuessed.name}` : 
-            `${activePlayer.name} passed`;
+            `Guess entered for ${turnForPlayer.name}` : 
+            `${turnForPlayer.name} passed`;
 
         let toast = this.toastCtrl.create({ message: message, duration: 1500 });
         toast.present();
