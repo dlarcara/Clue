@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { ToastController  } from 'ionic-angular';
+import { Vibration } from '@ionic-native/vibration';
 
 import { GameTracker, Card, Player } from '../../../app/game/index';
 import { GuessEntryComponent } from '../index';
@@ -13,7 +14,7 @@ import { GuessEntryComponent } from '../index';
 export class GameHomePage {
     @ViewChild('guessEntry') guessEntry: GuessEntryComponent
 
-    constructor(public toastCtrl: ToastController, private gameTracker : GameTracker) {}
+    constructor(public toastCtrl: ToastController, private gameTracker : GameTracker, private vibration: Vibration) {}
 
     guessEntered(guess) : void
     {
@@ -66,8 +67,7 @@ export class GameHomePage {
             let message = `Full solution identified! ${currentVerdict.suspect.friendlyName} in the ${currentVerdict.room.friendlyName} 
                            with the ${currentVerdict.weapon.friendlyName}!`;
         
-            let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
-            toast.present();
+            this.showVerdictAlert(message, true);
         }
         else 
         {
@@ -86,9 +86,18 @@ export class GameHomePage {
             {
                 let newVerdcitsDisplay = verdictsLearned.map((c) => c.friendlyName.toUpperCase()).join(', ');
                 let message = `Part of the solution identified! ${newVerdcitsDisplay}!`;
-                let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
-                toast.present();
+                this.showVerdictAlert(message, false);
             }
         }
+    }
+
+    private showVerdictAlert(message : string, fullSolution : boolean) : void 
+    {
+        let messageLength = fullSolution ? 4000 : 2500;
+
+        let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: messageLength, cssClass: 'text-center' });
+        toast.present();
+
+        this.vibration.vibrate(messageLength);
     }
 }

@@ -1,6 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { Vibration } from '@ionic-native/vibration';
 
 import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
@@ -57,7 +58,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GameCardService,
     GameLoaderService,
-    GameTracker
+    GameTracker,
+    Vibration
   ]
 })
 

@@ -205,7 +205,7 @@ export class GameAlgorithm
     getUnresolvedTurns() : Turn[]
     {
         return _.filter(this._turns, (t) => {
-            return t.guess && !(t.guess.cardShown || t.guess.resolvedTurn) && (!t.player.isDetective || !t.guess.playerThatShowed.isDetective);
+            return t.guess && !(t.guess.cardShown || t.guess.resolvedTurn) && (!t.player.isDetective || (t.guess.playerThatShowed && !t.guess.playerThatShowed.isDetective));
         });
     }
 
