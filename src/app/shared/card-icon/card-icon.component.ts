@@ -21,7 +21,6 @@ export class CardIconComponent implements AfterViewInit
 
     ngAfterViewInit() : void 
     {
-        console.log(this.disableAlert);
         if (!this.disableAlert)
             this.renderer.listen(this.elRef.nativeElement, 'click', (event) => { this.showCardDetails();});
     }
