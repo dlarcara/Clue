@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { NavController, AlertController } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus, CellData } from '../../../../app/game/index';
+import { GameTracker, CardCategory, Turn, Player, Card, CellStatus, CellData } from '../../../../app/game/index';
 import { GameCardService } from '../../../../app/shared/index';
 import { EditTurnPage } from './edit-turn.page';
 
@@ -35,9 +35,9 @@ export class TurnComponent
         return player.isDetective ? "You" : player.name;
     }
 
-    shouldShowTurnResolution(turn : Turn) : Boolean
+    shouldShowTurnResolution() : Boolean
     {
-        if (turn.player.isDetective || !turn.guess || !turn.guess.playerThatShowed || turn.guess.playerThatShowed.isDetective)
+        if (this.turn.player.isDetective || !this.turn.guess || !this.turn.guess.playerThatShowed || this.turn.guess.playerThatShowed.isDetective)
             return false;
 
         return true;
@@ -45,7 +45,7 @@ export class TurnComponent
 
     getPlayerAndCardData(player : Player, card : Card) : CellData
     {
-        return this.gameTracker.getCellDataForPlayerAndCard(player, card);
+        return this.gameTracker.getActiveTurn().resultingSheet.getCellDataForPlayerAndCard(player, card);
     }
 
     showGuessMessage(player : Player, card : Card) : void 
@@ -62,25 +62,32 @@ export class TurnComponent
         alert.present();
     }
 
-    getTotalNumberOfLessonsLearnedFromTurn(turn : Turn) : number
+    getTotalNumberOfLessonsLearnedFromTurn() : number
     {
-        return _.sumBy(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length + ll.cardsNotHad.length);
+        return _.sumBy(this.turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length + ll.cardsNotHad.length);
     }
 
-    getLessonsLearnedFromTurn(turn : Turn) : any
+    getLessonsLearnedFromTurn() : any
     {
-        return _.filter(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length || ll.cardsNotHad.length);
+        return _.filter(this.turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length || ll.cardsNotHad.length);
     }
 
-    getMultipleResolvedTurnDisplay(turn : Turn) : string
+    noLessonsLearned() : Boolean
     {
-        return turn.lessonsLearned.resolvedTurns.map((n) => `<span class="display-value">#${n}</span>`).join(', ');
+        return this.getTotalNumberOfLessonsLearnedFromTurn() == 0 && !this.turn.lessonsLearned.identifiedSuspect &&
+                !this.turn.lessonsLearned.identifiedWeapon && !this.turn.lessonsLearned.identifiedRoom && 
+                !this.turn.lessonsLearned.resolvedTurns.length;
     }
 
-    editTurn(turn : Turn) : void
+    getMultipleResolvedTurnDisplay() : string
+    {
+        return this.turn.lessonsLearned.resolvedTurns.map((n) => `<span class="display-value">#${n}</span>`).join(', ');
+    }
+    
+    editTurn() : void
     {
         this.navCtrl.push(EditTurnPage, { 
-            turn: turn,
+            turn: this.turn,
             gameTracker: this.gameTracker
         });
     }

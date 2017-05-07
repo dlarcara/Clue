@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { FilterOptions } from './filter-options.model';
-import { GameTracker, Turn, Player } from '../../../app/game/index';
+import { GameTracker, Turn } from '../../../app/game/index';
 
 import * as _ from "lodash";
 
@@ -44,7 +44,10 @@ export class GameDetailsPage implements OnInit
     private setTurnsToDisplay() : void
     {
         let filteredTurns = _.filter(this.gameTracker.turns, (t : Turn) => {
-            if (!this.filterOptions.showPasses && !t.guess)
+            if(t.number == 0 && !this.filterOptions.filterPlayer)
+                return true;
+                
+            if (!this.filterOptions.showPasses && (!t.guess && t.number != 0))
                 return false;
                 
             if (this.filterOptions.filterPlayer && !_.isEqual(t.player, this.filterOptions.filterPlayer))

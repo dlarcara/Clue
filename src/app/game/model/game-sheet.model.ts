@@ -72,11 +72,8 @@ export class GameSheet
 
     getVerdict() : Verdict
     {
-        let verdict = new Verdict();
-        verdict.suspect = this.getVerdictForCategory(CardCategory.SUSPECT);
-        verdict.weapon = this.getVerdictForCategory(CardCategory.WEAPON);
-        verdict.room = this.getVerdictForCategory(CardCategory.ROOM);
-        return verdict;
+        return new Verdict(this.getVerdictForCategory(CardCategory.SUSPECT), this.getVerdictForCategory(CardCategory.WEAPON), 
+                           this.getVerdictForCategory(CardCategory.ROOM));
     }
 
     //TODO: Test this
@@ -148,7 +145,7 @@ export class GameSheet
 
         //Ensure you're not marking the last card in the category as fully not had, avoid duplicate verdicts in category
         let verdictInCategory = this.getVerdictForCategory(card.category);
-        if (verdictInCategory && verdictInCategory != card.cardIndex && _.countBy(this._data[card.category][+card.cardIndex], 'status')[CellStatus.NOTHAD] == (this._players.length - 1))
+        if (verdictInCategory && !_.isEqual(verdictInCategory, card) && _.countBy(this._data[card.category][+card.cardIndex], 'status')[CellStatus.NOTHAD] == (this._players.length - 1))
             throw new Error(`Can't mark ${this.getCardFriendlyNameDispalyForError(card, false, false)} as not had by ${player.name}, no one else has ${this.getCardFriendlyNameDispalyForError(card, false, false)} and a verdict has already been reached in this category`)
 
         this.setStatus(player, card, new CellData(CellStatus.NOTHAD, turnNumber));
@@ -177,7 +174,7 @@ export class GameSheet
         return `${capitalizeThe ?  "The" : "the"} ${_.lowerCase(card.friendlyName)}`;
     }
 
-    private getVerdictForCategory(cardCategory : CardCategory) : number
+    private getVerdictForCategory(cardCategory : CardCategory) : Card
     {
         let verdict = null;
 
@@ -187,7 +184,7 @@ export class GameSheet
                 verdict = cardIndex;
         });
 
-        return verdict;
+        return verdict ? new Card(cardCategory, verdict) : null;
     }
 
     private getPlayerIndex(player : Player) : number

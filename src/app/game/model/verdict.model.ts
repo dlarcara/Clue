@@ -1,12 +1,12 @@
-import { Suspect, Weapon, Room } from '../index';
+import { Card } from '../index';
 
 export class Verdict
 {
-    suspect: Suspect
-    weapon: Weapon
-    room: Room
+    suspect: Card
+    weapon: Card
+    room: Card
 
-    constructor(suspect : Suspect = null, weapon : Weapon = null, room : Room = null)
+    constructor(suspect : Card, weapon : Card, room : Card)
     {
         this.suspect = suspect;
         this.weapon = weapon;

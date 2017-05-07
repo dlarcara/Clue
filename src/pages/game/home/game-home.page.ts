@@ -2,11 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 
 import { ToastController  } from 'ionic-angular';
 
-import { GameTracker, Verdict, Card, CardCategory, Player } from '../../../app/game/index';
-import { GameCardService } from '../../../app/shared/index';
+import { GameTracker, Card, Player } from '../../../app/game/index';
 import { GuessEntryComponent } from '../index';
-
-import * as _ from "lodash";
 
 @Component({
     selector: 'game-home-page',
@@ -61,13 +58,13 @@ export class GameHomePage {
 
     private showNewVerdictInformation() : void
     {
-        let currentVerdict = this.gameTracker.getVerdict();
+        let activeTurn = this.gameTracker.turns[this.gameTracker.turns.length-1];
+        let currentVerdict = activeTurn.resultingSheet.getVerdict();
+
         if (currentVerdict.suspect != null && currentVerdict.weapon != null && currentVerdict.room != null )
         {
-            let suspect = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
-            let weapon = new Card(CardCategory.WEAPON, currentVerdict.weapon);
-            let room = new Card(CardCategory.ROOM, currentVerdict.room);
-            let message = `Full solution identified! ${suspect.friendlyName} in the ${room.friendlyName} with the ${weapon.friendlyName}!`;
+            let message = `Full solution identified! ${currentVerdict.suspect.friendlyName} in the ${currentVerdict.room.friendlyName} 
+                           with the ${currentVerdict.weapon.friendlyName}!`;
         
             let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
             toast.present();
@@ -75,16 +72,15 @@ export class GameHomePage {
         else 
         {
             let verdictsLearned : Card[] = [];
-            let activeTurn = this.gameTracker.turns[this.gameTracker.turns.length-1];
-
+            
             if (activeTurn.lessonsLearned.identifiedSuspect)
-                verdictsLearned.push(activeTurn.lessonsLearned.identifiedSuspect);
+                verdictsLearned.push(currentVerdict.suspect);
 
             if (activeTurn.lessonsLearned.identifiedWeapon)
-                verdictsLearned.push(activeTurn.lessonsLearned.identifiedWeapon);
+                verdictsLearned.push(currentVerdict.weapon);
 
             if (activeTurn.lessonsLearned.identifiedRoom)
-                verdictsLearned.push(activeTurn.lessonsLearned.identifiedRoom);
+                verdictsLearned.push(currentVerdict.room);
 
             if (verdictsLearned.length)
             {

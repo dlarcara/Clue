@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { GameConstants, Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData, 
-         TurnLessons, LessonsLearnedForPlayer } from './index';
+import { GameConstants, Player, Card, Turn, Guess, GameAlgorithm, CellStatus, Verdict, TurnLessons, LessonsLearnedForPlayer } from './index';
 import { GameLoaderService, GameDetails } from '../shared/index';
 
 import * as _ from 'lodash';
@@ -55,6 +54,7 @@ export class GameTracker
         
         this.gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
 
+        this.addLessonsLearnedForTurn();
         this.saveGame();
     }
 
@@ -89,9 +89,15 @@ export class GameTracker
 
         let successfulReplay = true;
         this.gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
+        this.addLessonsLearnedForTurn();
+        
         try
         {
             _.forEach(turns, (turn) => {
+                //Don't replay the start game turn
+                if (turn.number == 0)
+                    return;
+
                 if (!turn.guess)
                 {
                     this.enterPassInternal(turn.player);
@@ -121,10 +127,16 @@ export class GameTracker
     //TODO: Test this
     getActivePlayer() : Player
     {
-        if (!this.gameAlgorithm.turns.length)
+        //First turn is the start game turn, still player 1's turn
+        if (this.turns.length == 1)
             return this.players[0];
 
-        return this.getNextPlayer(this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1].player);
+        return this.getNextPlayer(this.getActiveTurn().player);
+    }
+
+    getActiveTurn() : Turn
+    {   
+        return this.turns[this.turns.length-1];
     }
 
     getDetective() : Player
@@ -135,41 +147,6 @@ export class GameTracker
     getNextPlayer(player : Player) : Player
     {
         return this.gameAlgorithm.getNextPlayer(player);
-    }
-    
-    getStatusForPlayerAndCard(player: Player, card : Card) : CellStatus
-    {     
-        return this.gameAlgorithm.gameSheet.getStatusForPlayerAndCard(player, card);
-    }
-
-    getCellDataForPlayerAndCard(player: Player, card : Card) : CellData
-    {     
-        return this.gameAlgorithm.gameSheet.getCellDataForPlayerAndCard(player, card);
-    }
-
-    getVerdict() : Verdict
-    {
-        return this.gameAlgorithm.gameSheet.getVerdict()
-    }
-
-    getProgress() : number
-    {
-        return this.gameAlgorithm.gameSheet.getProgress();
-    }
-
-    getAllCardsForPlayerInGivenStatus(player : Player, cellStatus : CellStatus) : Card[]
-    {
-        return this.gameAlgorithm.gameSheet.getAllCardsForPlayerInGivenStatus(player, cellStatus);
-    }
-
-    getPlayerWhoHasCard(card : Card) : Player
-    {
-        return this.gameAlgorithm.gameSheet.getPlayerWhoHasCard(card);
-    }
-
-    getGameSheet() : GameSheet
-    {
-        return this.gameAlgorithm.gameSheet;
     }
 
     private saveGame() : void
@@ -189,43 +166,42 @@ export class GameTracker
     //TODO: Test this
     private addLessonsLearnedForTurn() : void
     {
-        let activeTurn = this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1];
+        let turnToFillOut = this.getActiveTurn();
 
         //Tack on resulting sheet to turn
-        activeTurn.resultingSheet = _.cloneDeep(this.getGameSheet());
+        turnToFillOut.resultingSheet = _.cloneDeep(this.gameAlgorithm.gameSheet);
 
         //Create Lessons Learned for Players this Turn
         let lessonsLearnedForPlayers = [];
         _.forEach(this.players, (player : Player) => {
-            let cardsHad = activeTurn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, activeTurn.number, CellStatus.HAD);
-            let cardsNotHad = activeTurn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, activeTurn.number, CellStatus.NOTHAD);
+            let cardsHad = turnToFillOut.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turnToFillOut.number, CellStatus.HAD);
+            let cardsNotHad = turnToFillOut.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turnToFillOut.number, CellStatus.NOTHAD);
 
             lessonsLearnedForPlayers.push(new LessonsLearnedForPlayer(player, cardsHad, cardsNotHad));
         });
         
         //Create Gueses resolved by this turn
-        let resolvedTurns = _.filter(this.gameAlgorithm.turns, (t) => {
-            return t.guess && t.guess.resolvedTurn == activeTurn.number && !t.guess.playerThatGuessed.isDetective && !t.guess.playerThatShowed.isDetective;
+        let resolvedTurns = _.filter(this.turns, (t) => {
+            return t.guess && t.guess.resolvedTurn == turnToFillOut.number && !t.guess.playerThatGuessed.isDetective && !t.guess.playerThatShowed.isDetective;
         }).map((t) => t.number);
 
         //Mark if given category verdict was identified
-        let suspectIdentified : Card, weaponIdentified : Card, roomIdentified : Card;
+        let suspectIdentified : Boolean, weaponIdentified : Boolean, roomIdentified : Boolean;
         let currentVerdict : Verdict = this.gameAlgorithm.gameSheet.getVerdict();
-        let previousVerdict : Verdict = (this.gameAlgorithm.turns.length > 1) ? 
-            this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-2].resultingSheet.getVerdict() : 
-            new Verdict();
-  
-        if (currentVerdict.suspect != null && previousVerdict.suspect == null)
-            suspectIdentified = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
-        
-        if (currentVerdict.weapon != null && previousVerdict.weapon == null)
-            weaponIdentified = new Card(CardCategory.WEAPON, currentVerdict.weapon);
-        
-        if (currentVerdict.room != null && previousVerdict.room == null)
-            roomIdentified = new Card(CardCategory.ROOM, currentVerdict.room);
+        let previousVerdict : Verdict = (this.turns.length > 1) ? 
+            this.turns[this.turns.length-2].lessonsLearned.verdict : 
+            new Verdict(null, null, null);
+
+        suspectIdentified = (currentVerdict.suspect != null && previousVerdict.suspect == null);
+        weaponIdentified = (currentVerdict.weapon != null && previousVerdict.weapon == null);
+        roomIdentified = (currentVerdict.room != null && previousVerdict.room == null);
     
+        //Get Progress for the given turn
+        let progress = turnToFillOut.resultingSheet.getProgress();
+
         //Assign all lessons learned to turn
-        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns, suspectIdentified, weaponIdentified, roomIdentified);
-        this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1].lessonsLearned = lessonsLearned;
+        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns, currentVerdict,
+                                             suspectIdentified, weaponIdentified, roomIdentified, progress);
+        turnToFillOut.lessonsLearned = lessonsLearned;
     }
 }

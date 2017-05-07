@@ -109,36 +109,29 @@ export class GameSheetPage {
         });
     }
 
-    getVerdict() : any
+    getVerdict() : Verdict
     {
         let gameSheet = this.getGameSheetForDisplayedTurn();
-        let verdict = gameSheet.getVerdict();
-        
-        return {
-            suspect: verdict ? this.gameCardService.getCard(CardCategory.SUSPECT, verdict.suspect) : null,
-            weapon: verdict ? this.gameCardService.getCard(CardCategory.WEAPON, verdict.weapon) : null,
-            room: verdict ? this.gameCardService.getCard(CardCategory.ROOM, verdict.room) : null,
-        }
+        return gameSheet.getVerdict();
     }
 
     private getGameSheetForDisplayedTurn() : GameSheet
     {
-        if (!this.gameTracker.turns.length)
-            return this.gameTracker.getGameSheet();
-            
         return this.gameTracker.turns[this.displayedTurn-1].resultingSheet;
     }
 
     getPlayerMessage(player) : string
     {
-        let knownCards = this.gameTracker.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
+        let gameSheet = this.getGameSheetForDisplayedTurn();
+        let knownCards = gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.HAD);
 
         return `${knownCards.length}/${player.numberOfCards} cards identified`;
     }
 
     getCardMessage(card : Card) : string
     {
-        let playerWhoHasCard = this.gameTracker.getPlayerWhoHasCard(card);
+        let gameSheet = this.getGameSheetForDisplayedTurn();
+        let playerWhoHasCard = gameSheet.getPlayerWhoHasCard(card);
         let youHaveCard = _.isEqual(this.gameTracker.getDetective(), playerWhoHasCard);
 
         return playerWhoHasCard ? 

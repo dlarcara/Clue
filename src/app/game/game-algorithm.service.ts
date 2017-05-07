@@ -20,6 +20,8 @@ export class GameAlgorithm
     private _turns: Turn[];
     get turns() : Turn[] { return this._turns; }
 
+    get activeTurnNumber() : number { return this._turns.length ? this._turns[this._turns.length-1].number  : 0; }
+
     constructor(players : Player[], detectivesCards : Card[])
     {
         if(_.some(_.countBy(players, 'suspect'), (c) => c > 1))
@@ -33,11 +35,12 @@ export class GameAlgorithm
         this._gameSheet = new GameSheet(players);
         
         this.fillOutKnownCards(this.detective, detectivesCards);
+        this._turns.push(new Turn(0, this.detective, null, _.cloneDeep(this._gameSheet)));
     }
 
     enterPass(player : Player) : void
     {
-        this._turns.push(new Turn(this._turns.length + 1, player, null, _.cloneDeep(this._gameSheet)));
+        this._turns.push(new Turn(this.activeTurnNumber+1, player, null, _.cloneDeep(this._gameSheet)));
     }
 
     applyGuess(guess : Guess) : void
@@ -73,7 +76,7 @@ export class GameAlgorithm
 
         try
         {
-            let turn = new Turn(this._turns.length + 1, guess.playerThatGuessed, guess, null);
+            let turn = new Turn(this.activeTurnNumber+1, guess.playerThatGuessed, guess, null);
             this.evaluateTurn(turn);
         }
         catch(error)
@@ -126,7 +129,7 @@ export class GameAlgorithm
             return;
 
         //Mark this card as had by this player
-        this._gameSheet.markCardAsHadByPlayer(player, card, this._turns.length);
+        this._gameSheet.markCardAsHadByPlayer(player, card, this.activeTurnNumber);
 
         //Mark all other players as not having this card
         let allOtherPlayers = _.differenceWith(this._players, [player], _.isEqual);
@@ -145,7 +148,7 @@ export class GameAlgorithm
             return;
 
         //Mark this card as not had by a player
-        this._gameSheet.markCardAsNotHadByPlayer(player, card, this._turns.length);
+        this._gameSheet.markCardAsNotHadByPlayer(player, card, this.activeTurnNumber);
 
         //Mark all remaining cards as had by this player if all their not had cards have been identified
         let knowNotHadCardsForPlayer = this._gameSheet.getAllCardsForPlayerInGivenStatus(player, CellStatus.NOTHAD);
@@ -244,9 +247,8 @@ export class GameAlgorithm
 
     private markTurnAsResolved(turn : Turn) : void
     {
-        //Find this turn in the list of turns and update the resolved turn number to the active turn
-        let activeTurn = this._turns.length;
-        _.find(this._turns, (t : Turn) => t.number == turn.number).guess.resolvedTurn = activeTurn;
+        //Find this turn in the list of turns and update the resolved turn number to the active turn    
+        _.find(this._turns, (t : Turn) => t.number == turn.number).guess.resolvedTurn = this.activeTurnNumber;
     }
 
     private attemptToDeduceVerdictInEachCategory() : void
