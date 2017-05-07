@@ -54,9 +54,26 @@ export class TurnComponent
         let cellData = this.getPlayerAndCardData(player, card);
 
         if (cellData.status == CellStatus.UNKNOWN)
-            message =  `Status of card unknown for ${player.name}`;
-        else
-            message = `Identified as ${cellData.status == CellStatus.HAD ? 'had' : 'not had' } by ${player.name} in turn #${cellData.enteredTurn}`;
+        {
+            message =  `Status of card unknown for ${player.name}.`;
+        }  
+        else if (cellData.status == CellStatus.HAD)
+        {
+            message = `Identified as had by ${player.name} in turn #${cellData.enteredTurn}.`;
+        }  
+        else if (cellData.status == CellStatus.NOTHAD)
+        {
+            let cardOwner = this.gameTracker.getActiveTurn().resultingSheet.getPlayerWhoHasCard(card);
+            if (cardOwner)
+            {
+                let cellDataForOwner = this.getPlayerAndCardData(cardOwner, card);
+                message = `Identified as not had by ${player.name} in turn #${cellData.enteredTurn}. ${cardOwner.name} was identified as having the card in turn #${cellDataForOwner.enteredTurn}.`;
+            }
+            else 
+            {
+                message = `Identified as not had by ${player.name} in turn #${cellData.enteredTurn}. The owner is not known.`;
+            }
+        }   
         
         let alert = this.alertController.create({title: card.friendlyName, subTitle: message });
         alert.present();
