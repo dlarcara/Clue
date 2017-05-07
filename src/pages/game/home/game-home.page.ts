@@ -37,9 +37,7 @@ export class GameHomePage {
         
         if (entrySuccessful)
         {
-            if (!_.isEqual(previousVerdict, this.gameTracker.getVerdict()))
-                this.showVerdictIdentified(previousVerdict, this.gameTracker.getVerdict());
-                
+            this.showNewVerdictInformation();
             this.guessEntry.resetEntry();
             this.showGuessEntered(this.gameTracker.getActivePlayer(), guess);
         }
@@ -61,34 +59,40 @@ export class GameHomePage {
         toast.present();
     }
 
-    private showVerdictIdentified(previousVerdict : Verdict, currentVerdict : Verdict) : void
+    private showNewVerdictInformation() : void
     {
-        let verdictsLearned : Card[] = [];
-        let suspect = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
-        if (previousVerdict.suspect == null && currentVerdict.suspect != null)
-            verdictsLearned.push(suspect)
-
-        let weapon = new Card(CardCategory.WEAPON, currentVerdict.weapon);
-        if (previousVerdict.weapon == null && currentVerdict.weapon != null)
-            verdictsLearned.push(weapon)
-
-        let room = new Card(CardCategory.ROOM, currentVerdict.room);
-        if (previousVerdict.room == null && currentVerdict.room != null)
-            verdictsLearned.push(room)
-
-        let fullSolutionKnown = (currentVerdict.suspect != null && currentVerdict.weapon != null && currentVerdict.room != null );
-        let message : string;
-        if (fullSolutionKnown)
+        let currentVerdict = this.gameTracker.getVerdict();
+        if (currentVerdict.suspect != null && currentVerdict.weapon != null && currentVerdict.room != null )
         {
-            message = `Full solution identified! ${suspect.friendlyName} in the ${room.friendlyName} with the ${weapon.friendlyName}!`;
+            let suspect = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
+            let weapon = new Card(CardCategory.WEAPON, currentVerdict.weapon);
+            let room = new Card(CardCategory.ROOM, currentVerdict.room);
+            let message = `Full solution identified! ${suspect.friendlyName} in the ${room.friendlyName} with the ${weapon.friendlyName}!`;
+        
+            let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
+            toast.present();
         }
-        else
+        else 
         {
-            let newVerdcitsDisplay = verdictsLearned.map((c) => c.friendlyName.toUpperCase()).join(', ');
-            message = `Part of the solution identified! ${newVerdcitsDisplay}!`;
+            let verdictsLearned : Card[] = [];
+            let activeTurn = this.gameTracker.turns[this.gameTracker.turns.length-1];
+
+            if (activeTurn.lessonsLearned.identifiedSuspect)
+                verdictsLearned.push(activeTurn.lessonsLearned.identifiedSuspect);
+
+            if (activeTurn.lessonsLearned.identifiedWeapon)
+                verdictsLearned.push(activeTurn.lessonsLearned.identifiedWeapon);
+
+            if (activeTurn.lessonsLearned.identifiedRoom)
+                verdictsLearned.push(activeTurn.lessonsLearned.identifiedRoom);
+
+            if (verdictsLearned.length)
+            {
+                let newVerdcitsDisplay = verdictsLearned.map((c) => c.friendlyName.toUpperCase()).join(', ');
+                let message = `Part of the solution identified! ${newVerdcitsDisplay}!`;
+                let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
+                toast.present();
+            }
         }
-            
-        let toast = this.toastCtrl.create({ position: 'middle', message: message, duration: 3000, cssClass: 'text-center' });
-        toast.present();
     }
 }

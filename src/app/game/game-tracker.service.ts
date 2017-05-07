@@ -210,22 +210,20 @@ export class GameTracker
 
         //Mark if given category verdict was identified
         let suspectIdentified : Card, weaponIdentified : Card, roomIdentified : Card;
-        if (this.gameAlgorithm.turns.length > 1)
-        {   
-            let previousTurn = this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-2];
-            let previousVerdict : Verdict = previousTurn.resultingSheet.getVerdict();
-            let currentVerdict : Verdict = this.gameAlgorithm.gameSheet.getVerdict();
-            
-            if (currentVerdict.suspect != null && previousVerdict.suspect == null)
-                suspectIdentified = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
-            
-            if (currentVerdict.weapon != null && previousVerdict.weapon == null)
-                weaponIdentified = new Card(CardCategory.WEAPON, currentVerdict.weapon);
-            
-            if (currentVerdict.room != null && previousVerdict.room == null)
-                roomIdentified = new Card(CardCategory.ROOM, currentVerdict.room);
-        }
-
+        let currentVerdict : Verdict = this.gameAlgorithm.gameSheet.getVerdict();
+        let previousVerdict : Verdict = (this.gameAlgorithm.turns.length > 1) ? 
+            this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-2].resultingSheet.getVerdict() : 
+            new Verdict();
+  
+        if (currentVerdict.suspect != null && previousVerdict.suspect == null)
+            suspectIdentified = new Card(CardCategory.SUSPECT, currentVerdict.suspect);
+        
+        if (currentVerdict.weapon != null && previousVerdict.weapon == null)
+            weaponIdentified = new Card(CardCategory.WEAPON, currentVerdict.weapon);
+        
+        if (currentVerdict.room != null && previousVerdict.room == null)
+            roomIdentified = new Card(CardCategory.ROOM, currentVerdict.room);
+    
         //Assign all lessons learned to turn
         let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns, suspectIdentified, weaponIdentified, roomIdentified);
         this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1].lessonsLearned = lessonsLearned;
