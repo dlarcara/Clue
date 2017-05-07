@@ -31,6 +31,11 @@ export class GameDetailsPage implements OnInit
         this.setTurnsToDisplay();
     }
 
+    ionViewDidEnter() : void 
+    {
+        this.setTurnsToDisplay();
+    }
+
     filterOptionsChanged() : void
     {
         this.setTurnsToDisplay();
