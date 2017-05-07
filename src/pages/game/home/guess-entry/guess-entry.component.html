@@ -59,15 +59,20 @@
     <player-entry [players]="getPlayersToShow()" [selectedPlayer]="playerThatShowed" (playerSelected)="playerThatShowedSelected($event)">
     </player-entry>
 
-    <div padding>
-        <button ion-button block
-                [disabled]="!guessIsValid()"
-                (click)="enterGuess()">
-            {{editMode ? 'Re-enter Guess' : 'Enter Guess' }}
-        </button>
-
-        <button ion-button block (click)="enterPass()" color="secondary">
-            No Guess Made
-        </button>
-    </div>
+    <ion-grid>
+        <ion-row>
+            <ion-col width-50>
+                <button ion-button block
+                        [disabled]="!guessIsValid()"
+                        (click)="enterGuess()">
+                    {{editMode ? 'Re-enter Guess' : 'Enter Guess' }}
+                </button>
+            </ion-col>
+            <ion-col width-50>
+                <button ion-button block (click)="enterPass()" color="secondary">
+                    No Guess Made
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-card>
