@@ -117,9 +117,6 @@ export class GameAlgorithm
 
         //Recursively assess different scenarios on card until nothing new is found out
         this.replayAllTurnsUntilNothingNewIsFoundOut();
-
-        //Tack on resulting sheet to turn
-        this._turns[this._turns.length-1].resultingSheet = _.cloneDeep(this._gameSheet);
     }
 
     private markCardAsHadByPlayer(player : Player, card : Card) : void

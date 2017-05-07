@@ -1,11 +1,13 @@
-import { Player, GameSheet, Guess } from '../index';
+import { Player, GameSheet, Guess, TurnLessons } from '../index';
 
 export class Turn
 {
     number: number
     player: Player
     guess: Guess
+
     resultingSheet: GameSheet
+    lessonsLearned : TurnLessons
 
     constructor(number : Number, player : Player, guess : Guess, resultingSheet : GameSheet)
     {

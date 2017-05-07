@@ -1,8 +1,7 @@
-import { Player, Card, CardCategory } from '../../../app/game/index';
+import { Player, Card, CardCategory } from '../../index';
 
 export class LessonsLearnedForPlayer
 {
-    
     constructor(public player : Player, public cardsHad : Card[], public cardsNotHad : Card[]) {}
 
     toFriendlyString()

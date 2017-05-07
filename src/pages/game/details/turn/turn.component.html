@@ -19,10 +19,10 @@
                 
                 <span *ngIf="!turn.guess.playerThatShowed"><span class="display-value">No one</span> disproved it.</span>
                 <span *ngIf="turn.guess.playerThatShowed">
-                    <span *ngIf="!playerIsDetective(turn.player)">
+                    <span *ngIf="!turn.player.isDetective">
                         <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> disproved it.
                     </span>
-                    <span *ngIf="playerIsDetective(turn.player)">
+                    <span *ngIf="turn.player.isDetective">
                         <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> disproved it by showing you 
                         <span *ngIf="turn.guess.cardShown.category != CardCategory.SUSPECT">the </span>
                         <span class="display-value">{{getCardDisplay(turn.guess.cardShown.category, turn.guess.cardShown.cardIndex)}}</span>.

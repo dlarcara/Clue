@@ -8,7 +8,11 @@ export * from './enum/cell-status.enum';
 export * from './model/card.model';
 export * from './model/player.model';
 export * from './model/game-sheet.model';
+
 export * from './model/turn.model';
+export * from './model/turn-lessons/turn-lessons.model';
+export * from './model/turn-lessons/lessons-learned-for-player.model';
 export * from './model/guess.model';
+
 export * from './model/verdict.model';
 export * from './game.constants';

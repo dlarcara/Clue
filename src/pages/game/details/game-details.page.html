@@ -61,10 +61,9 @@
         </ion-card>
         
         <div *ngFor="let turn of turnsToDisplay">
-            <turn-component [turn]="turn" 
-                  [gameTracker]="gameTracker" 
-                  [useGuessTracking]="useGuessTracking"
-                  [useLessonsLearned]="useLessonsLearned">
+            <turn-component [turn]="turn"
+                            [useGuessTracking]="useGuessTracking"
+                            [useLessonsLearned]="useLessonsLearned">
             </turn-component>
         </div>
     </div>

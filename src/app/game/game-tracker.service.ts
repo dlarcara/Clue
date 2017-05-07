@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
-import { GameConstants, Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData } from './index';
+import { GameConstants, Player, CardCategory, Card, Turn, Guess, GameSheet, GameAlgorithm, CellStatus, Verdict, CellData, 
+         TurnLessons, LessonsLearnedForPlayer } from './index';
 import { GameLoaderService, GameDetails } from '../shared/index';
 
 import * as _ from 'lodash';
@@ -59,34 +60,50 @@ export class GameTracker
 
     enterPass(player : Player) : void
     {
-        this.gameAlgorithm.enterPass(player);
+        this.enterPassInternal(player);
         this.saveGame();
+    }
+
+    private enterPassInternal(player : Player) : void
+    {
+        this.gameAlgorithm.enterPass(player);
+        this.addLessonsLearnedForTurn();
     }
 
     enterTurn(guess : Guess) : void
     {
-        this.gameAlgorithm.applyGuess(guess);
+        this.enterTurnInternal(guess);
         this.saveGame();
+    }
+
+    private enterTurnInternal(guess : Guess) : void 
+    {
+        this.gameAlgorithm.applyGuess(guess);
+        this.addLessonsLearnedForTurn();
     }
 
     //TODO: Test this
     replayTurns(turns : Turn[]) : void
     {
+        let previousAlgorithm = _.cloneDeep(this.gameAlgorithm);
+
         let successfulReplay = true;
-        let gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
+        this.gameAlgorithm = new GameAlgorithm(this.players, this.detectiveCards);
         try
         {
             _.forEach(turns, (turn) => {
                 if (!turn.guess)
                 {
-                    gameAlgorithm.enterPass(turn.player);
+                    this.enterPassInternal(turn.player);
                 } 
                 else
                 {
-                    //Wipe resolved Turn off guess, algorithm will recalculate this
+                    //Wipe out calculated information, let algorithm recalculate it
                     turn.guess.resolvedTurn = null;
+                    turn.resultingSheet = null
+                    turn.lessonsLearned = null;
 
-                    gameAlgorithm.applyGuess(turn.guess);
+                    this.enterTurnInternal(turn.guess);
                 }    
             });
         }
@@ -96,11 +113,10 @@ export class GameTracker
             throw error;
         }
 
-        if (successfulReplay)
-        {
-            this.gameAlgorithm = gameAlgorithm;
-            this.saveGame();
-        }
+        if (!successfulReplay)
+            this.gameAlgorithm = previousAlgorithm;
+
+        this.saveGame();
     }
 
     //TODO: Test this
@@ -169,5 +185,27 @@ export class GameTracker
         var totalNumberOfAvailableCards = 18; 
         var averageCardsPerPerson = totalNumberOfAvailableCards/numberOfPlayers;
         return _.uniq([Math.floor(averageCardsPerPerson), Math.ceil(averageCardsPerPerson)]);
+    }
+
+    //TODO: Test this
+    private addLessonsLearnedForTurn() : void
+    {
+        let activeTurn = this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1];
+
+        //Tack on resulting sheet to turn
+        activeTurn.resultingSheet = _.cloneDeep(this.getGameSheet());
+
+        //Create Lessons Learned for Turn
+        let lessonsLearnedForPlayers = [];
+        _.forEach(this.players, (player : Player) => {
+            let cardsHad = activeTurn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, activeTurn.number, CellStatus.HAD);
+            let cardsNotHad = activeTurn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, activeTurn.number, CellStatus.NOTHAD);
+
+            lessonsLearnedForPlayers.push(new LessonsLearnedForPlayer(player, cardsHad, cardsNotHad));
+        });
+        
+        //Assign all lessons learned to turn
+        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers);
+        this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1].lessonsLearned = lessonsLearned;
     }
 }

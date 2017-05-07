@@ -17,14 +17,13 @@ import * as _ from "lodash";
 export class TurnComponent
 {
     @Input() turn: Turn
-    @Input() gameTracker: GameTracker
     @Input() useGuessTracking : Boolean
     @Input() useLessonsLearned : Boolean
 
     CardCategory = CardCategory;
     CellStatus = CellStatus;
 
-    constructor(private gameCardService : GameCardService, private navCtrl: NavController) {}
+    constructor(private gameCardService : GameCardService, private navCtrl: NavController, private gameTracker : GameTracker) {}
 
     getCardDisplay(cardCategory : CardCategory, cardIndex : number) : string
     {
@@ -33,20 +32,12 @@ export class TurnComponent
 
     getPlayerDisplay(player : Player) : string
     {
-        return this.playerIsDetective(player) ? "You" : player.name;
-    }
-
-    playerIsDetective(player : Player) : Boolean
-    {
-        return _.isEqual(player, this.gameTracker.getDetective())
+        return player.isDetective ? "You" : player.name;
     }
 
     shouldShowTurnResolution(turn : Turn) : Boolean
     {
-        if (!turn.guess || !turn.guess.playerThatShowed)
-            return false;
-
-        if (this.playerIsDetective(turn.player) || this.playerIsDetective(turn.guess.playerThatShowed))
+        if (turn.player.isDetective || !turn.guess || !turn.guess.playerThatShowed || turn.guess.playerThatShowed.isDetective)
             return false;
 
         return true;
@@ -54,23 +45,12 @@ export class TurnComponent
 
     getTotalNumberOfLessonsLearnedFromTurn(turn : Turn) : number
     {
-        let lessonsLearned = this.getLessonsLearnedFromTurn(turn);
-        return _.sumBy(lessonsLearned, (ll : LessonsLearnedForPlayer) => ll.cardsHad.length + ll.cardsNotHad.length);
+        return _.sumBy(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length + ll.cardsNotHad.length);
     }
 
-    getLessonsLearnedFromTurn(turn : Turn) : LessonsLearnedForPlayer[]
+    getLessonsLearnedFromTurn(turn : Turn) : any
     {
-        let lessonsLearned = [];
-
-        _.forEach(this.gameTracker.players, (player : Player) => {
-            let cardsHad = turn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turn.number, CellStatus.HAD);
-            let cardsNotHad = turn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, turn.number, CellStatus.NOTHAD);
-
-            if (cardsHad.length || cardsNotHad.length)
-                lessonsLearned.push(new LessonsLearnedForPlayer(player, cardsHad, cardsNotHad));
-        })
-
-        return lessonsLearned;
+        return _.filter(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length || ll.cardsNotHad.length);
     }
 
     getCardByCategory(guess : Guess, cardCategory : CardCategory) : Card

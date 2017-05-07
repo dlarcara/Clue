@@ -48,7 +48,7 @@ export class GameDetailsPage implements OnInit
             if (this.filterOptions.onlyShowOpenGuesses)
             {
                 if (!t.guess || t.player.isDetective || t.guess.playerThatShowed.isDetective || t.guess.resolvedTurn)
-                    return false
+                    return false;
             }
 
             return true;
