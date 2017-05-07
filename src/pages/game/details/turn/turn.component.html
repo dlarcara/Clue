@@ -41,53 +41,56 @@
                 
                 <div class="guess-resolution accordion-content" [ngClass]="{'active': turn.showGuess}">
                     <p *ngIf="!turn.guess.resolvedTurn">
-                        The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> is stil unresolved.
+                        The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> is still open.
                     </p>
 
                     <p *ngIf="turn.guess.resolvedTurn">
                         The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}} </span>
-                        <span *ngIf="turn.guess.resolvedTurn != turn.number">was resolved in turn <span class="display-value">#{{turn.guess.resolvedTurn}}</span>.</span>
-                        <span *ngIf="turn.guess.resolvedTurn == turn.number">was resolved immediately.</span>
+                        <span *ngIf="turn.guess.resolvedTurn != turn.number">was closed in turn <span class="display-value">#{{turn.guess.resolvedTurn}}</span>.</span>
+                        <span *ngIf="turn.guess.resolvedTurn == turn.number">was closed immediately.</span>
                     </p>
 
                     <ion-grid>
                         <ion-row>
                             <ion-col></ion-col>
+
+                            <!-- Suspect -->
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.SUSPECT)" [message]="getCardMessage(turn.guess, CardCategory.SUSPECT)"></card-icon>
+                                <card-icon [card]="turn.guess.suspectCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.SUSPECT).status == CellStatus.HAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.SUSPECT).enteredTurn}}
-                                </ion-badge>
-                                <ion-badge color="invalid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.SUSPECT).status == CellStatus.NOTHAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.SUSPECT).enteredTurn}}
+                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
+                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status != CellStatus.UNKNOWN">
+                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).enteredTurn}}
                                 </ion-badge>
                             </ion-col>
+
                             <ion-col></ion-col>
+
+                            <!-- Weapon -->
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.WEAPON)" [message]="getCardMessage(turn.guess, CardCategory.WEAPON)"></card-icon>
+                                <card-icon [card]="turn.guess.weaponCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.WEAPON).status == CellStatus.HAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.WEAPON).enteredTurn}}
-                                </ion-badge>
-                                <ion-badge color="invalid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.WEAPON).status == CellStatus.NOTHAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.WEAPON).enteredTurn}}
+                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
+                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status != CellStatus.UNKNOWN">
+                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).enteredTurn}}
                                 </ion-badge>
                             </ion-col>
+
+                            <!-- Room -->
                             <ion-col></ion-col>
+
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="getCardByCategory(turn.guess, CardCategory.ROOM)" [message]="getCardMessage(turn.guess, CardCategory.ROOM)"></card-icon>
+                                <card-icon [card]="turn.guess.roomCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.roomCard)"></card-icon>
                             </ion-col>
                             <ion-col class="sheet-cell-icon" col-auto>
-                                <ion-badge color="valid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.ROOM).status == CellStatus.HAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.ROOM).enteredTurn}}
-                                </ion-badge>
-                                <ion-badge color="invalid" *ngIf="getDataForPlayerAndCard(turn.guess, CardCategory.ROOM).status == CellStatus.NOTHAD">
-                                    {{getDataForPlayerAndCard(turn.guess, CardCategory.ROOM).enteredTurn}}
+                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
+                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status != CellStatus.UNKNOWN">
+                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).enteredTurn}}
                                 </ion-badge>
                             </ion-col>
+
                             <ion-col></ion-col>
                         </ion-row>
                     </ion-grid>

@@ -98,12 +98,11 @@ export class GameTracker
                 } 
                 else
                 {
-                    //Wipe out calculated information, let algorithm recalculate it
-                    turn.guess.resolvedTurn = null;
-                    turn.resultingSheet = null
-                    turn.lessonsLearned = null;
+                    //Reconstruct Turn & Guess to ensure all calculated information is wiped off
+                    let guess = new Guess(turn.guess.suspect, turn.guess.weapon, turn.guess.room, turn.guess.playerThatGuessed,
+                                          turn.guess.playerThatShowed, turn.guess.cardShown);
 
-                    this.enterTurnInternal(turn.guess);
+                    this.enterTurnInternal(guess);
                 }    
             });
         }

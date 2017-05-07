@@ -4,7 +4,6 @@ import { NavController } from 'ionic-angular';
 
 import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus, CellData } from '../../../../app/game/index';
 import { GameCardService } from '../../../../app/shared/index';
-import { LessonsLearnedForPlayer } from '../lesson-learned-for-player.model';
 import { EditTurnPage } from './edit-turn.page';
 
 import * as _ from "lodash";
@@ -43,6 +42,24 @@ export class TurnComponent
         return true;
     }
 
+    getPlayerAndCardData(player : Player, card : Card) : CellData
+    {
+        return this.gameTracker.getCellDataForPlayerAndCard(player, card);
+    }
+
+    getCardMessage(player : Player, card : Card) : string
+    {
+        if (!player)
+            return '';
+
+        let cellData = this.getPlayerAndCardData(player, card);
+
+        if (cellData.status == CellStatus.UNKNOWN)
+            return `Status of card unknown for ${player.name}`;
+        
+        return `Identified as ${cellData.status == CellStatus.HAD ? 'had' : 'not had' } by ${player.name} in turn #${cellData.enteredTurn}`;
+    }
+
     getTotalNumberOfLessonsLearnedFromTurn(turn : Turn) : number
     {
         return _.sumBy(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length + ll.cardsNotHad.length);
@@ -53,44 +70,11 @@ export class TurnComponent
         return _.filter(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length || ll.cardsNotHad.length);
     }
 
-    getCardByCategory(guess : Guess, cardCategory : CardCategory) : Card
-    {
-        switch(cardCategory)
-        {
-            case CardCategory.SUSPECT: return new Card(CardCategory.SUSPECT, guess.suspect);
-            case CardCategory.WEAPON: return new Card(CardCategory.WEAPON, guess.weapon);
-            case CardCategory.ROOM: return new Card(CardCategory.ROOM, guess.room);
-        }
-    }
-
-    getDataForPlayerAndCard(guess : Guess, cardCategory : CardCategory) : CellData
-    {
-        let card = this.getCardByCategory(guess, cardCategory);
-        return this.gameTracker.getCellDataForPlayerAndCard(guess.playerThatShowed, card);
-    }
-
     editTurn(turn : Turn) : void
     {
         this.navCtrl.push(EditTurnPage, { 
             turn: turn,
             gameTracker: this.gameTracker
         });
-    }
-
-    getCardMessage(guess : Guess, cardCategory : CardCategory) : string
-    {
-        let card = this.getCardByCategory(guess, cardCategory);
-        let cellData = this.getDataForPlayerAndCard(guess, cardCategory);
-
-        if (!guess.playerThatShowed)
-            return '';
-
-        if (cellData.status == CellStatus.HAD)
-            return `Identified as had by ${guess.playerThatShowed.name} in turn #${cellData.enteredTurn}`;
-
-        if (cellData.status == CellStatus.NOTHAD)
-            return `Identified as not had by ${guess.playerThatShowed.name} in turn #${cellData.enteredTurn}`;
-
-        return `Status of card unknown for ${guess.playerThatShowed.name}`;
     }
 }
