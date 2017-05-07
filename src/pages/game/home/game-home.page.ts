@@ -84,7 +84,6 @@ export class GameHomePage {
         }
         else
         {
-            debugger;
             let newVerdcitsDisplay = verdictsLearned.map((c) => c.friendlyName.toUpperCase()).join(', ');
             message = `Part of the solution identified! ${newVerdcitsDisplay}!`;
         }
