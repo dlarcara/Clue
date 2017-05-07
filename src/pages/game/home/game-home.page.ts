@@ -12,9 +12,15 @@ import { GuessEntryComponent } from '../index';
 })
 
 export class GameHomePage {
+    verdictKnown : Boolean = false;
+
     @ViewChild('guessEntry') guessEntry: GuessEntryComponent
 
-    constructor(public toastCtrl: ToastController, private gameTracker : GameTracker, private vibration: Vibration) {}
+    constructor(public toastCtrl: ToastController, private gameTracker : GameTracker, private vibration: Vibration) 
+    {
+        let currentVerdict = gameTracker.getActiveTurn().resultingSheet.getVerdict()
+        this.verdictKnown = (currentVerdict.suspect != null && currentVerdict.room != null && currentVerdict.room != null);
+    }
 
     guessEntered(guess) : void
     {
@@ -62,12 +68,13 @@ export class GameHomePage {
         let activeTurn = this.gameTracker.turns[this.gameTracker.turns.length-1];
         let currentVerdict = activeTurn.resultingSheet.getVerdict();
 
-        if (currentVerdict.suspect != null && currentVerdict.weapon != null && currentVerdict.room != null )
+        if (!this.verdictKnown && currentVerdict.suspect != null && currentVerdict.weapon != null && currentVerdict.room != null )
         {
             let message = `Full solution identified! ${currentVerdict.suspect.friendlyName} in the ${currentVerdict.room.friendlyName} 
                            with the ${currentVerdict.weapon.friendlyName}!`;
         
             this.showVerdictAlert(message, true);
+            this.verdictKnown = true;
         }
         else 
         {
