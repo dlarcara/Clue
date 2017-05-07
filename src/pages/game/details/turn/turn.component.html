@@ -55,10 +55,10 @@
                             <ion-col></ion-col>
 
                             <!-- Suspect -->
-                            <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="turn.guess.suspectCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)"></card-icon>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
+                                <card-icon [card]="turn.guess.suspectCard" [disableAlert]="true"></card-icon>
                             </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
                                 <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
                                            *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status != CellStatus.UNKNOWN">
                                     {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).enteredTurn}}
@@ -68,10 +68,10 @@
                             <ion-col></ion-col>
 
                             <!-- Weapon -->
-                            <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="turn.guess.weaponCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)"></card-icon>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
+                                <card-icon [card]="turn.guess.weaponCard" [disableAlert]="true"></card-icon>
                             </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
                                 <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
                                            *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status != CellStatus.UNKNOWN">
                                     {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).enteredTurn}}
@@ -81,10 +81,10 @@
                             <!-- Room -->
                             <ion-col></ion-col>
 
-                            <ion-col class="sheet-cell-icon" col-auto>
-                                <card-icon [card]="turn.guess.roomCard" [message]="getCardMessage(turn.guess.playerThatShowed, turn.guess.roomCard)"></card-icon>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
+                                <card-icon [card]="turn.guess.roomCard" [disableAlert]="true"></card-icon>
                             </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto>
+                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
                                 <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status == CellStatus.HAD ? 'valid' : 'inavlid'"
                                            *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status != CellStatus.UNKNOWN">
                                     {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).enteredTurn}}

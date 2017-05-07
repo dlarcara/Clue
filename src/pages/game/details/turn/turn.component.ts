@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 
 import { GameTracker, CardCategory, Turn, Player, Card, Guess, CellStatus, CellData } from '../../../../app/game/index';
 import { GameCardService } from '../../../../app/shared/index';
@@ -22,7 +22,8 @@ export class TurnComponent
     CardCategory = CardCategory;
     CellStatus = CellStatus;
 
-    constructor(private gameCardService : GameCardService, private navCtrl: NavController, private gameTracker : GameTracker) {}
+    constructor(private gameCardService : GameCardService, private navCtrl: NavController, private gameTracker : GameTracker,
+                private alertController : AlertController) {}
 
     getCardDisplay(cardCategory : CardCategory, cardIndex : number) : string
     {
@@ -47,17 +48,18 @@ export class TurnComponent
         return this.gameTracker.getCellDataForPlayerAndCard(player, card);
     }
 
-    getCardMessage(player : Player, card : Card) : string
+    showGuessMessage(player : Player, card : Card) : void 
     {
-        if (!player)
-            return '';
-
+        let message = '';
         let cellData = this.getPlayerAndCardData(player, card);
 
         if (cellData.status == CellStatus.UNKNOWN)
-            return `Status of card unknown for ${player.name}`;
+            message =  `Status of card unknown for ${player.name}`;
+        else
+            message = `Identified as ${cellData.status == CellStatus.HAD ? 'had' : 'not had' } by ${player.name} in turn #${cellData.enteredTurn}`;
         
-        return `Identified as ${cellData.status == CellStatus.HAD ? 'had' : 'not had' } by ${player.name} in turn #${cellData.enteredTurn}`;
+        let alert = this.alertController.create({title: card.friendlyName, subTitle: message });
+        alert.present();
     }
 
     getTotalNumberOfLessonsLearnedFromTurn(turn : Turn) : number
