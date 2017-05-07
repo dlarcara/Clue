@@ -72,6 +72,11 @@ export class TurnComponent
         return _.filter(turn.lessonsLearned.lessonsLearnedForPlayers, (ll) => ll.cardsHad.length || ll.cardsNotHad.length);
     }
 
+    getMultipleResolvedTurnDisplay(turn : Turn) : string
+    {
+        return turn.lessonsLearned.resolvedTurns.map((n) => `<span class="display-value">#${n}</span>`).join(', ');
+    }
+
     editTurn(turn : Turn) : void
     {
         this.navCtrl.push(EditTurnPage, { 

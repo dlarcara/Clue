@@ -194,7 +194,7 @@ export class GameTracker
         //Tack on resulting sheet to turn
         activeTurn.resultingSheet = _.cloneDeep(this.getGameSheet());
 
-        //Create Lessons Learned for Turn
+        //Create Lessons Learned for Players this Turn
         let lessonsLearnedForPlayers = [];
         _.forEach(this.players, (player : Player) => {
             let cardsHad = activeTurn.resultingSheet.getAllEntriesForPlayerAndTurnAndStatus(player, activeTurn.number, CellStatus.HAD);
@@ -203,8 +203,13 @@ export class GameTracker
             lessonsLearnedForPlayers.push(new LessonsLearnedForPlayer(player, cardsHad, cardsNotHad));
         });
         
+        //Create Gueses resolved by this turn
+        let resolvedTurns = _.filter(this.gameAlgorithm.turns, (t) => {
+            return t.guess && t.guess.resolvedTurn == activeTurn.number && !t.guess.playerThatGuessed.isDetective && !t.guess.playerThatShowed.isDetective;
+        }).map((t) => t.number);
+
         //Assign all lessons learned to turn
-        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers);
+        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns);
         this.gameAlgorithm.turns[this.gameAlgorithm.turns.length-1].lessonsLearned = lessonsLearned;
     }
 }
