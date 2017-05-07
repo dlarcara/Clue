@@ -16,8 +16,9 @@
             <span *ngIf="turn.number > 0"><span class="display-value">{{getPlayerDisplay(turn.player)}}</span> passed.</span>
             <span *ngIf="turn.number == 0">Your {{turn.player.numberOfCards}} cards were filled out.</span>
         </p>
+
+        <!-- Guess Sentence -->
         <div *ngIf="turn.guess">
-            <!-- Guess Sentence -->
             <p>
                 <span class="display-value">{{getPlayerDisplay(turn.player)}}</span> guessed 
                 <span class="display-value">{{getCardDisplay(CardCategory.SUSPECT, turn.guess.suspect)}}</span> in the 
@@ -36,79 +37,79 @@
                     </span>
                 </span>
             </p>
-            
-            <!-- Guess Tracking Section -->
-            <div class="accordion" *ngIf="useGuessTracking && shouldShowTurnResolution()">
-                <div class="accordion-header item row" (click)="turn.showGuess = !turn.showGuess" [ngClass]="{'active': turn.showGuess}">      
-                    <span align="left" class="col col-80">
-                        Guess Tracking
-                        <span *ngIf="turn.guess.resolvedTurn == null" class="display-value open">(Open)</span>
-                        <span *ngIf="turn.guess.resolvedTurn != null" class="display-value closed">(Closed)</span>
-                    </span>
-                    <span align="right" class="col col-20">
-                        <ion-icon [name]="turn.showGuess ? 'arrow-dropup-circle' : 'arrow-dropdown-circle'" ></ion-icon>
-                    </span>
-                </div>
-                
-                <div class="guess-resolution accordion-content" [ngClass]="{'active': turn.showGuess}">
-                    <p *ngIf="!turn.guess.resolvedTurn">
-                        The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> is still open.
-                    </p>
-
-                    <p *ngIf="turn.guess.resolvedTurn">
-                        The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}} </span>
-                        <span *ngIf="turn.guess.resolvedTurn != turn.number">was closed in turn <span class="display-value">#{{turn.guess.resolvedTurn}}</span>.</span>
-                        <span *ngIf="turn.guess.resolvedTurn == turn.number">was closed immediately.</span>
-                    </p>
-
-                    <ion-grid>
-                        <ion-row>
-                            <ion-col></ion-col>
-
-                            <!-- Suspect -->
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
-                                <card-icon [card]="turn.guess.suspectCard" [disableAlert]="true"></card-icon>
-                            </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
-                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
-                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status != CellStatus.UNKNOWN">
-                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).enteredTurn}}
-                                </ion-badge>
-                            </ion-col>
-
-                            <ion-col></ion-col>
-
-                            <!-- Weapon -->
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
-                                <card-icon [card]="turn.guess.weaponCard" [disableAlert]="true"></card-icon>
-                            </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
-                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
-                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status != CellStatus.UNKNOWN">
-                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).enteredTurn}}
-                                </ion-badge>
-                            </ion-col>
-
-                            <!-- Room -->
-                            <ion-col></ion-col>
-
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
-                                <card-icon [card]="turn.guess.roomCard" [disableAlert]="true"></card-icon>
-                            </ion-col>
-                            <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
-                                <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
-                                           *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status != CellStatus.UNKNOWN">
-                                    {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).enteredTurn}}
-                                </ion-badge>
-                            </ion-col>
-
-                            <ion-col></ion-col>
-                        </ion-row>
-                    </ion-grid>
-                </div>
-            </div>
         </div>
        
+        <!-- Guess Tracking Section -->
+        <div class="accordion" *ngIf="useGuessTracking && shouldShowTurnResolution()">
+            <div class="accordion-header item row" (click)="turn.showGuess = !turn.showGuess" [ngClass]="{'active': turn.showGuess}">      
+                <span align="left" class="col col-80">
+                    Guess Tracking
+                    <span *ngIf="turn.guess.resolvedTurn == null" class="display-value open">(Open)</span>
+                    <span *ngIf="turn.guess.resolvedTurn != null" class="display-value closed">(Closed)</span>
+                </span>
+                <span align="right" class="col col-20">
+                    <ion-icon [name]="turn.showGuess ? 'arrow-dropup-circle' : 'arrow-dropdown-circle'" ></ion-icon>
+                </span>
+            </div>
+            
+            <div class="guess-resolution accordion-content" [ngClass]="{'active': turn.showGuess}">
+                <p *ngIf="!turn.guess.resolvedTurn">
+                    The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}}</span> is still open.
+                </p>
+
+                <p *ngIf="turn.guess.resolvedTurn">
+                    The guess disproved by <span class="display-value">{{getPlayerDisplay(turn.guess.playerThatShowed)}} </span>
+                    <span *ngIf="turn.guess.resolvedTurn != turn.number">was closed in turn <span class="display-value">#{{turn.guess.resolvedTurn}}</span>.</span>
+                    <span *ngIf="turn.guess.resolvedTurn == turn.number">was closed immediately.</span>
+                </p>
+
+                <ion-grid>
+                    <ion-row>
+                        <ion-col></ion-col>
+
+                        <!-- Suspect -->
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
+                            <card-icon [card]="turn.guess.suspectCard" [disableAlert]="true"></card-icon>
+                        </ion-col>
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.suspectCard)">
+                            <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
+                                        *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).status != CellStatus.UNKNOWN">
+                                {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.suspectCard).enteredTurn}}
+                            </ion-badge>
+                        </ion-col>
+
+                        <ion-col></ion-col>
+
+                        <!-- Weapon -->
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
+                            <card-icon [card]="turn.guess.weaponCard" [disableAlert]="true"></card-icon>
+                        </ion-col>
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.weaponCard)">
+                            <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
+                                        *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).status != CellStatus.UNKNOWN">
+                                {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.weaponCard).enteredTurn}}
+                            </ion-badge>
+                        </ion-col>
+
+                        <!-- Room -->
+                        <ion-col></ion-col>
+
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
+                            <card-icon [card]="turn.guess.roomCard" [disableAlert]="true"></card-icon>
+                        </ion-col>
+                        <ion-col class="sheet-cell-icon" col-auto (click)="showGuessMessage(turn.guess.playerThatShowed, turn.guess.roomCard)">
+                            <ion-badge [color]="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status == CellStatus.HAD ? 'valid' : 'invalid'"
+                                        *ngIf="getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).status != CellStatus.UNKNOWN">
+                                {{getPlayerAndCardData(turn.guess.playerThatShowed, turn.guess.roomCard).enteredTurn}}
+                            </ion-badge>
+                        </ion-col>
+
+                        <ion-col></ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
+        </div>
+
         <!-- Lessons Section -->
         <div class="accordion lessons" *ngIf="useLessonsLearned && (turn.guess || getLessonsLearnedFromTurn().length)">   
             <div class="accordion-header item row" (click)="turn.showLessons = !turn.showLessons" [ngClass]="{'active': turn.showLessons}">      
@@ -126,11 +127,11 @@
                     <div *ngFor="let lessonLearned of getLessonsLearnedFromTurn()" class="lesson-learned">
                         <span [innerHTML]="lessonLearned.toFriendlyString()"></span>
                     </div>
-                    <div class="lesson-learned" *ngIf="turn.lessonsLearned.resolvedTurns.length">
-                        <span *ngIf="turn.lessonsLearned.resolvedTurns.length == 1">
-                            The guess from turn <span class="display-value">#{{turn.lessonsLearned.resolvedTurns[0]}}</span> was closed.
+                    <div class="lesson-learned" *ngIf="getResolvedTurns().length">
+                        <span *ngIf="getResolvedTurns().length == 1">
+                            The guess from turn <span class="display-value">#{{getResolvedTurns()[0]}}</span> was closed.
                         </span>
-                        <span *ngIf="turn.lessonsLearned.resolvedTurns.length > 1">
+                        <span *ngIf="getResolvedTurns().length > 1">
                             Guesses from turns <span [innerHTML]="getMultipleResolvedTurnDisplay(turn)"></span> were closed.
                         </span>
                     </div>

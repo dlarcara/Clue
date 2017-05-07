@@ -93,12 +93,17 @@ export class TurnComponent
     {
         return this.getTotalNumberOfLessonsLearnedFromTurn() == 0 && !this.turn.lessonsLearned.identifiedSuspect &&
                 !this.turn.lessonsLearned.identifiedWeapon && !this.turn.lessonsLearned.identifiedRoom && 
-                !this.turn.lessonsLearned.resolvedTurns.length;
+                !this.getResolvedTurns().length;
+    }
+
+    getResolvedTurns()
+    {
+        return _.filter(this.turn.lessonsLearned.resolvedTurns, (t) => t != this.turn.number);
     }
 
     getMultipleResolvedTurnDisplay() : string
     {
-        return this.turn.lessonsLearned.resolvedTurns.map((n) => `<span class="display-value">#${n}</span>`).join(', ');
+        return this.getResolvedTurns().map((n) => `<span class="display-value">#${n}</span>`).join(', ');
     }
     
     editTurn() : void
