@@ -9,14 +9,15 @@
                     <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
                 </ion-col>
                 <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleTurnSlide()">
-                    <span [color]="getTurnColor()">#{{displayedTurn}}</span>
+                    <span [color]="getTurnColor()">#{{displayedTurnNumber}}</span>
                 </ion-col>
             </ion-row>
         </ion-grid>
         
         <div class="header-group" *ngIf="showTurnSlide">
             <ion-item class="turn-selector">
-                <ion-range min="1" [max]="gameTracker.turns.length" step="1" [(ngModel)]="displayedTurn"></ion-range>
+                <ion-range min="0" [max]="gameTracker.turns.length-1" step="1" [(ngModel)]="displayedTurnNumber" 
+                           (ngModelChange)="onDisplayedTurnChange()"></ion-range>
             </ion-item>
         </div>
     </ion-toolbar>
@@ -33,13 +34,13 @@
                 </ion-row>
                 <ion-row>
                     <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="getVerdict().suspect" *ngIf="getVerdict().suspect" ></card-icon>
+                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.suspect" *ngIf="displayedTurn.lessonsLearned.verdict.suspect" ></card-icon>
                     </ion-col>
                     <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="getVerdict().weapon" *ngIf="getVerdict().weapon" ></card-icon>
+                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.weapon" *ngIf="displayedTurn.lessonsLearned.verdict.weapon" ></card-icon>
                     </ion-col>
                     <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="getVerdict().room" *ngIf="getVerdict().room" ></card-icon>
+                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.room" *ngIf="displayedTurn.lessonsLearned.verdict.room" ></card-icon>
                     </ion-col>
                 </ion-row>
             </ion-grid>

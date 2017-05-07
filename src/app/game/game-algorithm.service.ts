@@ -201,11 +201,11 @@ export class GameAlgorithm
             this.replayAllTurnsUntilNothingNewIsFoundOut();
     }
 
-    //Get unresolved turns, either no card was shown or the turn is not yet marked as resolved
-    private getUnresolvedTurns() : Turn[]
+    //Get unresolved turns, either no card was shown or the turn is not yet marked as resolved, also it wasn't the detective who guessed or showed
+    getUnresolvedTurns() : Turn[]
     {
         return _.filter(this._turns, (t) => {
-            return t.guess && !(t.guess.cardShown || t.guess.resolvedTurn);
+            return t.guess && !(t.guess.cardShown || t.guess.resolvedTurn) && (!t.player.isDetective || !t.guess.playerThatShowed.isDetective);
         });
     }
 

@@ -40,7 +40,11 @@
             <!-- Guess Tracking Section -->
             <div class="accordion" *ngIf="useGuessTracking && shouldShowTurnResolution()">
                 <div class="accordion-header item row" (click)="turn.showGuess = !turn.showGuess" [ngClass]="{'active': turn.showGuess}">      
-                    <span align="left" class="col col-80">Guess Tracking</span>
+                    <span align="left" class="col col-80">
+                        Guess Tracking
+                        <span *ngIf="turn.guess.resolvedTurn == null" class="display-value open">(Open)</span>
+                        <span *ngIf="turn.guess.resolvedTurn != null" class="display-value closed">(Closed)</span>
+                    </span>
                     <span align="right" class="col col-20">
                         <ion-icon [name]="turn.showGuess ? 'arrow-dropup-circle' : 'arrow-dropdown-circle'" ></ion-icon>
                     </span>
@@ -108,7 +112,10 @@
         <!-- Lessons Section -->
         <div class="accordion lessons" *ngIf="useLessonsLearned && (turn.guess || getLessonsLearnedFromTurn().length)">   
             <div class="accordion-header item row" (click)="turn.showLessons = !turn.showLessons" [ngClass]="{'active': turn.showLessons}">      
-                <span align="left" class="col col-80">Lessons Learned ({{getTotalNumberOfLessonsLearnedFromTurn()}})</span>
+                <span align="left" class="col col-80">
+                    Lessons Learned 
+                    <span class="display-value">({{getTotalNumberOfLessonsLearnedFromTurn()}})</span>
+                </span>
                 <span align="right" class="col col-20">
                     <ion-icon [name]="turn.showLessons ? 'arrow-dropup-circle' : 'arrow-dropdown-circle'" ></ion-icon>
                 </span>

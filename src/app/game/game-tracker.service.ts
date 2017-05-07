@@ -185,6 +185,9 @@ export class GameTracker
             return t.guess && t.guess.resolvedTurn == turnToFillOut.number && !t.guess.playerThatGuessed.isDetective && !t.guess.playerThatShowed.isDetective;
         }).map((t) => t.number);
 
+        //Unresolved Turns
+        let unresolvedTurns = this.gameAlgorithm.getUnresolvedTurns().map((t) => t.number);
+
         //Mark if given category verdict was identified
         let suspectIdentified : Boolean, weaponIdentified : Boolean, roomIdentified : Boolean;
         let currentVerdict : Verdict = this.gameAlgorithm.gameSheet.getVerdict();
@@ -200,7 +203,7 @@ export class GameTracker
         let progress = turnToFillOut.resultingSheet.getProgress();
 
         //Assign all lessons learned to turn
-        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns, currentVerdict,
+        let lessonsLearned = new TurnLessons(lessonsLearnedForPlayers, resolvedTurns, unresolvedTurns, currentVerdict,
                                              suspectIdentified, weaponIdentified, roomIdentified, progress);
         turnToFillOut.lessonsLearned = lessonsLearned;
     }
