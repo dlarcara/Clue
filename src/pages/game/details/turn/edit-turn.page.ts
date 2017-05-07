@@ -22,12 +22,7 @@ export class EditTurnPage
     {
         this.turn = navParams.get('turn');
     }
-
-    playerIsDetective(player : Player) : Boolean
-    {
-        return _.isEqual(player, this.gameTracker.getDetective());
-    }
-
+    
     cancel() : void
     {
         this.navCtrl.pop();
