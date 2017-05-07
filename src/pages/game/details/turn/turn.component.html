@@ -111,13 +111,22 @@
                         <div *ngFor="let lessonLearned of getLessonsLearnedFromTurn(turn)" class="lesson-learned">
                             <span [innerHTML]="lessonLearned.toFriendlyString()"></span>
                         </div>
-                        <div class="lesson-learned">
+                        <div class="lesson-learned" *ngIf="turn.lessonsLearned.resolvedTurns.length">
                             <span *ngIf="turn.lessonsLearned.resolvedTurns.length == 1">
-                                Guess from turn <span class="display-value">#{{turn.lessonsLearned.resolvedTurns[0]}}</span> was resolved.
+                                The guess from turn <span class="display-value">#{{turn.lessonsLearned.resolvedTurns[0]}}</span> was closed.
                             </span>
                             <span *ngIf="turn.lessonsLearned.resolvedTurns.length > 1">
-                                Guesses from turns <span [innerHTML]="getMultipleResolvedTurnDisplay(turn)"></span> were resolved.
+                                Guesses from turns <span [innerHTML]="getMultipleResolvedTurnDisplay(turn)"></span> were closed.
                             </span>
+                        </div>
+                        <div class="lesson-learned" *ngIf="turn.lessonsLearned.identifiedSuspect">
+                            The suspect was identified as <span class="display-value">{{turn.lessonsLearned.identifiedSuspect.friendlyName}}</span>
+                        </div>
+                        <div class="lesson-learned" *ngIf="turn.lessonsLearned.identifiedWeapon">
+                            The weapon was identified as <span class="display-value">{{turn.lessonsLearned.identifiedWeapon.friendlyName}}</span>
+                        </div>
+                        <div class="lesson-learned" *ngIf="turn.lessonsLearned.identifiedRoom">
+                            The room was identified as <span class="display-value">{{turn.lessonsLearned.identifiedRoom.friendlyName}}</span>
                         </div>
                         <div *ngIf="!getLessonsLearnedFromTurn(turn).length" class="lesson-learned">
                             Nothing was learned from this turn.
