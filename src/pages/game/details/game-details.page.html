@@ -2,12 +2,9 @@
     <ion-toolbar>
         <ion-title>Game Replay</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="showFilters = true" *ngIf="!showFilters">
-                <ion-icon name="funnel"></ion-icon>
-            </button>
-            <button ion-button icon-only (click)="showFilters = false" *ngIf="showFilters">
-                <ion-icon name="albums"></ion-icon>
-            </button>            
+            <button ion-button icon-only (click)="showFilters = !showFilters">
+                <ion-icon [name]="showFilters ? 'albums' : 'funnel'"></ion-icon>
+            </button>           
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
@@ -17,7 +14,7 @@
         <!-- Player -->
         <div class="filter-header">Players</div>
         <div class="filter-group">
-            <ion-segment [(ngModel)]="filterPlayer" (ngModelChange)="filterPlayer = $event ? $event : null">
+            <ion-segment [(ngModel)]="filterOptions.filterPlayer" (ngModelChange)="filterOptionsChanged()">
                 <ion-segment-button value="">Any</ion-segment-button>
                 <ion-segment-button *ngFor="let player of gameTracker.players" [value]="player">
                     <player-icon [player]="player"></player-icon>
@@ -31,13 +28,13 @@
             <!-- Passes -->
             <ion-item color="light">
                 <ion-label>Show Passes</ion-label>
-                <ion-toggle [(ngModel)]="showPasses"></ion-toggle>
+                <ion-toggle [(ngModel)]="filterOptions.showPasses" (ngModelChange)="filterOptionsChanged()"></ion-toggle>
             </ion-item>
 
             <!-- Turn Types -->
             <ion-item color="light">
                 <ion-label>Only Show Open Guesses</ion-label>
-                <ion-toggle [(ngModel)]="onlyShowOpenGuesses"></ion-toggle>
+                <ion-toggle [(ngModel)]="filterOptions.onlyShowOpenGuesses" (ngModelChange)="filterOptionsChanged()"></ion-toggle>
             </ion-item>
         </div>
 
@@ -57,13 +54,13 @@
     
     <!-- Turns Display -->
     <div *ngIf="!showFilters">
-        <ion-card *ngIf="!getTurns().length">
+        <ion-card *ngIf="!turnsToDisplay.length">
             <ion-card-content>
                 <p>No turns to display</p>
             </ion-card-content>
         </ion-card>
         
-        <div *ngFor="let turn of getTurns()">
+        <div *ngFor="let turn of turnsToDisplay">
             <turn-component [turn]="turn" 
                   [gameTracker]="gameTracker" 
                   [useGuessTracking]="useGuessTracking"

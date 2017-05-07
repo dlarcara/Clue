@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
+import { FilterOptions } from './filter-options.model';
 import { GameTracker, Turn, Player } from '../../../app/game/index';
 
 import * as _ from "lodash";
@@ -9,58 +10,50 @@ import * as _ from "lodash";
     templateUrl: 'game-details.page.html'
 })
 
-export class GameDetailsPage
+export class GameDetailsPage implements OnInit
 {
     showFilters: Boolean
-    filterPlayer: Player
-
-    showPasses: Boolean
-    onlyShowOpenGuesses: Boolean
+    filterOptions: FilterOptions
 
     useGuessTracking: Boolean
     useLessonsLearned: Boolean
 
-    constructor(private gameTracker : GameTracker)
-    {
-        this.showFilters = false;
-        this.filterPlayer = null;
-        
-        this.showPasses = false;
-        this.onlyShowOpenGuesses = false;
+    turnsToDisplay: Turn[]
 
+    constructor(private gameTracker : GameTracker) {}
+
+    ngOnInit() : void 
+    {
+        this.filterOptions = new FilterOptions();
         this.useGuessTracking = true;
         this.useLessonsLearned = true;
+
+        this.setTurnsToDisplay();
     }
 
-    getTurns() : Turn[]
+    filterOptionsChanged() : void
+    {
+        this.setTurnsToDisplay();
+    }
+
+    private setTurnsToDisplay() : void
     {
         let filteredTurns = _.filter(this.gameTracker.turns, (t : Turn) => {
-            if (!this.showPasses && !t.guess)
+            if (!this.filterOptions.showPasses && !t.guess)
                 return false;
                 
-            if (this.filterPlayer && !_.isEqual(t.player, this.filterPlayer))
+            if (this.filterOptions.filterPlayer && !_.isEqual(t.player, this.filterOptions.filterPlayer))
                 return false;
 
-            if (this.onlyShowOpenGuesses)
+            if (this.filterOptions.onlyShowOpenGuesses)
             {
-                if (!t.guess)
+                if (!t.guess || t.player.isDetective || t.guess.playerThatShowed.isDetective || t.guess.resolvedTurn)
                     return false
-                
-                if (this.playerIsDetective(t.player) || this.playerIsDetective(t.guess.playerThatShowed))
-                    return false;
-
-                if (t.guess.resolvedTurn)
-                    return false;
             }
 
             return true;
         });
 
-        return _.orderBy(filteredTurns, 'number', 'desc');
-    }
-    
-    playerIsDetective(player : Player) : Boolean
-    {
-        return _.isEqual(player, this.gameTracker.getDetective())
+        this.turnsToDisplay = _.orderBy(filteredTurns, 'number', 'desc');
     }
 }
