@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, reorderArray } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Player, Card } from '../../app/game/index';
+import { GameTracker, CardCategory, Player, Card, Suspect } from '../../app/game/index';
 import { GameCardService } from '../../app/shared/index';
 import { GameTabsPage } from '../game/index';
 
@@ -101,8 +101,11 @@ export class SetupPage {
                         .concat(_.filter(this.allCardsByCategory[2].cards, 'selected'));
     }
 
-    onOrchidChange() : void
-    {
+    onPlayerIconPress(suspect : Suspect) : void {
+        if (suspect != Suspect.WHITE)
+            return;
+
+        this.useOrchid = !this.useOrchid;
         this.gameTracker.configureGame(this.useOrchid);
     }
 

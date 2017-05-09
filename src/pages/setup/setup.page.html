@@ -57,7 +57,7 @@
         <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
         <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
             <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)" class="icon-item">
-                <ion-icon item-left><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
+                <ion-icon item-left (press)="onPlayerIconPress(player.suspect.cardIndex)"><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
 
                 <!-- Step 1: Players -->
                 <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-input>
@@ -85,10 +85,3 @@
         </ion-list>
     </ion-card>
 </ion-content>
-
-<ion-footer *ngIf="setupStep == 1">
-    <ion-item>
-        <ion-label>Use Dr. Orchid</ion-label>
-        <ion-toggle [(ngModel)]="useOrchid" (ngModelChange)="onOrchidChange()"></ion-toggle>
-    </ion-item>
-</ion-footer>
