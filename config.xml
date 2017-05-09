@@ -52,4 +52,5 @@
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
     <icon src="resources\android\icon\drawable-xhdpi-icon.png" />
     <plugin name="cordova-plugin-vibration" spec="~2.1.5" />
+    <plugin name="cordova-plugin-speechrecognition" spec="~1.1.2" />
 </widget>

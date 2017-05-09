@@ -61,14 +61,19 @@
 
     <ion-grid>
         <ion-row>
-            <ion-col width-50>
+            <ion-col *ngIf="useSpeechCapture">
+                <button ion-button icon-only (click)="captureGuessFromSpeech()" outline color="dark">
+                    <ion-icon name="mic"></ion-icon>
+                </button>
+            </ion-col>
+            <ion-col>
                 <button ion-button block
                         [disabled]="!guessIsValid()"
                         (click)="enterGuess()">
                     {{editMode ? 'Re-enter Guess' : 'Enter Guess' }}
                 </button>
             </ion-col>
-            <ion-col width-50>
+            <ion-col>
                 <button ion-button block (click)="enterPass()" color="secondary">
                     No Guess Made
                 </button>

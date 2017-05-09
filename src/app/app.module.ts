@@ -2,13 +2,14 @@ import { NgModule, ErrorHandler } from '@angular/core';
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { Vibration } from '@ionic-native/vibration';
+import { SpeechRecognition } from '@ionic-native/speech-recognition';
 
 import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
 import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEntryComponent, CardListComponent, PlayerEntryComponent, 
          PlayerListComponent, GameDetailsPage, GameSettingsPage, TurnComponent, EditTurnPage } from '../pages/game/index';
 
-import { GameLoaderService, GameCardService, PlayerIconComponent, CardIconComponent } from './shared/index';
+import { GameLoaderService, GameCardService, PlayerIconComponent, CardIconComponent, GuessParser, SpeechRecognitionService } from './shared/index';
 import { GameAlgorithm, GameTracker } from './game/index';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -59,7 +60,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     GameCardService,
     GameLoaderService,
     GameTracker,
-    Vibration
+    GuessParser,
+    Vibration,
+    SpeechRecognition,
+    SpeechRecognitionService
   ]
 })
 
