@@ -1,9 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
-import { } from 'ionic-angular';
-
 import { CardCategory, Player, Guess, Card, Suspect } from '../../../../app/game/index';
-import { GameCardService } from '../../../../app/shared/index';
+import { GameCardService, GuessParser, SpeechRecognitionService } from '../../../../app/shared/index';
 
 import * as _ from "lodash";
 
@@ -19,6 +17,8 @@ export class GuessEntryComponent implements OnInit {
     playerThatShowed: Player
     shownCategory : CardCategory
 
+    useSpeechCapture : Boolean = false;
+
     @Input() activePlayer: Player
     @Input() players: Player[]
     @Input() enterShownCard : Boolean
@@ -31,7 +31,8 @@ export class GuessEntryComponent implements OnInit {
 
     CardCategory = CardCategory
 
-    constructor(private gameCardService : GameCardService) {}
+    constructor(private gameCardService : GameCardService, private guessParser : GuessParser,
+                private speechRecognitionService : SpeechRecognitionService) {}
 
     ngOnInit () : void 
     {
@@ -47,6 +48,9 @@ export class GuessEntryComponent implements OnInit {
         {
             this.resetEntry();
         }
+
+        this.speechRecognitionService.checkAccess()
+            .then(() => this.useSpeechCapture = true);
     }
 
     guessIsValid() : Boolean
@@ -134,4 +138,27 @@ export class GuessEntryComponent implements OnInit {
     weaponSelected(selectedWeapon : Card) : void { this.accusedWeapon = selectedWeapon; }
     roomSelected(selectedRoom : Card) : void { this.accusedRoom = selectedRoom; }
     playerThatShowedSelected(selectedPlayer : Player) : void { this.playerThatShowed = selectedPlayer; }
+    
+    captureGuessFromSpeech() : void 
+    {
+        this.speechRecognitionService.startListening('Say the guess out loud!')
+            .subscribe((matches: Array<string>) => this.applyGuessFromSpeech(matches));
+    }
+
+    private applyGuessFromSpeech(matches : string[]) : void 
+    {
+        let parsedGuess = this.guessParser.parse(matches, this.getPlayersToShow());
+
+        if (parsedGuess.suspect)
+            this.accusedSuspect = parsedGuess.suspect;
+
+        if (parsedGuess.weapon)
+            this.accusedWeapon = parsedGuess.weapon;
+
+        if (parsedGuess.room)
+            this.accusedRoom = parsedGuess.room;
+        
+        if (parsedGuess.player)
+            this.playerThatShowed = parsedGuess.player;
+    }
 }

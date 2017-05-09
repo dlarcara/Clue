@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "2.4.8",
     "@angular/platform-server": "2.4.8",
     "@ionic-native/core": "^3.6.1",
+    "@ionic-native/speech-recognition": "^3.6.1",
     "@ionic-native/splash-screen": "3.1.0",
     "@ionic-native/status-bar": "3.1.0",
     "@ionic-native/vibration": "^3.6.1",
