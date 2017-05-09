@@ -24,7 +24,7 @@ export class GuessParser
         this.cardSearchTerms[CardCategory.SUSPECT] = [
             { card: new Card(CardCategory.SUSPECT, Suspect.GREEN), searchTerms: ["green"] },
             { card: new Card(CardCategory.SUSPECT, Suspect.MUSTARD), searchTerms: ["colonel", "mustard"] },
-            { card: new Card(CardCategory.SUSPECT, Suspect.WHITE), searchTerms: ["white"] },
+            { card: new Card(CardCategory.SUSPECT, Suspect.WHITE), searchTerms: ["white", "doctor", "dr.", "orchid"] },
             { card: new Card(CardCategory.SUSPECT, Suspect.PLUM), searchTerms: ["professor", "plum"] },
             { card: new Card(CardCategory.SUSPECT, Suspect.SCARLET), searchTerms: ["scarlet"] },
             { card: new Card(CardCategory.SUSPECT, Suspect.PEACOCK), searchTerms: ["peacock"] }
