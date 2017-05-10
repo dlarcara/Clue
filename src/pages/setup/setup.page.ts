@@ -43,6 +43,12 @@ export class SetupPage {
         this.playingPlayers = _.cloneDeep(this.players);
     }
 
+    setPlayerAsPlaying(player) : void 
+    {
+        player.isPlaying = true;
+        this.playingPlayerChanged();
+    }   
+    
     playingPlayerChanged() : void {
         this.playingPlayers = _.filter(this.players, 'isPlaying');
     }

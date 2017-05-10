@@ -59,7 +59,7 @@
             <ion-item *ngFor="let player of players" class="icon-item">
                 <ion-icon item-left (press)="onPlayerIconPress(player.suspect.cardIndex)"><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
 
-                <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying"></ion-input>
+                <ion-input type="text" (tap)="setPlayerAsPlaying(player)" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying"></ion-input>
                 <ion-toggle item-right [(ngModel)]="player.isPlaying" (ngModelChange)="playingPlayerChanged()"></ion-toggle>
             </ion-item>
         </ion-list>
