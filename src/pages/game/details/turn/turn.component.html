@@ -13,7 +13,7 @@
 
     <ion-card-content>
         <p *ngIf="!turn.guess">
-            <span *ngIf="turn.number > 0"><span class="display-value">{{getPlayerDisplay(turn.player)}}</span> passed.</span>
+            <span *ngIf="turn.number > 0"><span class="display-value">{{getPlayerDisplay(turn.player)}}</span> did not guess.</span>
             <span *ngIf="turn.number == 0">Your {{turn.player.numberOfCards}} cards were filled out.</span>
         </p>
 

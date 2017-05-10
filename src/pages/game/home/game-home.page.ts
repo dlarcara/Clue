@@ -51,7 +51,7 @@ export class GameHomePage {
     {
         var message = guess ? 
             `Guess entered for ${turnForPlayer.name}` : 
-            `${turnForPlayer.name} passed`;
+            `${turnForPlayer.name} did not guess`;
 
         let toast = this.toastCtrl.create({ message: message, duration: 1500 });
         toast.present();
