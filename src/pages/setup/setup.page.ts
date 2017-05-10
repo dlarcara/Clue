@@ -18,7 +18,8 @@ export class SetupPage {
     allCardsByCategory: any[] //Game Cards grouped by category
 
     detective: any
-    players: any[];
+    players: any[]
+    playingPlayers : any[] = []
 
     useOrchid : Boolean = false
 
@@ -39,25 +40,20 @@ export class SetupPage {
         this.players = _.map(this.allCardsByCategory[CardCategory.SUSPECT].cards, (suspect, index) => {
             return { name: '', suspect: suspect, isPlaying: index < 3, extraCard: false, cards: [] }
         });
+        this.playingPlayers = _.cloneDeep(this.players);
     }
 
-    getPlayersToDisplayBasedOnSetupStep(setupStep) : any[]
-    {
-        return setupStep == 1 ? this.players : this.getPlayingPlayers();
-    }
-
-    getPlayingPlayers() : any[]
-    {
-        return _.filter(this.players, 'isPlaying');
+    playingPlayerChanged() : void {
+        this.playingPlayers = _.filter(this.players, 'isPlaying');
     }
 
     reorderItems(indexes) : void {
-        this.players = reorderArray(this.players, indexes);
+        this.players = reorderArray(this.playingPlayers, indexes);
     }
 
     getNumberOfCardsForPlayer(player : any)
     {
-        let numberOfCards = Math.floor(18 / this.getPlayingPlayers().length);
+        let numberOfCards = Math.floor(18 / this.playingPlayers.length);
         if (player.extraCard) numberOfCards++;
         return numberOfCards;
     }
@@ -70,16 +66,16 @@ export class SetupPage {
     //Step 1 Validation
     isStep1Valid = () : Boolean => this.isPlayerCountValid() && this.arePlayerNamesValid();
 
-    isPlayerCountValid = () : Boolean => (this.getPlayingPlayers().length >= 3);
-    arePlayerNamesValid = () : Boolean => (_.every(this.getPlayingPlayers(), 'name'));
+    isPlayerCountValid = () : Boolean => (this.playingPlayers.length >= 3);
+    arePlayerNamesValid = () : Boolean => (_.every(this.playingPlayers, 'name'));
 
     //Step 2 Validation
     isStep2Valid = () : Boolean => this.isStep1Valid() && this.areExtraCardsIdentified();
-    getNumberOfExtraCards = () : number => 18 % this.getPlayingPlayers().length;
+    getNumberOfExtraCards = () : number => 18 % this.playingPlayers.length;
     getPlayersWithExtraCard = () : number => _.filter(this.players, 'extraCard').length;
     areExtraCardsIdentified = () : Boolean => this.getPlayersWithExtraCard() == this.getNumberOfExtraCards();
     shouldShowExtraCardValidation = () : Boolean => (this.setupStep == "2" || this.setupStep == "4") && this.getNumberOfExtraCards() !=0;
-    getPlayerOrderDisplay = () : string => this.getPlayingPlayers().map((item) => item.name).join(", ");
+    getPlayerOrderDisplay = () : string => this.playingPlayers.map((item) => item.name).join(", ");
 
     goToStep2() : void
     {
@@ -114,7 +110,7 @@ export class SetupPage {
         let players : Player[] = [];
         let detectivesCards = this.getSelectedCards();
 
-        _.forEach(this.getPlayingPlayers(), (p) => {
+        _.forEach(this.playingPlayers, (p) => {
             let player = new Player(p.name, p.suspect.cardIndex, this.getNumberOfCardsForPlayer(p), p == this.detective);
             players.push(player);
         });

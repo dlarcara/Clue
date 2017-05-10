@@ -54,19 +54,24 @@
 
     
     <ion-card *ngIf="setupStep != 4">
-        <!-- Step 1 & 2 - Players, Names, Extra Cards, Order -->
-        <ion-list [reorder]="setupStep == 2" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" *ngIf="setupStep != 3" no-lines>
-            <ion-item *ngFor="let player of getPlayersToDisplayBasedOnSetupStep(setupStep)" class="icon-item">
+        <!-- Step 1 -->
+        <ion-list *ngIf="setupStep==1" no-lines>
+            <ion-item *ngFor="let player of players" class="icon-item">
                 <ion-icon item-left (press)="onPlayerIconPress(player.suspect.cardIndex)"><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
 
-                <!-- Step 1: Players -->
-                <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying" *ngIf="setupStep == 1"></ion-input>
-                <ion-toggle item-right [(ngModel)]="player.isPlaying" *ngIf="setupStep == 1"></ion-toggle>
+                <ion-input type="text" (tap)="player.isPlaying = true" [(ngModel)]="player.name" name="playerName" [placeholder]="player.isPlaying ? 'Enter Name' : ''" [disabled]="!player.isPlaying"></ion-input>
+                <ion-toggle item-right [(ngModel)]="player.isPlaying" (ngModelChange)="playingPlayerChanged()"></ion-toggle>
+            </ion-item>
+        </ion-list>
 
-                <!-- Step 2: Detective, Extra Cards, Order -->
-                <ion-label *ngIf="setupStep == 2">{{player.name}}</ion-label>
-                <ion-radio item-right [value]="player" [checked]="player == detective" [disabled]="!player.isPlaying" *ngIf="setupStep == 2"></ion-radio>
-                <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="setupStep == 2 && getNumberOfExtraCards() !=0"></ion-toggle>
+        <!-- Step 2 -->
+        <ion-list *ngIf="setupStep==2" [reorder]="true" radio-group [(ngModel)]="detective" (ionItemReorder)="reorderItems($event)" no-lines>
+            <ion-item *ngFor="let player of playingPlayers" class="icon-item">
+                <ion-icon item-left><img item-left src="{{player.suspect.icon}}" class="game-card-icon" /></ion-icon>
+
+                <ion-label>{{player.name}}</ion-label>
+                <ion-radio item-right [value]="player" [checked]="player == detective" [disabled]="!player.isPlaying"></ion-radio>
+                <ion-toggle item-right [(ngModel)]="player.extraCard" *ngIf="getNumberOfExtraCards() != 0"></ion-toggle>
             </ion-item>
         </ion-list>
 
