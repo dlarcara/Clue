@@ -22,18 +22,22 @@ export class SpeechRecognitionService
                             this.speechRecognition.hasPermission()
                                 .then((hasPermission: boolean) => { 
                                     if (hasPermission){
-                                        resolve(available);
+                                        resolve(true);
                                     }
                                     else {
                                         this.speechRecognition.requestPermission()
                                             .then(
-                                                () => resolve(available),
+                                                () => resolve(true),
                                                 () => resolve(false)
                                             );
                                     }
-                                });
+                                }, () => resolve(false));
                         }
-                });
+                        else
+                        {
+                            resolve(false);
+                        }
+                }, () => resolve(false));
             }
             else 
             {

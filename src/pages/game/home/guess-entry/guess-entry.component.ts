@@ -50,7 +50,7 @@ export class GuessEntryComponent implements OnInit {
         }
 
         this.speechRecognitionService.checkAccess()
-            .then(() => this.useSpeechCapture = true);
+            .then((available) => { console.log(available); this.useSpeechCapture = available});
     }
 
     guessIsValid() : Boolean
