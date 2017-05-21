@@ -54,7 +54,7 @@ export class SetupPage {
     }
 
     reorderItems(indexes) : void {
-        this.players = reorderArray(this.playingPlayers, indexes);
+        this.playingPlayers = reorderArray(this.playingPlayers, indexes);
     }
 
     getNumberOfCardsForPlayer(player : any)
@@ -66,7 +66,7 @@ export class SetupPage {
 
     getDetective() : any
     {
-        return _.find(this.players, this.detective);
+        return _.find(this.playingPlayers, this.detective);
     }
 
     //Step 1 Validation
@@ -78,7 +78,7 @@ export class SetupPage {
     //Step 2 Validation
     isStep2Valid = () : Boolean => this.isStep1Valid() && this.areExtraCardsIdentified();
     getNumberOfExtraCards = () : number => 18 % this.playingPlayers.length;
-    getPlayersWithExtraCard = () : number => _.filter(this.players, 'extraCard').length;
+    getPlayersWithExtraCard = () : number => _.filter(this.playingPlayers, 'extraCard').length;
     areExtraCardsIdentified = () : Boolean => this.getPlayersWithExtraCard() == this.getNumberOfExtraCards();
     shouldShowExtraCardValidation = () : Boolean => (this.setupStep == "2" || this.setupStep == "4") && this.getNumberOfExtraCards() !=0;
     getPlayerOrderDisplay = () : string => this.playingPlayers.map((item) => item.name).join(", ");
@@ -86,7 +86,7 @@ export class SetupPage {
     goToStep2() : void
     {
         if (!this.getDetective().isPlaying)
-            this.detective = _.find(this.players, 'isPlaying');
+            this.detective = _.find(this.playingPlayers, 'isPlaying');
         else
             this.detective = this.getDetective();
     }
