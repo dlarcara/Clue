@@ -17,8 +17,8 @@ export class GameSheetPage {
     readonly weaponCards: Card[]
     readonly roomCards: Card[]
 
-    showTurnSlide : Boolean
-    showVerdict : Boolean
+    showTurnSlide: Boolean
+    showVerdict: Boolean
 
     displayedTurnNumber : number
     displayedTurn: Turn
@@ -31,33 +31,22 @@ export class GameSheetPage {
         this.weaponCards = gameCardService.getCardsByCategory(CardCategory.WEAPON);
         this.roomCards = gameCardService.getCardsByCategory(CardCategory.ROOM);
 
-        this.resetFilters();
-    }
-
-    ionViewDidEnter() : void
-    {
-        this.resetFilters();
-    }
-
-    private resetFilters() : void
-    {
         this.showTurnSlide = false;
         this.showVerdict = true;
 
+        this.resetTurnDisplay();
+    }
+
+    resetTurnDisplay() : void 
+    {
         this.displayedTurnNumber = this.gameTracker.getActiveTurn().number;
         this.displayedTurn = this.gameTracker.getActiveTurn();
     }
 
-    toggleVerdict() : void
+    onShownTurnSlideChange() : void 
     {
-        this.showVerdict = !this.showVerdict;
-        this.content.resize();
-    }
-
-    toggleTurnSlide() : void 
-    {
-        this.showTurnSlide = !this.showTurnSlide;
-        this.content.resize();
+        if (!this.showTurnSlide)
+            this.resetTurnDisplay();
     }
 
     onDisplayedTurnChange() : void 
@@ -65,15 +54,9 @@ export class GameSheetPage {
         this.displayedTurn = this.gameTracker.turns[this.displayedTurnNumber];
     }
 
-    getTurnColor() : string
+    isNextPlayer(player : Player) : Boolean
     {
-        if (this.displayedTurnNumber == this.gameTracker.getActiveTurn().number)
-            return 'valid';
-
-        if ((this.displayedTurnNumber / this.gameTracker.turns.length) > .25)
-            return 'warning';
-
-        return 'invalid';
+        return _.isEqual(this.gameTracker.getNextPlayer(this.displayedTurn.player), player);
     }
 
     getCellClass(player : Player, card: Card) : string

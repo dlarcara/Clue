@@ -1,8 +1,4 @@
-game-sheet-page {    
-    .header-button { width: 50px !important; }
-    .header-group { background-color: transparent; padding: 0 5px; }
-    .turn-selector { height: 10px; }
-
+game-sheet-page {
     .group-padding { padding: 5px; }
 
     .game-sheet { padding: 0; }
@@ -14,13 +10,14 @@ game-sheet-page {
     .sheet-cell.no-padding { padding: 0px }
     
     .avatar { font-size: 1.4em; }
+    //.avatar.active { border-bottom: 2px solid color($colors, warning);  }
     .game-card-icon { height: 24px !important; width: 24px !important; }
 
     .card-had { background-color: color($colors, primary); }
     .card-not-had { background-color: color($colors, medium); }
     .card-unknown { background-color: #FFF; }
 
-    .sheet-legend { color: #000; font-weight: bold; padding-top: 8px; }
+    .sheet-legend { color: #000; width: 100%; }
 
     .verdict-row
     {
@@ -30,17 +27,49 @@ game-sheet-page {
     }
 
     //Check Mark for Guessed cells
-   .guess-tick {
-        color: #fff;
-        position: relative;
-    }
+    .guess-tick:after { border-width: 5px; border-color: color($colors, warning); }
+    .guess-tick-legend:after { border-width: 8px; border-color: color($colors, warning); }
 
-    .guess-tick:after {
+    //General tick mark
+    .tick-top-right, .tick-top-left { position: relative }
+    .tick-top-right:after {
         content: '';
-        border: 5px solid;
-        border-color: color($colors, warning) color($colors, warning) rgba(0,0,255,0) rgba(255,0,0,0);
         position: absolute;
         top: 0;
         right: 0;
+        border-style: solid !important;
+        border-bottom-color: transparent !important;
+        border-left-color: transparent !important;
+    }
+
+    .tick-top-left:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: left;
+        border-style: solid !important;
+        border-bottom-color: transparent !important;
+        border-right-color: transparent !important;
+    }
+
+    //Filter Page
+    .filter-header {
+        font-weight: bold;
+        color: #FFFFFF;
+        min-height: 22px;
+        text-align: center;
+        border-bottom: 1px solid color($colors, medium);
+    }
+
+    .filter-group { 
+        padding-bottom: 20px; 
+    
+        .item-block {
+            padding-left: 0px !important;
+        }
+
+        ion-label {
+            padding-left: 10px;
+        }
     }
 }

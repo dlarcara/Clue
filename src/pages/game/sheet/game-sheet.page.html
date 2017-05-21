@@ -1,49 +1,80 @@
 <ion-header>
     <ion-toolbar>
-        <ion-grid>
-            <ion-row>
-                <ion-col class="sheet-cell-icon card-had sheet-legend">Card Had</ion-col>
-                <ion-col class="sheet-cell-icon card-not-had sheet-legend">Not Had</ion-col>
-                <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleVerdict()">
-                    <ion-icon ios="ios-folder-open" md="ios-folder-open" *ngIf="showVerdict"></ion-icon>
-                    <ion-icon ios="ios-folder" md="ios-folder" *ngIf="!showVerdict"></ion-icon>
-                </ion-col>
-                <ion-col class="sheet-cell-icon sheet-legend header-button" col-auto (click)="toggleTurnSlide()">
-                    <span [color]="getTurnColor()">#{{displayedTurnNumber}}</span>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-        
-        <div class="header-group" *ngIf="showTurnSlide">
-            <ion-item class="turn-selector">
-                <ion-range min="0" [max]="gameTracker.turns.length-1" step="1" [(ngModel)]="displayedTurnNumber" 
-                           (ngModelChange)="onDisplayedTurnChange()"></ion-range>
-            </ion-item>
-        </div>
+        <ion-title>Game Sheet</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="showFilters = !showFilters">
+                <ion-icon [name]="showFilters ? 'clipboard' : 'funnel'"></ion-icon>
+            </button>           
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <div class="group-padding">
-        <div *ngIf="showVerdict" style="padding-bottom: 5px;">
-            <ion-grid class="game-sheet verdict-row">
-                <ion-row>
-                    <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
-                    <ion-col class="sheet-cell-icon verdict-header">Weapon</ion-col>
-                    <ion-col class="sheet-cell-icon verdict-header">Room</ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.suspect" *ngIf="displayedTurn.lessonsLearned.verdict.suspect" ></card-icon>
-                    </ion-col>
-                    <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.weapon" *ngIf="displayedTurn.lessonsLearned.verdict.weapon" ></card-icon>
-                    </ion-col>
-                    <ion-col class="sheet-cell-icon">
-                        <card-icon [card]="displayedTurn.lessonsLearned.verdict.room" *ngIf="displayedTurn.lessonsLearned.verdict.room" ></card-icon>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+    <div padding *ngIf="showFilters">
+        <!-- Legend -->
+        <div class="filter-header">Legend</div>
+        <div class="filter-group">
+            <ion-item class="sheet-cell-icon card-unknown sheet-legend">
+                Unknown if player has this card
+            </ion-item>
+            <ion-item class="sheet-cell-icon card-had sheet-legend">
+                Player definitely <b>has</b> this card
+            </ion-item>
+            <ion-item class="sheet-cell-icon card-not-had sheet-legend">
+                Player definitely <b>does not have</b> this card
+            </ion-item>
+            <ion-item class="sheet-cell-icon card-unknown sheet-legend guess-tick-legend tick-top-right">
+                Player might have this card
+            </ion-item>
+        </div>
+
+        <!-- General Settings -->
+        <div class="filter-header">Genreal Settings</div>
+        <div class="filter-group">
+            <ion-item color="light">
+                <ion-label>Show Verdict</ion-label>
+                <ion-toggle [(ngModel)]="showVerdict"></ion-toggle>
+            </ion-item>
+
+            <ion-item color="light">
+                <ion-label>Show Turn Slider</ion-label>
+                <ion-toggle [(ngModel)]="showTurnSlide" (ngModelChange)="onShownTurnSlideChange()"></ion-toggle>
+            </ion-item>
+        </div>
+    </div>
+
+    <div class="group-padding" *ngIf="!showFilters">
+        <div>
+            <div *ngIf="showVerdict" style="padding-bottom: 5px;">
+                <ion-grid class="game-sheet verdict-row">
+                    <ion-row>
+                        <ion-col class="sheet-cell-icon verdict-header">Suspect</ion-col>
+                        <ion-col class="sheet-cell-icon verdict-header">Weapon</ion-col>
+                        <ion-col class="sheet-cell-icon verdict-header">Room</ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col class="sheet-cell-icon">
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.suspect" *ngIf="displayedTurn.lessonsLearned.verdict.suspect" ></card-icon>
+                        </ion-col>
+                        <ion-col class="sheet-cell-icon">
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.weapon" *ngIf="displayedTurn.lessonsLearned.verdict.weapon" ></card-icon>
+                        </ion-col>
+                        <ion-col class="sheet-cell-icon">
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.room" *ngIf="displayedTurn.lessonsLearned.verdict.room" ></card-icon>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </div>
+            
+            <div *ngIf="showTurnSlide" style="padding-bottom: 5px; border: 1px solid black;">
+                <ion-item>
+                    <ion-range min="0" [max]="gameTracker.turns.length-1" step="1" [(ngModel)]="displayedTurnNumber" 
+                            (ngModelChange)="onDisplayedTurnChange()" style="padding: 2px;">
+                        <ion-label range-left>0</ion-label>
+                        <ion-label range-right>{{displayedTurnNumber}}</ion-label>           
+                    </ion-range>
+                </ion-item>
+            </div>
         </div>
 
         <ion-grid class="game-sheet">
@@ -52,7 +83,8 @@
                 <ion-row><ion-col class="sheet-cell-header">Suspects</ion-col></ion-row>
                 <ion-row>
                     <ion-col class="sheet-cell-icon" col-auto></ion-col>
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar" 
+                             [ngClass]="{'active': isNextPlayer(player)}">
                         <player-icon [player]="player" [message]="getPlayerMessage(player)"></player-icon>
                     </ion-col>
                 </ion-row>
@@ -62,7 +94,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell  no-padding" [ngClass]="getCellClass(player, suspect)">
-                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, suspect)"></div>
+                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, suspect)"></div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -72,7 +104,8 @@
                 <ion-row><ion-col class="sheet-cell-header">Weapons</ion-col></ion-row>
                 <ion-row>
                     <ion-col class="sheet-cell-icon" col-auto></ion-col>
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar"
+                             [ngClass]="{'active': isNextPlayer(player)}">
                         <player-icon [player]="player" [message]="getPlayerMessage(player)"></player-icon>
                     </ion-col>
                 </ion-row>
@@ -82,7 +115,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, weapon)">
-                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, weapon)"></div>
+                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, weapon)"></div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -92,7 +125,8 @@
                 <ion-row><ion-col class="sheet-cell-header">Rooms</ion-col></ion-row>
                 <ion-row>
                     <ion-col class="sheet-cell-icon" col-auto></ion-col>
-                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar">
+                    <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell-icon avatar"
+                             [ngClass]="{'active': isNextPlayer(player)}">
                         <player-icon [player]="player" [message]="getPlayerMessage(player)"></player-icon>
                     </ion-col>
                 </ion-row>
@@ -102,7 +136,7 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, room)">
-                        <div class="guess-tick" *ngIf="cardIsBeingTracked(player, room)"></div>
+                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, room)"></div>
                     </ion-col>
                 </ion-row>
             </div>
