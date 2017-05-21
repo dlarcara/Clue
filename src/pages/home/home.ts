@@ -19,7 +19,7 @@ export class HomePage {
     this.savedGame = gameLoaderService.loadGame();  
   }
 
-  startGame() : void
+  newGame() : void
   {
     this.navCtrl.setRoot(SetupPage);
   }
