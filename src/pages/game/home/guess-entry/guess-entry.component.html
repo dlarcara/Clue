@@ -1,6 +1,6 @@
 <ion-card padding>
     <p>
-        {{getGuessingPlayerDisplay()}} guessed 
+        <span class="card-entry">{{getGuessingPlayerDisplay()}}</span> guessed 
         <span [ngClass]="{'card-entry-space': !accusedSuspect}" class="card-entry">{{getSuspectDisplay()}}</span> in the 
         <span [ngClass]="{'card-entry-space': !accusedRoom}" class="card-entry">{{getRoomDisplay()}}</span> with the 
         <span [ngClass]="{'card-entry-space': !accusedWeapon}" class="card-entry">{{getWeaponDisplay()}}</span>.
@@ -26,16 +26,6 @@
 </ion-card>
 
 <ion-card> 
-    <card-entry [cardCategory]="CardCategory.SUSPECT"  
-                [entryText]="'Select Suspect'"
-                [icon]="'contact'"
-                [selectedCard]="accusedSuspect" 
-                (cardSelected)="suspectSelected($event)"
-                [enableActivateEntry]="enterShownCard"
-                [isActive]="shownCategory == CardCategory.SUSPECT"
-                (activeStatusChanged)="cardActiveChange(CardCategory.SUSPECT, $event)">
-    </card-entry>
-
     <card-entry [cardCategory]="CardCategory.ROOM" 
                 [entryText]="'Select Room'"
                 [icon]="'home'"
@@ -44,6 +34,16 @@
                 [enableActivateEntry]="enterShownCard"
                 [isActive]="shownCategory == CardCategory.ROOM"
                 (activeStatusChanged)="cardActiveChange(CardCategory.ROOM, $event)">
+    </card-entry>
+
+    <card-entry [cardCategory]="CardCategory.SUSPECT"  
+                [entryText]="'Select Suspect'"
+                [icon]="'contact'"
+                [selectedCard]="accusedSuspect" 
+                (cardSelected)="suspectSelected($event)"
+                [enableActivateEntry]="enterShownCard"
+                [isActive]="shownCategory == CardCategory.SUSPECT"
+                (activeStatusChanged)="cardActiveChange(CardCategory.SUSPECT, $event)">
     </card-entry>
 
     <card-entry [cardCategory]="CardCategory.WEAPON" 
