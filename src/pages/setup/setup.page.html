@@ -5,13 +5,13 @@
 </ion-header>
 
 <ion-content>
-    <ion-segment [(ngModel)]="setupStep" color="primary">
-        <ion-segment-button value="1">Players</ion-segment-button>
-        <ion-segment-button value="2" [disabled]="!isStep1Valid()" (click)="goToStep2()">Details</ion-segment-button>    
-        <ion-segment-button value="3" [disabled]="!isStep2Valid()">Cards</ion-segment-button>
-        <ion-segment-button value="4" [disabled]="!isStep3Valid()">Review</ion-segment-button>
-    </ion-segment>
-
+    <ion-segment [(ngModel)]="setupStep" color="primary"> 
+        <ion-segment-button value="1">Players</ion-segment-button> 
+        <ion-segment-button value="2" [disabled]="!isStep1Valid()" (click)="goToStep2()">Details</ion-segment-button>     
+        <ion-segment-button value="3" [disabled]="!isStep2Valid()">Cards</ion-segment-button> 
+        <ion-segment-button value="4" [disabled]="!isStep3Valid()">Review</ion-segment-button> 
+    </ion-segment> 
+    
     <!-- List of validations -->
     <ion-card>
         <ion-list>
@@ -46,10 +46,6 @@
                 Your cards selected ({{getSelectedCards().length}}/{{getNumberOfCardsForPlayer(getDetective())}})
             </ion-item> 
         </ion-list>
-
-        <div padding *ngIf="setupStep == 4 && isStep1Valid() && isStep2Valid() && isStep3Valid()">
-            <button ion-button full (click)="startGame()">Start Game</button>
-        </div>
     </ion-card>
 
     
@@ -90,3 +86,19 @@
         </ion-list>
     </ion-card>
 </ion-content>
+
+<ion-footer style="text-align: center; padding: 5px 0;">
+    <ion-grid>
+        <ion-row>
+            <ion-col width-50>
+                <button ion-button block color="secondary" (click)="goToPreviousStep()" [disabled]="setupStep == '1'">Back</button>
+            </ion-col>
+            <ion-col width-50>
+                <button ion-button block (click)="goToNextStep()" [disabled]="!activeStepIsValid()" *ngIf="setupStep != '4'">Next</button>
+                <button ion-button block (click)="startGame()" 
+                                [disabled]="!isStep1Valid() || !isStep2Valid() || !isStep3Valid()" 
+                                *ngIf="setupStep == '4'">Start Game</button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-footer>

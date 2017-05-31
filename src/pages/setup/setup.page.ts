@@ -69,6 +69,32 @@ export class SetupPage {
         return _.find(this.playingPlayers, this.detective);
     }
 
+    //General Wizard Navigation
+    goToPreviousStep() : void 
+    {
+        this.setupStep = String(parseInt(this.setupStep) - 1);
+    }
+
+    goToNextStep() : void
+    {
+        if (this.setupStep == "1")
+            this.goToStep2();
+        
+        this.setupStep = String(parseInt(this.setupStep) + 1);
+    }
+
+    activeStepIsValid() : Boolean
+    {
+        if (this.setupStep == "1")
+            return this.isStep1Valid();
+        else if (this.setupStep == "2")
+            return this.isStep2Valid();
+        else if (this.setupStep == "3")
+            return this.isStep3Valid();
+
+        return false;
+    }
+
     //Step 1 Validation
     isStep1Valid = () : Boolean => this.isPlayerCountValid() && this.arePlayerNamesValid();
 
