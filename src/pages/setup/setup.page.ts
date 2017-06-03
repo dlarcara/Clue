@@ -111,8 +111,8 @@ export class SetupPage {
 
     goToStep2() : void
     {
-        if (!this.getDetective().isPlaying)
-            this.detective = _.find(this.playingPlayers, 'isPlaying');
+        if (!this.getDetective() || !this.getDetective().isPlaying)
+            this.detective = _.find(this.playingPlayers, 'isPlaying'); //Default detective to first playing player
         else
             this.detective = this.getDetective();
     }
