@@ -37,6 +37,11 @@ export class GameSheetPage {
         this.resetTurnDisplay();
     }
 
+    ionViewDidEnter() : void 
+    {
+        this.resetTurnDisplay();
+    }
+
     resetTurnDisplay() : void 
     {
         this.displayedTurnNumber = this.gameTracker.getActiveTurn().number;
