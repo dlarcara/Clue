@@ -184,7 +184,7 @@ export class GameSheet
                 verdict = cardIndex;
         });
 
-        return verdict ? new Card(cardCategory, verdict) : null;
+        return verdict != null ? new Card(cardCategory, verdict) : null;
     }
 
     private getPlayerIndex(player : Player) : number

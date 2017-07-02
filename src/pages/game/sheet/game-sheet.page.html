@@ -54,13 +54,13 @@
                     </ion-row>
                     <ion-row>
                         <ion-col class="sheet-cell-icon">
-                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.suspect" *ngIf="displayedTurn.lessonsLearned.verdict.suspect" ></card-icon>
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.suspect" *ngIf="displayedTurn.lessonsLearned.verdict.suspect != null" ></card-icon>
                         </ion-col>
                         <ion-col class="sheet-cell-icon">
-                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.weapon" *ngIf="displayedTurn.lessonsLearned.verdict.weapon" ></card-icon>
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.weapon" *ngIf="displayedTurn.lessonsLearned.verdict.weapon != null" ></card-icon>
                         </ion-col>
                         <ion-col class="sheet-cell-icon">
-                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.room" *ngIf="displayedTurn.lessonsLearned.verdict.room" ></card-icon>
+                            <card-icon [card]="displayedTurn.lessonsLearned.verdict.room" *ngIf="displayedTurn.lessonsLearned.verdict.room != null" ></card-icon>
                         </ion-col>
                     </ion-row>
                 </ion-grid>
