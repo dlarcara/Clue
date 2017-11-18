@@ -85,7 +85,7 @@ export class GameConstants
 
     static getCardFriendlyName(card : Card)
     {
-        let cardDisplay =  _.find(this.displayForCards, (d : CardDisplay) => _.isEqual(d.card, card));
+        let cardDisplay =  _.find(this.displayForCards, (d : CardDisplay) => _.isEqual(d.card.cardIndex, card.cardIndex) && _.isEqual(d.card.category, card.category));
         return cardDisplay ? cardDisplay.friendlyName : '';
     }
 
@@ -97,7 +97,7 @@ export class GameConstants
 
     static getCardIcon(card : Card)
     {
-        let cardDisplay =  _.find(this.displayForCards, (d) => _.isEqual(d.card, card));
+        let cardDisplay =  _.find(this.displayForCards, (d : CardDisplay) => _.isEqual(d.card.cardIndex, card.cardIndex) && _.isEqual(d.card.category, card.category));
         return cardDisplay ? cardDisplay.icon : '';
     }
 
