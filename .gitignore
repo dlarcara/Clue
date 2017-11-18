@@ -36,3 +36,4 @@ UserInterfaceState.xcuserstate
 # Ignore compiled files in src
 src/**/*.js
 src/**/*.js.map
+.sourcemaps/
