@@ -27,7 +27,8 @@ export class HomePage {
 
   newGame() : void
   {
-    this.navCtrl.setRoot(SetupPage);
+    throw new Error("Purposeful Error");
+    //this.navCtrl.setRoot(SetupPage);
   }
 
   resumeGame()
