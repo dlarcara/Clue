@@ -3,6 +3,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { Vibration } from '@ionic-native/vibration';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { MyApp } from './app.component';
 import { HomePage, SetupPage } from '../pages/index';
@@ -63,7 +64,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     GuessParser,
     Vibration,
     SpeechRecognition,
-    SpeechRecognitionService
+    SpeechRecognitionService,
+    AppVersion
   ]
 })
 
