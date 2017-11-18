@@ -4,8 +4,6 @@ import { AlertController } from 'ionic-angular';
 
 import { Card } from '../../game/index';
 
-declare var jQuery:any;
-
 @Component({
     selector: 'card-icon',
     template: `<img [src]="card.icon" class="game-card-icon"/>`
