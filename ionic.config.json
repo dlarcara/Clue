@@ -1,6 +1,6 @@
 {
   "name": "Clue",
-  "app_id": "ca8bd9cb",
-  "v2": true,
-  "typescript": true
+  "app_id": "341ef0ec",
+  "integrations": {},
+  "type": "ionic-angular"
 }
