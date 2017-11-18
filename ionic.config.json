@@ -1,6 +1,8 @@
 {
   "name": "Clue",
   "app_id": "341ef0ec",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }
