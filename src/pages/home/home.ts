@@ -22,7 +22,7 @@ export class HomePage {
     this.savedGame = gameLoaderService.loadGame();  
 
     //Keep version in sync with Config.XML & app.module.ts
-    appVersion.getVersionNumber().then(value => this.version = "v" + value, value => this.version = "v1.0.1");
+    appVersion.getVersionNumber().then(value => this.version = "v" + value, value => this.version = "v1.0.2");
   }
 
   newGame() : void
