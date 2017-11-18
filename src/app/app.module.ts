@@ -10,7 +10,7 @@ import { GameTabsPage, GameHomePage, GameSheetPage, GuessEntryComponent, CardEnt
          PlayerListComponent, GameDetailsPage, GameSettingsPage, TurnComponent, EditTurnPage } from '../pages/game/index';
 
 import { GameLoaderService, GameCardService, PlayerIconComponent, CardIconComponent, GuessParser, SpeechRecognitionService } from './shared/index';
-import { GameAlgorithm, GameTracker } from './game/index';
+import { GameTracker } from './game/index';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';

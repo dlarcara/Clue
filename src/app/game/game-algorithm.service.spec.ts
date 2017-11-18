@@ -67,7 +67,7 @@ describe("When interacting with the game algorithm", () => {
         }
         
         //For all Suspect Cards
-        _.forEach(EnumValues.getValues(Suspect), (suspectIndex) => {
+        _.forEach(EnumValues.getValues(Suspect), (suspectIndex : number) => {
             let card = new Card(CardCategory.SUSPECT, suspectIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Suspect[suspectIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
@@ -75,7 +75,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         //For all Weapon Cards
-        _.forEach(EnumValues.getValues(Weapon), (weaponIndex) => {
+        _.forEach(EnumValues.getValues(Weapon), (weaponIndex : number) => {
             let card = new Card(CardCategory.WEAPON, weaponIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Weapon[weaponIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
@@ -83,7 +83,7 @@ describe("When interacting with the game algorithm", () => {
         });
 
         //For all Room Cards
-        _.forEach(EnumValues.getValues(Room), (roomIndex) => {
+        _.forEach(EnumValues.getValues(Room), (roomIndex : number) => {
             let card = new Card(CardCategory.ROOM, roomIndex);
             let expectedCellStatus = expectedCardStatus(card, expectedCardsHad, expectedCardsNotHad);
             let failMessage = `Expected ${Room[roomIndex]} to be in state ${CellStatus[expectedCellStatus]} for ${player.name}`;
@@ -211,7 +211,7 @@ describe("When interacting with the game algorithm", () => {
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[1], gamePlayers[2], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.WRENCH, Room.HALL, gamePlayers[0], gamePlayers[2], new Card(CardCategory.SUSPECT, Suspect.WHITE)));
 
-            expect(gameAlgorithm.turns[0].guess.resolvedTurn).toBe(2);
+            expect(gameAlgorithm.turns[1].guess.resolvedTurn).toBe(2);
         });
 
         it("it should mark a a card as had in a category if the verdict in the category is already known and the player is the only one left who might have that card", () => {

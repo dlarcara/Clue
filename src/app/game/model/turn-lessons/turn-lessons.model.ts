@@ -1,4 +1,4 @@
-import { LessonsLearnedForPlayer, Card, Verdict } from '../../index';
+import { LessonsLearnedForPlayer, Verdict } from '../../index';
 
 export class TurnLessons
 {

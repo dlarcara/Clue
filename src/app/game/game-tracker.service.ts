@@ -155,14 +155,6 @@ export class GameTracker
         this.gameLoaderService.saveGame(gameDetails);
     }
 
-    //Return possible number of cards a player can have based on the total number of players
-    private getCardCountPossibilities (numberOfPlayers : number) : number[]
-    {
-        var totalNumberOfAvailableCards = 18; 
-        var averageCardsPerPerson = totalNumberOfAvailableCards/numberOfPlayers;
-        return _.uniq([Math.floor(averageCardsPerPerson), Math.ceil(averageCardsPerPerson)]);
-    }
-
     //TODO: Test this
     private addLessonsLearnedForTurn() : void
     {

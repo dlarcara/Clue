@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
-import { CardCategory, Player, Guess, Card, Suspect } from '../../../../app/game/index';
+import { CardCategory, Player, Guess, Card } from '../../../../app/game/index';
 import { GameCardService, GuessParser, SpeechRecognitionService } from '../../../../app/shared/index';
 
 import * as _ from "lodash";

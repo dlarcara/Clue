@@ -139,9 +139,12 @@ describe("When filling out a game sheet", () => {
         let players = [new Player("Player 1", Suspect.WHITE, 6, true), new Player("Player 2", Suspect.GREEN, 6, false), new Player("Player 3", Suspect.PLUM, 6, false)];
         let gameSheet = new GameSheet(players);
 
-        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.SUSPECT, Suspect.MUSTARD), 1));
-        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, new Card(CardCategory.ROOM, Room.HALL), 2));
+        let mustard = new Card(CardCategory.SUSPECT, Suspect.MUSTARD);
+        let hall = new Card(CardCategory.ROOM, Room.HALL);
 
-        expect(gameSheet.getVerdict()).toEqual(new Verdict(Suspect.MUSTARD, null, Room.HALL));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, mustard, 1));
+        _.forEach(players, (p) => gameSheet.markCardAsNotHadByPlayer(p, hall, 2));
+
+        expect(gameSheet.getVerdict()).toEqual(new Verdict(mustard, null, hall));
     });
 });

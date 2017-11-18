@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, reorderArray } from 'ionic-angular';
 
-import { GameTracker, CardCategory, Player, Card, Suspect } from '../../app/game/index';
+import { GameTracker, CardCategory, Player, Suspect } from '../../app/game/index';
 import { GameCardService } from '../../app/shared/index';
 import { GameTabsPage } from '../game/index';
 

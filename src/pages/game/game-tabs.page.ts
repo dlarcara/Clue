@@ -7,8 +7,6 @@ import { GameHomePage, GameSheetPage, GameDetailsPage, GameSettingsPage } from '
 import { GameDetails } from '../../app/shared/index';
 import { GameTracker } from '../../app/game/index';
 
-import * as _ from "lodash";
-
 @Component({
     templateUrl: 'game-tabs.page.html'
 })

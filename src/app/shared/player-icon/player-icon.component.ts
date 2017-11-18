@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { AlertController } from 'ionic-angular';
 
-import { Player, Suspect, Card, GameConstants } from '../../game/index';
+import { Player, GameConstants } from '../../game/index';
 
 @Component({
     selector: 'player-icon',

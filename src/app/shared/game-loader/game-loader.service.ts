@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { GameDetails } from '../index';
 
-import * as _ from 'lodash';
-
 @Injectable()
 
 export class GameLoaderService

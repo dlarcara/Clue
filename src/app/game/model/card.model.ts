@@ -1,4 +1,4 @@
-import { GameConstants, CardCategory, Suspect, Weapon, Room } from '../index';
+import { GameConstants, CardCategory } from '../index';
 
 export class Card
 {

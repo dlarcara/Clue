@@ -1,9 +1,7 @@
 import { } from "@angular/core";
 
-import { GameSheet, Player, CardCategory, Card, Suspect, Weapon, Room, CellStatus, Guess, Turn, GameConstants } from "./index";
+import { GameSheet, Player, CardCategory, Card, CellStatus, Guess, Turn, GameConstants } from "./index";
 import { CircularArray } from "../shared/index";
-
-import { EnumValues } from 'enum-values';
 
 import * as _ from 'lodash';
 
@@ -264,7 +262,7 @@ export class GameAlgorithm
         let allCardsInCategory = GameConstants.getAllCardsInCategory(cardCategory);
         
         //Check if all but one card in this category has an identified owner, if so no one has the last card
-        let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return this._gameSheet.getPlayerWhoHasCard(card); });
+        let knownCardsInCategory = _.filter(allCardsInCategory, (card) => { return !!this._gameSheet.getPlayerWhoHasCard(card); });
         if (knownCardsInCategory.length == allCardsInCategory.length - 1)
         {
             let verdictInCategory = _.difference(allCardsInCategory, knownCardsInCategory)[0];

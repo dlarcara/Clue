@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
-import { Turn, Player, GameTracker, Guess } from '../../../../app/game/index';
-import { GameLoaderService } from '../../../../app/shared/index';
-
+import { Turn, GameTracker, Guess } from '../../../../app/game/index';
 
 import * as _ from "lodash";
 
