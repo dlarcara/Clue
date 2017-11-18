@@ -51,7 +51,7 @@
     "karma-webpack": "^2.0.3",
     "null-loader": "^0.1.1",
     "ts-loader": "^2.0.3",
-    "typescript": "^2.3.4"
+    "typescript": "2.3.4"
   },
   "cordovaPlugins": [
     "cordova-plugin-whitelist",
