@@ -1,6 +1,6 @@
 {
-  "name": "ionic-hello-world",
-  "author": "Ionic Framework",
+  "name": "clue-solver",
+  "author": "David Larcara",
   "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
@@ -64,5 +64,5 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [],
-  "description": "Clue: An Ionic project"
+  "description": "Clue Solver: Never lose a game of clue again"
 }
