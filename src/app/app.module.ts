@@ -19,7 +19,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 // Keep version in sync with Config.XML & src\pages\home\home.ts
-const IonicPro = Pro.init('7bda9402', { appVersion: "1.0.2" });
+const IonicPro = Pro.init('7bda9402', { appVersion: "1.0.3" });
 
 @Injectable()
 export class MyErrorHandler implements ErrorHandler {
