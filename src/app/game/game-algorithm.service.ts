@@ -302,7 +302,9 @@ export class GameAlgorithm
             
             // Get cards left as unknown for this player not included in one of the remaining unresolvd turns
             let cardsIncludedInUnresolvedShows = _.flatMap(unresolvedShowsForThisPlayer, (turn : Turn) => { return this.getCardsPlayerMightHaveForTurn(player, turn); });
-            let cardsToMarkAsUnknown = _.differenceWith(unknownCardsForPlayer, cardsIncludedInUnresolvedShows, _.isEqual);
+            let cardsToMarkAsUnknown = _.differenceWith(unknownCardsForPlayer, cardsIncludedInUnresolvedShows, (card1 : Card, card2 : Card) => {
+                return card1.category == card2.category && card1.cardIndex == card2.cardIndex;
+            });
             
             //Mark all of these cards as unknown
             _.forEach(cardsToMarkAsUnknown, (card : Card) => { this.markCardAsNotHadByPlayer(player, card); });

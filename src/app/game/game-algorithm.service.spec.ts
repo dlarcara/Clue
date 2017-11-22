@@ -4,6 +4,31 @@ import { EnumValues } from 'enum-values';
 
 import * as _ from 'lodash';
 
+//All cards constructed to use throughout testing
+let green = new Card(CardCategory.SUSPECT, Suspect.GREEN);
+let mustard = new Card(CardCategory.SUSPECT, Suspect.MUSTARD);
+let peacock = new Card(CardCategory.SUSPECT, Suspect.PEACOCK);
+let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+let scarlet = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+    
+let candlestick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+let knife = new Card(CardCategory.WEAPON, Weapon.KNIFE);
+let leadpipe = new Card(CardCategory.WEAPON, Weapon.LEADPIPE);
+let revolver = new Card(CardCategory.WEAPON, Weapon.REVOLVER);
+let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+let wrench = new Card(CardCategory.WEAPON, Weapon.WRENCH);
+    
+let ballroom = new Card(CardCategory.ROOM, Room.BALLROOM);
+let billiardRoom = new Card(CardCategory.ROOM, Room.BILLIARD);
+let conservatory = new Card(CardCategory.ROOM, Room.CONSERVATORY);
+let diningRoom = new Card(CardCategory.ROOM, Room.DINING);
+let hall = new Card(CardCategory.ROOM, Room.HALL);
+let kitchen = new Card(CardCategory.ROOM, Room.KITCHEN);
+let library = new Card(CardCategory.ROOM, Room.LIBRARY);
+let lounge = new Card(CardCategory.ROOM, Room.LOUNGE);
+let study = new Card(CardCategory.ROOM, Room.STUDY);
+
 describe("When interacting with the game algorithm", () => {
     describe("and exercising error condtions", () => {
         let defaultPlayers = [ new Player("Player 1", Suspect.PEACOCK, 6, true), new Player("Player 2", Suspect.PLUM, 6, false), new Player("Player 3", Suspect.GREEN, 6, false)];
@@ -810,6 +835,47 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand);
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand);
+        });
+    });
+
+    describe("for real life games", () => {
+        it("the board should look as follows", () => {
+            let cardsInHand = [ 
+                new Card(CardCategory.SUSPECT, Suspect.PLUM), new Card(CardCategory.ROOM, Room.KITCHEN), 
+                new Card(CardCategory.ROOM, Room.LOUNGE)
+            ];
+            let gamePlayers =  [ 
+                new Player("Player 1", Suspect.GREEN, 3, true), new Player("Player 2", Suspect.PEACOCK, 3, false), 
+                new Player("Player 3", Suspect.PLUM, 3, false), new Player("Player 4", Suspect.MUSTARD, 3, false), 
+                new Player("Player 5", Suspect.WHITE, 3, false), new Player("Player 6", Suspect.SCARLET, 3, false) 
+            ]; 
+            let gameAlgorithm = new GameAlgorithm(gamePlayers, cardsInHand);
+            
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.BALLROOM, gamePlayers[0], gamePlayers[4], new Card(CardCategory.ROOM, Room.BALLROOM)));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.KNIFE, Room.LIBRARY, gamePlayers[1], gamePlayers[5], null));
+            gameAlgorithm.enterPass(gamePlayers[2]);
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.WRENCH, Room.LOUNGE, gamePlayers[3], gamePlayers[0], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.MUSTARD, Weapon.ROPE, Room.BALLROOM, gamePlayers[4], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.LEADPIPE, Room.LOUNGE, gamePlayers[5], gamePlayers[0], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.LEADPIPE, Room.CONSERVATORY, gamePlayers[0], gamePlayers[2], new Card(CardCategory.WEAPON, Weapon.LEADPIPE)));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.ROPE, Room.BALLROOM, gamePlayers[1], gamePlayers[4], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.REVOLVER, Room.BALLROOM, gamePlayers[2], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.REVOLVER, Room.BALLROOM, gamePlayers[3], gamePlayers[4], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.REVOLVER, Room.KITCHEN, gamePlayers[4], gamePlayers[5], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.MUSTARD, Weapon.LEADPIPE, Room.BALLROOM, gamePlayers[5], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.REVOLVER, Room.BILLIARD, gamePlayers[0], gamePlayers[4], new Card(CardCategory.ROOM, Room.BILLIARD)));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[1], gamePlayers[5], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.KITCHEN, gamePlayers[2], gamePlayers[5], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.KNIFE, Room.DINING, gamePlayers[3], gamePlayers[4], null)); 
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.WRENCH, Room.STUDY, gamePlayers[4], gamePlayers[1], null)); 
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[5], gamePlayers[1], null)); 
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], [plum, lounge, kitchen], [green, mustard, peacock, scarlet, white, candlestick, knife, leadpipe, revolver, rope, wrench, ballroom, billiardRoom, conservatory, diningRoom, hall, library, study ]);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [library, rope], [green, mustard, peacock, plum, white, candlestick, knife, leadpipe, revolver, ballroom, billiardRoom, conservatory, diningRoom, hall, kitchen, lounge]);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [leadpipe], [green, peacock, plum, white, candlestick, knife, revolver, rope, ballroom, billiardRoom, conservatory, diningRoom, kitchen, library, lounge]);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [white], [green, peacock, plum, candlestick, knife, leadpipe, revolver, rope, ballroom, billiardRoom, conservatory, diningRoom, kitchen, library, lounge]);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [ballroom, billiardRoom, diningRoom], [green, mustard, peacock, plum, scarlet, white, candlestick, knife, leadpipe, revolver, rope, wrench, conservatory, hall, kitchen, library, lounge, study]);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [revolver, knife], [mustard, plum, scarlet, white, leadpipe, rope, wrench, ballroom, billiardRoom, diningRoom, kitchen, library, lounge, study]);
         });
     });
 
