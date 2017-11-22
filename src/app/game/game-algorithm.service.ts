@@ -175,8 +175,9 @@ export class GameAlgorithm
     // If at any point the status of a given cell is modified all steps are run again
     //   1. Attempt to resolve all unresolved turns
     //   2. Check to see if all cards for a player not included in an unresolved guess can be marked as not had
-    //   3. See if the verdict is known for all categories (all other cards identified as had by someone)
-    //   4. If the verdict for a category is known and only one player still views a card in that category as Not Had, they have that card 
+    //   3. Check to see if there are any inter-related unresolved turns where players involved must have all cards involved, and therefore no one else has them
+    //   4. See if the verdict is known for all categories (all other cards identified as had by someone)
+    //   5. If the verdict for a category is known and only one player still views a card in that category as Not Had, they have that card 
     private replayAllTurnsUntilNothingNewIsFoundOut() : void
     {
         //1. Iterate through all unresolved turns and attempt to resolve them
@@ -195,7 +196,15 @@ export class GameAlgorithm
         if (!_.isEqual(this._gameSheet, gameSheetBeforeStep2))
             this.replayAllTurnsUntilNothingNewIsFoundOut();
 
-        //3. Check all categories to see if the verdict can be deduced for that category
+        //3 Analyze realted unresolved turns
+        let gameSheetBeforeStep3 = _.cloneDeep(this._gameSheet);
+        this.analyzeRelatedUnresolvedShowsBetweenPlayers();
+
+        //If anything changed in step 3 attempt replaying all guesses again
+        if (!_.isEqual(this._gameSheet, gameSheetBeforeStep3))
+            this.replayAllTurnsUntilNothingNewIsFoundOut();
+
+        //4. Check all categories to see if the verdict can be deduced for that category
         //Can be done if the owner for all other cards in that category have been identified
         let previousVerdict = this._gameSheet.getVerdict();
         this.attemptToDeduceVerdictInEachCategory();
@@ -204,7 +213,7 @@ export class GameAlgorithm
         if (!_.isEqual(previousVerdict, this._gameSheet.getVerdict()))
             this.replayAllTurnsUntilNothingNewIsFoundOut();
 
-        //4. If only one player can have a card in a given category and the verdict is already known for that category, that player has that card
+        //5. If only one player can have a card in a given category and the verdict is already known for that category, that player has that card
         let previousGameSheet = _.cloneDeep(this._gameSheet);
         this.attemptToResolveMustHaves();
         
@@ -338,7 +347,84 @@ export class GameAlgorithm
         });
     }
 
-    // 3. Verdict Decution Step
+    // 3. If for any combination of unresolved turns the players involved must have all the cards involved, then no one else has those cards
+    //     - Generate all combinations of unresolved turns (at least 2 turns)
+    //     - Run the following checks for each
+    //     -   Identify unique cards involved in the combination
+    //     -   Identify unique players involved in the combination
+    //     -   For each player identify the minimum number of cards they must have to satisfy their shows
+    //     -   Sum up this number for all players
+    //     -   If this equals the unique cards involved in the combination, then the players involved hold all the cards involved. 
+    //     -   Therefore no one else has these cards and can be marked appropiately
+    private analyzeRelatedUnresolvedShowsBetweenPlayers() : void
+    {
+        //Get all combinations of unresolved turns 
+        let turnCombinations = this.getAllUnresolvedTurnCombinations();
+        
+        //Iterate through all possible combinations of these turns
+        _.forEach(turnCombinations, (turns : Turn[]) => {
+            //Get unique cards involved in these turns guesses
+            let allCards = _.flatMap(turns, (turn : Turn) => { return this.getCardsPlayerMightHaveForTurn(turn.guess.playerThatShowed, turn); });
+            let uniqueCards = _.uniqWith(allCards, _.isEqual);
+
+            //Get unique players involved in these turns guesses
+            let allPlayers = _.map(turns, (turn : Turn) => { return turn.guess.playerThatShowed; })
+            let uniquePlayers = _.uniqWith(allPlayers, _.isEqual);
+
+            //Get the sum of minimum number of must have cards for each player's shows
+            let minimumNumberOfMustHaveCards = _.sumBy(uniquePlayers, (player : Player) => {
+                let turnsForPlayer = _.filter(turns, (t) => { return _.isEqual(t.guess.playerThatShowed, player); }); 
+                return this.getMinimumMustHaveCardsForPlayerFromTurns(player, turnsForPlayer);
+            });
+         
+            //If unique number of cards involved is the same as the minimum number of identified must have cards then no one else has any of these cards
+            if (uniqueCards.length == minimumNumberOfMustHaveCards)
+            {
+                //Identify Players not involved in this guess combinations
+                let otherPlayers = _.differenceWith(this._players, uniquePlayers, _.isEqual);
+
+                //Mark all cards included in this guess combination as not had by all players not involved in guess combination
+                _.forEach(otherPlayers, (player : Player) => {
+                    _.forEach(uniqueCards, (card : Card) => {
+                        this.markCardAsNotHadByPlayer(player, card);
+                    });
+                });
+            }
+        });
+    }
+
+    // Get all combinations of unresolved turns, minimum size of 2
+    // Code adapted from https://stackoverflow.com/questions/5752002/find-all-possible-subset-combos-in-an-array
+    private getAllUnresolvedTurnCombinations() {
+        let unresolvedTurns = this.getUnresolvedTurns();
+        if (unresolvedTurns.length == 1)
+            return [];
+
+        var fn = function(n, src, got, all) {
+            if (n == 0) {
+                if (got.length > 0) {
+                    all[all.length] = got;
+                }
+                return;
+            }
+            for (var j = 0; j < src.length; j++) {
+                fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
+            }
+            return;
+        }
+
+        var all = [];
+        let min = 2;
+        for (var i = min; i < unresolvedTurns.length; i++) {
+            fn(i, unresolvedTurns, [], all);
+        }
+
+        all.push(unresolvedTurns);
+        
+        return all;
+    }
+
+    // 4. Verdict Decution Step
     private attemptToDeduceVerdictInEachCategory() : void
     {
         this.attemptToDeduceVerdictInCategory(CardCategory.SUSPECT);
@@ -360,7 +446,7 @@ export class GameAlgorithm
         }
     }
 
-    //4. Must have resolution step
+    //5. Must have resolution step
     //If only one player is left as possibly having a card in a given category, and the verdict for that category is known
     //then that player must have the card
     private attemptToResolveMustHaves()

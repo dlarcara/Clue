@@ -415,6 +415,34 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[2], player3Cards, allCardsExcept(player3Cards));  
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat(player3Cards));           
         });
+
+        it("it should apply inter-related turn rules if the number of unqiue cards for different shows equals the number of shows involved", () => {
+            initializeAlgorithm(0);
+
+            let candlestick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);      
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.HALL, gamePlayers[2], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([candlestick, hall]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
+        });
+
+        it("it should not apply inter-related turn rules for unresolved turns by the same player", () => {
+            initializeAlgorithm(0);
+  
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[2], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.REVOLVER, Room.KITCHEN, gamePlayers[2], gamePlayers[3], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
+        });
     });
 
     describe("for a 5 player game", () => {
@@ -718,6 +746,70 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([white]));  
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([white]));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([white]));
+        });
+
+        it("it should apply inter-related turn rules if the number of unqiue cards for different shows equals the number of shows involved", () => {
+            initializeAlgorithm(0);
+
+            let candlestick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+            let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+            let library = new Card(CardCategory.ROOM, Room.LIBRARY); 
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[2], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[3], gamePlayers[4], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.LIBRARY, gamePlayers[4], gamePlayers[5], null));
+
+            //Player 3 doesn't have plum, conervatory, library because guess 2,3,4 must be shared, which means player 3 has the hall
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([candlestick, hall, plum, library]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [hall], cardsInHand.concat([candlestick, plum, library]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([hall]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([hall]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([hall]));
+        });
+
+        it("it should apply inter-related turn rules if the number of unqiue cards for different shows equals the number of shows involved, even for the same player", () => {
+            initializeAlgorithm(0);
+            
+            let candlestick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+            let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+            let library = new Card(CardCategory.ROOM, Room.LIBRARY); 
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[2], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[3], gamePlayers[4], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.HALL, gamePlayers[3], gamePlayers[4], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([candlestick, hall, plum, library]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([candlestick, hall, plum, library]));
+        });
+
+        it("it should not apply inter-related turn rules for unresolved turns by the same player", () => {
+            initializeAlgorithm(0);
+            
+            let candlestick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+            let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+            let library = new Card(CardCategory.ROOM, Room.LIBRARY); 
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[2], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PEACOCK, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[3], gamePlayers[4], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.KNIFE, Room.CONSERVATORY, gamePlayers[3], gamePlayers[4], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand);
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand);
         });
     });
 
