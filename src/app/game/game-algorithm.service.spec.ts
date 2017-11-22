@@ -494,11 +494,14 @@ describe("When interacting with the game algorithm", () => {
                 new Card(CardCategory.SUSPECT, Suspect.MUSTARD), new Card(CardCategory.ROOM, Room.DINING),
                 new Card(CardCategory.WEAPON, Weapon.WRENCH), new Card(CardCategory.ROOM, Room.STUDY)
             ];
-            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.REVOLVER, Room.BILLIARD, gamePlayers[1], gamePlayers[3], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.CANDLESTICK, Room.CONSERVATORY, gamePlayers[1], gamePlayers[3], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.LEADPIPE, Room.HALL, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.REVOLVER, Room.BILLIARD, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.CONSERVATORY, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.HALL, gamePlayers[1], gamePlayers[3], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.LIBRARY, gamePlayers[1], gamePlayers[3], null));
             gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.REVOLVER, Room.LOUNGE, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.REVOLVER, Room.LOUNGE, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.REVOLVER, Room.HALL, gamePlayers[1], gamePlayers[3], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.REVOLVER, Room.LIBRARY, gamePlayers[1], gamePlayers[3], null));
 
             verifySheetForPlayer(gameAlgorithm, gamePlayers[0], [], cardsInHand.concat(player3Cards));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[1], cardsInHand, allCardsExcept(cardsInHand));
@@ -610,12 +613,15 @@ describe("When interacting with the game algorithm", () => {
                 new Card(CardCategory.WEAPON, Weapon.WRENCH)
             ];
             gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.CANDLESTICK, Room.BALLROOM, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.LEADPIPE, Room.BILLIARD, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.ROPE, Room.HALL, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.CANDLESTICK, Room.LIBRARY, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.LOUNGE, gamePlayers[5], gamePlayers[1], null));
-            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.LEADPIPE, Room.STUDY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.LEADPIPE, Room.BILLIARD, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.REVOLVER, Room.CONSERVATORY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.ROPE, Room.HALL, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.LEADPIPE, Room.LIBRARY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.LEADPIPE, Room.LOUNGE, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.LEADPIPE, Room.STUDY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.LEADPIPE, Room.STUDY, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.LEADPIPE, Room.LOUNGE, gamePlayers[5], gamePlayers[1], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.LEADPIPE, Room.BALLROOM, gamePlayers[5], gamePlayers[1], null));
 
             verifySheetForPlayer(gameAlgorithm, gamePlayers[0], player1Cards, allCardsExcept(player1Cards));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat(player1Cards));
@@ -643,6 +649,75 @@ describe("When interacting with the game algorithm", () => {
             verifySheetForPlayer(gameAlgorithm, gamePlayers[3], player4Cards, allCardsExcept(player4Cards));
             verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat(player4Cards)); 
             verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat(player4Cards));        
+        });
+
+        it("it should mark all currently unknown cards as had by player if only one card is left unknown and they showed another card", () => {
+            initializeAlgorithm(0);
+
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let lounge = new Card(CardCategory.ROOM, Room.LOUNGE);
+          
+            let plum = new Card(CardCategory.SUSPECT, Suspect.PLUM);
+            let candleStick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], white));
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], rope));
+            gameAlgorithm.applyGuess(new Guess(Suspect.PLUM, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([white, rope, lounge]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [white, rope], allCardsExcept([white, rope, plum, candleStick, hall])); 
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([white, rope]));  
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([white, rope]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([white, rope]));
+        });
+
+        it("it should not mark all currently unknown cards as had by player if two cards are left unknown for player and there are 2 unresolved guesses, but the guesses share a card in common", () => {
+            initializeAlgorithm(0);
+
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let lounge = new Card(CardCategory.ROOM, Room.LOUNGE);
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], white));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.REVOLVER, Room.LIBRARY, gamePlayers[1], gamePlayers[2], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([white, rope, lounge]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [white], cardsInHand); 
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([white]));  
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([white]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([white]));
+        });
+
+        it("it should mark all currently unknown cards as had by player if only two cards are left unknown for player and there are 2 unresolved guesses, and the guesses don't share a common card", () => {
+            initializeAlgorithm(0);
+
+            let white = new Card(CardCategory.SUSPECT, Suspect.WHITE);
+            let rope = new Card(CardCategory.WEAPON, Weapon.ROPE);
+            let lounge = new Card(CardCategory.ROOM, Room.LOUNGE);
+          
+            let green = new Card(CardCategory.SUSPECT, Suspect.GREEN);
+            let candleStick = new Card(CardCategory.WEAPON, Weapon.CANDLESTICK);
+            let hall = new Card(CardCategory.ROOM, Room.HALL);
+
+            let scarlet = new Card(CardCategory.SUSPECT, Suspect.SCARLET);
+            let revolver = new Card(CardCategory.WEAPON, Weapon.REVOLVER);
+            let ballroom = new Card(CardCategory.ROOM, Room.BALLROOM);
+
+            gameAlgorithm.applyGuess(new Guess(Suspect.WHITE, Weapon.ROPE, Room.LOUNGE, gamePlayers[0], gamePlayers[2], white));
+            gameAlgorithm.applyGuess(new Guess(Suspect.GREEN, Weapon.CANDLESTICK, Room.HALL, gamePlayers[1], gamePlayers[2], null));
+            gameAlgorithm.applyGuess(new Guess(Suspect.SCARLET, Weapon.REVOLVER, Room.BALLROOM, gamePlayers[1], gamePlayers[2], null));
+
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[0], cardsInHand, allCardsExcept(cardsInHand));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[1], [], cardsInHand.concat([white, rope, lounge]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[2], [white], allCardsExcept([green, candleStick, hall, scarlet, revolver, ballroom])); 
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[3], [], cardsInHand.concat([white]));  
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[4], [], cardsInHand.concat([white]));
+            verifySheetForPlayer(gameAlgorithm, gamePlayers[5], [], cardsInHand.concat([white]));
         });
     });
 

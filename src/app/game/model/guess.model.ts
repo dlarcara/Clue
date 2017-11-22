@@ -29,4 +29,9 @@ export class Guess
         this.weaponCard = new Card(CardCategory.WEAPON, this.weapon); 
         this.roomCard = new Card(CardCategory.ROOM, this.room); 
     }
+
+    getGuessedCards() : Card[]
+    {
+        return [this.suspectCard, this.weaponCard, this.roomCard];
+    }
 }
