@@ -358,7 +358,7 @@ export class GameAlgorithm
     //     -   Therefore no one else has these cards and can be marked appropiately
     private analyzeRelatedUnresolvedShowsBetweenPlayers() : void
     {
-        //Get all combinations of unresolved turns 
+        //Get all combinations of unresolved turns that someone showed a card in
         let turnCombinations = this.getAllUnresolvedTurnCombinations();
         
         //Iterate through all possible combinations of these turns
@@ -368,7 +368,7 @@ export class GameAlgorithm
             let uniqueCards = _.uniqWith(allCards, _.isEqual);
 
             //Get unique players involved in these turns guesses
-            let allPlayers = _.map(turns, (turn : Turn) => { return turn.guess.playerThatShowed; })
+            let allPlayers = _.map(turns, (turn : Turn) => { return turn.guess.playerThatShowed; });
             let uniquePlayers = _.uniqWith(allPlayers, _.isEqual);
 
             //Get the sum of minimum number of must have cards for each player's shows
@@ -395,8 +395,11 @@ export class GameAlgorithm
 
     // Get all combinations of unresolved turns, minimum size of 2
     // Code adapted from https://stackoverflow.com/questions/5752002/find-all-possible-subset-combos-in-an-array
-    private getAllUnresolvedTurnCombinations() {
-        let unresolvedTurns = this.getUnresolvedTurns();
+    private getAllUnresolvedTurnCombinations() : Turn[][] {
+        let unresolvedTurns = _.filter(this.getUnresolvedTurns(), (turn : Turn) => {
+            return turn.guess && turn.guess.playerThatShowed;
+        });
+        
         if (unresolvedTurns.length == 1)
             return [];
 
