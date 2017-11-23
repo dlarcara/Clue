@@ -34,8 +34,8 @@ game-sheet-page {
     .guess-block
     {
         font-weight: bold;
-        width: 20px;
-        height: 20px;
+        width: 17px;
+        height: 17px;
         display: inline-block;
         text-align: center;
     }
@@ -43,6 +43,7 @@ game-sheet-page {
     .guess-block.guess-color-1 { background-color: color($colors, valid); }
     .guess-block.guess-color-2 { background-color: color($colors, warning); }
     .guess-block.guess-color-3 { background-color: color($colors, invalid); }
+    .guess-block.guess-color-4 { background-color: #525AD9; }
 
     //Filter Page
     .filter-header {

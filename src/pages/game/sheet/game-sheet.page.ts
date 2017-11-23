@@ -110,8 +110,8 @@ export class GameSheetPage {
 
     getColorClassForIndex(index) : string
     {
-        //3 Unique colors are used for guesses, generate a class for one of this based on the index number
-        return "guess-color-" + ((index % 3) + 1);
+        //4 Unique colors are used for guesses, generate a class for one of this based on the index number
+        return "guess-color-" + ((index % 4) + 1);
     }
 
     getPlayerMessage(player) : string
