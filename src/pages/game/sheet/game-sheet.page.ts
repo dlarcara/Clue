@@ -78,26 +78,40 @@ export class GameSheetPage {
         return 'card-unknown';
     }
 
-    cardIsBeingTracked(player : Player, card : Card) : Boolean
-    {
+    getUnresolvedGuessDisplayDetails(player : Player, card : Card) : any {
+        //Get all unresolved turns for this player      
+        let allUnresolvedTurnsForPlayer : Turn[] = _.chain(this.displayedTurn.lessonsLearned.unresolvedTurns)
+            .map((turnNumber : number) => { return this.gameTracker.turns[turnNumber]; })
+            .filter((turn : Turn) => { return _.isEqual(player, turn.guess.playerThatShowed); })
+            .value();
+        
+        let guessDisplayDetails = [];
         let gameSheetForActiveTurn = this.displayedTurn.resultingSheet;
-        return _.some(this.displayedTurn.lessonsLearned.unresolvedTurns, (turnNumber : number) => {
-            let turn = this.gameTracker.turns[turnNumber];
-
-            if(!_.isEqual(turn.guess.playerThatShowed, player))
-                return false;
-
-            if (card.category == CardCategory.SUSPECT && turn.guess.suspect == card.cardIndex)
-                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
-            
-            if (card.category == CardCategory.WEAPON && turn.guess.weapon == card.cardIndex)
-                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
-
-            if (card.category == CardCategory.ROOM && turn.guess.room == card.cardIndex)
-                return gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN;
-
-            return false;
+        
+        //Build list of display details based on the total set of unresolved guesses for this player
+        _.forEach(allUnresolvedTurnsForPlayer, (turn : Turn, index : number) => {
+            //Make sure the card this is for was part of the guess
+            if (card.category == CardCategory.SUSPECT && turn.guess.suspect == card.cardIndex ||
+                card.category == CardCategory.WEAPON && turn.guess.weapon == card.cardIndex ||
+                card.category == CardCategory.ROOM && turn.guess.room == card.cardIndex
+            )
+            {
+                //Make sure the card this is for is in the unknown status for the player this if for
+                if (gameSheetForActiveTurn.getStatusForPlayerAndCard(player, card) == CellStatus.UNKNOWN)
+                {
+                    guessDisplayDetails.push({ index: index, turnNumber: turn.number });
+                    index++;
+                }
+            }
         });
+
+        return guessDisplayDetails;
+    }
+
+    getColorClassForIndex(index) : string
+    {
+        //3 Unique colors are used for guesses, generate a class for one of this based on the index number
+        return "guess-color-" + ((index % 3) + 1);
     }
 
     getPlayerMessage(player) : string

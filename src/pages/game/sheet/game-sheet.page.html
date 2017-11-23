@@ -23,8 +23,9 @@
             <ion-item class="sheet-cell-icon card-not-had sheet-legend">
                 Player definitely <b>does not have</b> this card
             </ion-item>
-            <ion-item class="sheet-cell-icon card-unknown sheet-legend guess-tick-legend tick-top-right">
-                Player might have this card
+            <ion-item class="sheet-cell-icon card-unknown sheet-legend">
+                <span class="guess-block guess-color-1">2</span>
+                Turn player <b>may have</b> shown this card
             </ion-item>
         </div>
 
@@ -94,7 +95,11 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell  no-padding" [ngClass]="getCellClass(player, suspect)">
-                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, suspect)"></div>
+                        <div class="guess-block-wrapper">
+                            <span *ngFor="let guessDisplayDetail of getUnresolvedGuessDisplayDetails(player, suspect)" class="guess-block" [ngClass]="getColorClassForIndex(guessDisplayDetail.index)">
+                                {{guessDisplayDetail.turnNumber}}
+                            </span>
+                        </div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -115,7 +120,11 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, weapon)">
-                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, weapon)"></div>
+                            <div class="guess-block-wrapper">
+                                <span *ngFor="let guessDisplayDetail of getUnresolvedGuessDisplayDetails(player, weapon)" class="guess-block" [ngClass]="getColorClassForIndex(guessDisplayDetail.index)">
+                                    {{guessDisplayDetail.turnNumber}}
+                                </span>
+                            </div>
                     </ion-col>
                 </ion-row>
             </div>
@@ -136,7 +145,11 @@
                     </ion-col>
             
                     <ion-col *ngFor="let player of gameTracker.players" class="sheet-cell no-padding" [ngClass]="getCellClass(player, room)">
-                        <div class="guess-tick tick-top-right" *ngIf="cardIsBeingTracked(player, room)"></div>
+                        <div class="guess-block-wrapper">
+                            <span *ngFor="let guessDisplayDetail of getUnresolvedGuessDisplayDetails(player, room)" class="guess-block" [ngClass]="getColorClassForIndex(guessDisplayDetail.index)">
+                                {{guessDisplayDetail.turnNumber}}
+                            </span>
+                        </div>
                     </ion-col>
                 </ion-row>
             </div>

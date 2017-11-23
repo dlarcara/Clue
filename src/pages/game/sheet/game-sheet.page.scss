@@ -26,31 +26,23 @@ game-sheet-page {
         .icon { font-size: 1.6em; }
     }
 
-    //Check Mark for Guessed cells
-    .guess-tick:after { border-width: 5px; border-color: color($colors, warning); }
-    .guess-tick-legend:after { border-width: 8px; border-color: color($colors, warning); }
-
-    //General tick mark
-    .tick-top-right, .tick-top-left { position: relative }
-    .tick-top-right:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        border-style: solid !important;
-        border-bottom-color: transparent !important;
-        border-left-color: transparent !important;
+    //Guess Tracking
+    .guess-block-wrapper {
+        text-align: right;
+    }
+    
+    .guess-block
+    {
+        font-weight: bold;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        text-align: center;
     }
 
-    .tick-top-left:after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: left;
-        border-style: solid !important;
-        border-bottom-color: transparent !important;
-        border-right-color: transparent !important;
-    }
+    .guess-block.guess-color-1 { background-color: color($colors, valid); }
+    .guess-block.guess-color-2 { background-color: color($colors, warning); }
+    .guess-block.guess-color-3 { background-color: color($colors, invalid); }
 
     //Filter Page
     .filter-header {
